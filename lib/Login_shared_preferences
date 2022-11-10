@@ -1,0 +1,403 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:app_actasalinstante/NavBar.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:app_actasalinstante/Widgets/carousel_example.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:lottie/lottie.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'FlatMessage/Message.dart';
+import 'LoginView/api/ProgressHUD.dart';
+import 'RFCDescargas/services/Variables.dart';
+
+enum ViewDialogsAction { yes, no }
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+Future<void> setup() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  getIt.registerSingleton<AuthModel>(AuthModel());
+  print(getIt);
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _obscureText = true;
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+
+  
+
+  bool hidePassword = true;
+  bool isApiCallProcess = false;
+  GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  AnimationController _coffeeController;
+  bool copAnimated = false;
+  bool animateCafeText = false;
+
+  TextEditingController userController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool tappedYes = false;
+
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+  void login(String user, password) async {
+    try {
+      Response response = await post(
+          Uri.parse('https://actasalinstante.com:3030/api/user/signin/'),
+          body: {'username': user, 'password': password});
+
+      if (response.statusCode == 200) {
+          prefs.setString('email', 'useremail@gmail.com')
+        var data = jsonDecode(response.body.toString());
+        print(data.toString());
+        // print(data['token']);
+        // print(data['username']);
+        //Variables().usuario = data['username'];
+        getIt<AuthModel>().id = data['id'];
+        getIt<AuthModel>().usuario = data['username'];
+        getIt<AuthModel>().token = data['token'];
+        //print( Variables().usuario = data['username']);
+        print(getIt<AuthModel>().id);
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.black,
+          content: Text(
+            "Bienvenido " + userController.text.toString(),
+            style: TextStyle(color: Colors.white, fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => NavBar()));
+      } else {
+        setState(() {
+          isApiCallProcess = false;
+        });
+        print('failed');
+        var snackBar = SnackBar(
+          elevation: 0,
+          width: 400,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Usuario Incorrecto ' + user,
+            message: 'Contacte al equipo de software!',
+            contentType: ContentType.failure,
+          ),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    } catch (e) {
+      print(e.toString());
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.BOTTOMSLIDE,
+        title: 'Se agoto el tiempo de espera',
+        desc: user + ' ¿quieres salir de la aplicación?',
+        btnCancelOnPress: () {
+          //  Navigator.of(context).pop(true);
+        },
+        btnOkOnPress: () {
+          exit(0);
+        },
+      )..show();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ProgressHUD(
+      child: _uiSetup(context),
+      inAsyncCall: isApiCallProcess,
+      opacity: 0.3,
+    );
+  }
+
+  Widget _uiSetup(BuildContext context) {
+    return Scaffold(
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   elevation: 0,
+      //   backgroundColor: Colors.white,
+      // ),
+
+      key: scaffoldKey,
+      backgroundColor: Theme.of(context).accentColor,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            // SizedBox.expand(
+            //   // -> 01
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //       image: DecorationImage(
+            //         image: AssetImage('assets/fondoalterno.jpg'),
+            //         fit: BoxFit.cover, // -> 02
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Stack(
+              children: <Widget>[
+                Container(
+                  height: 757,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/fondoalterno.jpg'),
+                        fit: BoxFit.fill),
+                  ),
+                  // Foreground widget here
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                  margin: EdgeInsets.symmetric(vertical: 140, horizontal: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(40),
+                      topLeft: Radius.circular(40),
+                    ),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).hintColor.withOpacity(0.1),
+                        offset: Offset(0, 20),
+                        blurRadius: 90,
+                      )
+                    ],
+                  ),
+                  child: Form(
+                    key: globalFormKey,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 190,
+                          width: MediaQuery.of(context).size.width * 0.43,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            image: DecorationImage(
+                              image: AssetImage('assets/splash.png'),
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(26)),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "Ingresar",
+                          style: GoogleFonts.lato(
+                            textStyle: Theme.of(context).textTheme.headline4,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        new TextFormField(
+                          style: GoogleFonts.lato(
+                            textStyle: Theme.of(context).textTheme.headline4,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.black,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          controller: userController,
+                          onSaved: (input) => userController.text = input,
+                          decoration: new InputDecoration(
+                            hintText: "Usuario",
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .accentColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).accentColor)),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        new TextFormField(
+                          style: GoogleFonts.lato(
+                            textStyle: Theme.of(context).textTheme.headline4,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.black,
+                          ),
+                          keyboardType: TextInputType.text,
+                          controller: passwordController,
+                          // onSaved: (input) => passwordController.text = input,
+                          // validator: (input) =>
+                          //     input.length < 3 ? "Contraseña no valida" : null,
+                          obscureText: hidePassword,
+                          decoration: new InputDecoration(
+                            hintText: "Contraseña",
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .accentColor
+                                        .withOpacity(0.2))),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).accentColor)),
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  hidePassword = !hidePassword;
+                                });
+                              },
+                              color: Theme.of(context)
+                                  .accentColor
+                                  .withOpacity(0.9),
+                              icon: Icon(hidePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 39),
+                        new Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 29, vertical: 5),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                MaterialButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isApiCallProcess = true;
+                                    });
+
+                                    login(userController.text.toString(),
+                                        passwordController.text.toString());
+                                    print(userController.text.toString() +
+                                        passwordController.text.toString());
+                                  },
+                                  child: Text("Iniciar sesion",
+                                      style: GoogleFonts.lato(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                                // Icon(
+                                //   Icons.download_done,
+                                //   size: 20,
+                                //   color: Colors.white,
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // MaterialButton(
+                        //   padding: EdgeInsets.symmetric(
+                        //       vertical: 22, horizontal: 50),
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       isApiCallProcess = true;
+                        //     });
+
+                        //     login(userController.text.toString(),
+                        //         passwordController.text.toString());
+                        //     print(userController.text.toString() +
+                        //         passwordController.text.toString());
+                        //   },
+                        //   child: Text(
+                        //     "Iniciar sesion",
+                        //     style: TextStyle(color: Colors.white),
+                        //   ),
+                        //   color: Theme.of(context).accentColor,
+                        //   shape: StadiumBorder(),
+                        // ),
+                        SizedBox(height: 15),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  bool validateAndSave() {
+    final form = globalFormKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+// // we will be creating a widget for text field
+// Widget inputFile({label, obscureText = false}) {
+//   return Column(
+//     crossAxisAlignment: CrossAxisAlignment.start,
+//     children: <Widget>[
+//       Text(
+//         label,
+//         style: TextStyle(
+//             fontSize: 15, fontWeight: FontWeight.w400, color: Colors.redAccent),
+//       ),
+//       SizedBox(
+//         height: 5,
+//       ),
+//       TextField(
+//         obscureText: obscureText,
+//         decoration: InputDecoration(
+//             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+//             enabledBorder: OutlineInputBorder(
+//               borderSide: BorderSide(color: Colors.redAccent),
+//             ),
+//             border: OutlineInputBorder(
+//                 borderSide: BorderSide(color: Colors.redAccent))),
+//       ),
+//       SizedBox(
+//         height: 10,
+//       )
+//     ],
+//   );
+// }
+}
