@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_actasalinstante/NavBar.dart';
@@ -17,7 +18,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 import 'RFCDescargas/services/Variables.dart';
 
 Future<void> main() async {
-  
+  json_version();
   //INICIALIZAMOS LAS CREDENCIALES 
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,6 +59,16 @@ Future<void> main() async {
   runApp(MyAppfull());
 
   HttpOverrides.global = MyHttpOverrides();
+}
+
+
+json_version(){
+
+var json = jsonEncode({
+"version": "0.2.0"
+
+});
+print(json.toString());
 }
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();

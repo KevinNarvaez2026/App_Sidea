@@ -20,6 +20,7 @@ class Userlists {
   String website;
   DateTime fecha;
   String comments;
+  DateTime horaTotal;
 
   Userlists({
     this.id,
@@ -35,6 +36,7 @@ class Userlists {
     this.website,
     this.fecha,
     this.type,
+    this.horaTotal,
   });
 
   Userlists.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,12 @@ class Userlists {
 
     email = json['namefile'];
     fecha = DateTime.parse(json["createdAt"]);
+    DateTime fecha2 = DateTime.parse('0000-00-00 06:00:00Z');
+    horaTotal =
+        fecha.add(Duration(hours: fecha2.hour, minutes: fecha2.minute) * -1);
+// print(horaTotal);
+// print(horaTotal.hour);
+// print(horaTotal.minute);
 
     metadataestado = json["estado"];
     website = json['url'];

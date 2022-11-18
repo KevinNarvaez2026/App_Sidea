@@ -75,7 +75,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Color.fromARGB(255, 127,137,146),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -89,7 +89,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
           ),
         ),
         elevation: 0,
-        backgroundColor: Colors.grey,
+        backgroundColor: Color.fromARGB(255, 127,137,146),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -427,7 +427,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
-                                color: Colors.grey),
+                                color: Color.fromARGB(255, 127,137,146),),
                             child: Text(
                               "Solicitar",
                               style: GoogleFonts.lato(
@@ -456,7 +456,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
-                                color: Colors.grey),
+                                color: Color.fromARGB(255, 127,137,146),),
                             child: Text(
                               "Solicitar",
                               style: GoogleFonts.lato(

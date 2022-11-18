@@ -103,7 +103,7 @@ class SearchUser extends SearchDelegate {
 
   Widget buildResults(BuildContext context) {
     return FutureBuilder<List<Userlists>>(
-        future: _userList.serachapi(query: query),
+        future: _userList.getuserLists(query: query),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(

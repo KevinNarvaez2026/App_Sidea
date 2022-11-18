@@ -25,10 +25,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../ColorScheme.dart';
 import '../DropDown/DropDown.dart';
 import '../Inicio/InicioActas.dart';
+import '../LoginView/api/ProgressHUD.dart';
 import '../LoginView/api/model/login_model.dart';
 import '../NavBar.dart';
 import '../RFC/RfcBody.dart';
@@ -52,6 +54,7 @@ import 'package:dio/dio.dart';
 import 'dart:typed_data';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class CarouselExample extends StatefulWidget {
   const CarouselExample({Key key}) : super(key: key);
@@ -69,6 +72,67 @@ class _CarouselExampleState extends State<CarouselExample> {
   void initState() {
     super.initState();
 
+    Check_uPDATE();
+  
+    //Notification();
+  }
+Check_uPDATE(){
+setState(() {
+
+      isApiCallProcess = true;
+    });
+  json_version();
+}
+  bool isApiCallProcess = false;
+  json_version() async {
+    
+    print("Token: " + Token);
+    try {
+      var json_Ver = jsonEncode({"version": "0.2.0"});
+      print(json_Ver.toString());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      setState(() {
+        Token = prefs.getString('token');
+      });
+      Map<String, String> mainheader = new Map();
+      mainheader["content-type"] = "application/json";
+      mainheader['x-access-token'] = Token;
+
+      var response = await get(
+          Uri.parse('https://actasalinstante.com:3030/api/app/version/'),
+          headers: mainheader);
+      var datas = json.decode(response.body);
+      print(datas);
+      if (response.statusCode == 200) {
+        setState(() {
+      isApiCallProcess = false;
+    });
+        datas['version'];
+        print(datas['version']);
+        if (datas['version'] != '0.2.0') {
+          print("Debe actualizar su version");
+
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.WARNING,
+            animType: AnimType.BOTTOMSLIDE,
+            title: 'Actas al instante',
+            desc: user.toString() +
+                ' Tienes una version desactualizada\n Presione Ok para descargar la nueva version',
+            btnCancelOnPress: () {
+             exit(0);
+            },
+            btnOkOnPress: () {
+                _launchURL();
+            },
+          )..show();
+        
+        } else {
+  setState(() {
+      isApiCallProcess = false;
+    });
+
     GetImages();
     GetNames();
     getToken();
@@ -76,13 +140,26 @@ class _CarouselExampleState extends State<CarouselExample> {
     _fetchContacts();
     _getCurrentLocation();
 
-    //Notification();
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _launchURL() async {
+    const url = 'https://actasalinstante.com:3030/api/app/download/';
+    if (await launch(url)) {
+      await canLaunch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Check_VPN() async {
     if (await CheckVpnConnection.isVpnActive()) {
       // do some action if VPN connection status is true
-    
+
       var snackBar = SnackBar(
         elevation: 0,
         width: 400,
@@ -98,9 +175,7 @@ class _CarouselExampleState extends State<CarouselExample> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       await Future.delayed(Duration(seconds: 4));
       exit(0);
-    } else {
-      
-    }
+    } else {}
   }
 
 //GPS
@@ -109,7 +184,6 @@ class _CarouselExampleState extends State<CarouselExample> {
   var _longitud = "";
 //PUT_GPS
   Put_GPS(String latitude, String longitude) async {
-    
     Map<String, String> mainheader = new Map();
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
@@ -123,17 +197,16 @@ class _CarouselExampleState extends State<CarouselExample> {
         headers: mainheader,
         body: json.encode(body));
     var datas = json.decode(response.body);
-   
+
     // setState(() {
     //   data = resBody;
 
     // });
 
-
     if (response.statusCode == 200) {
       //_controller.sendNotification();
       datas = jsonDecode(response.body);
-   
+
       // } else if (response.statusCode == 401) {
       //   SharedPreferences prefs = await SharedPreferences.getInstance();
       //   prefs.remove('token');
@@ -142,9 +215,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 
       //   exit(0);
       // } else {
-   
-      
-    
+
     }
 
     // return results;
@@ -177,7 +248,6 @@ class _CarouselExampleState extends State<CarouselExample> {
 
 //NOTIFICAIONES
   Notification() {
-  
     socket = IO.io("https://actasalinstante.com:3030/");
     socket.connect();
     connectAndListen();
@@ -206,7 +276,6 @@ class _CarouselExampleState extends State<CarouselExample> {
     setState(() {
       user = prefs.getString('username');
     });
-    
   }
 
   String Token = "";
@@ -227,7 +296,7 @@ class _CarouselExampleState extends State<CarouselExample> {
     setState(() {
       _imageFile = pickedFile;
     });
-   
+
     var headers = {'x-access-token': Token};
     var request = http.MultipartRequest('POST',
         Uri.parse('https://actasalinstante.com:3030/api/user/avatar/up/'));
@@ -286,12 +355,9 @@ class _CarouselExampleState extends State<CarouselExample> {
     final bytes = response.bodyBytes;
 
     if (response.statusCode == 200) {
-     
       setState(() {
         imagen = bytes;
       });
-
-     
     }
 
     if (response.statusCode == 401) {
@@ -311,7 +377,6 @@ class _CarouselExampleState extends State<CarouselExample> {
 
   Putnames(String names, String lastname, String phone, String email,
       int ids) async {
- 
     Map<String, String> mainheader = new Map();
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
@@ -361,11 +426,23 @@ class _CarouselExampleState extends State<CarouselExample> {
   int selectedIndex;
   final ImagePicker _picker = ImagePicker();
   PickedFile _imageFile;
+
   @override
   Widget build(BuildContext context) {
+    return ProgressHUD(
+      child: Carr(context),
+      inAsyncCall: isApiCallProcess,
+      opacity: 0.4,
+      key: Key(isApiCallProcess.toString()),
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+    );
+  }
+
+
+  Widget Carr(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: Colors.grey,
+          backgroundColor: Color.fromARGB(255, 127, 137, 146),
           appBar: AppBar(
             automaticallyImplyLeading: false,
             centerTitle: true,
@@ -378,7 +455,7 @@ class _CarouselExampleState extends State<CarouselExample> {
                   color: Colors.black,
                 )),
             elevation: 0,
-            backgroundColor: Colors.grey,
+            backgroundColor: Color.fromARGB(255, 127, 137, 146),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -763,9 +840,10 @@ class _CarouselExampleState extends State<CarouselExample> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 40, vertical: 15),
                               decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                  color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                color: Color.fromARGB(255, 127, 137, 146),
+                              ),
                               child: Text(
                                 "Solicitar",
                                 style: GoogleFonts.lato(
@@ -831,9 +909,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 //CAMBIO DE ACTAS O RFC
   void changeFrequency(String frequency) {
     selectedFrequency = frequency;
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   Column extraWidget(String img, String name, bool isSelected) {
@@ -888,7 +964,6 @@ class _CarouselExampleState extends State<CarouselExample> {
 
 //FUCNION PARA SABER SI ESTA EN ACTAS O RFC
   void OnchangeActas() {
-    
     if (selectedType == "Actas") {
       Navigator.push(
         context,
@@ -918,7 +993,6 @@ class _CarouselExampleState extends State<CarouselExample> {
         ),
       );
     } else {
-    
       var snackBar = SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
@@ -931,7 +1005,6 @@ class _CarouselExampleState extends State<CarouselExample> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      
     }
   }
 
@@ -989,7 +1062,6 @@ class _CarouselExampleState extends State<CarouselExample> {
                             onTap: () {
                               UploadCamera();
                               // takePhoto(ImageSource.camera);
-                              
                             },
                           ),
                           ListTile(
@@ -998,7 +1070,6 @@ class _CarouselExampleState extends State<CarouselExample> {
                             onTap: () {
                               UploadGallery();
                               //takePhoto(ImageSource.gallery);
-                             
                             },
                           ),
                           ListTile(

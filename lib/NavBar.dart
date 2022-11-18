@@ -74,7 +74,7 @@ class _NavBarState extends State<NavBar> {
               new Center(
                 child: Icon(
                   (myindex == 0) ? Icons.home_outlined : Icons.home,
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 127,137,146),
                 ),
               ),
               new Center(
@@ -85,7 +85,7 @@ class _NavBarState extends State<NavBar> {
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    color: Colors.grey,
+                    color: Color.fromARGB(255, 127,137,146),
                   ),
                 ),
               ),
@@ -100,7 +100,7 @@ class _NavBarState extends State<NavBar> {
                   (myindex == 1)
                       ? Ionicons.documents_outline
                       : Ionicons.documents,
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 127,137,146),
                 ),
               ),
               new Center(
@@ -110,7 +110,7 @@ class _NavBarState extends State<NavBar> {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Colors.grey,
+                      color: Color.fromARGB(255, 127,137,146),
                     )),
               ),
             ],
@@ -123,7 +123,7 @@ class _NavBarState extends State<NavBar> {
                   (myindex == 2)
                       ? Ionicons.document_outline
                       : Ionicons.document,
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 127,137,146),
                 ),
               ),
               new Center(
@@ -133,7 +133,7 @@ class _NavBarState extends State<NavBar> {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Colors.grey,
+                      color: Color.fromARGB(255, 127,137,146),
                     )),
               ),
             ],
@@ -144,7 +144,7 @@ class _NavBarState extends State<NavBar> {
               new Center(
                 child: Icon(
                   (myindex == 3) ? Icons.settings_outlined : Icons.settings,
-                  color: Colors.grey,
+                  color:Color.fromARGB(255, 127,137,146),
                 ),
               ),
               new Center(
@@ -154,7 +154,7 @@ class _NavBarState extends State<NavBar> {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Colors.grey,
+                      color: Color.fromARGB(255, 127,137,146),
                     )),
               ),
             ],

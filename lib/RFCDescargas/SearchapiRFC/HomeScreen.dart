@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:android_intent/flag.dart';
+import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
 import 'package:app_actasalinstante/NavBar.dart';
 import 'package:app_actasalinstante/RFCDescargas/SearchapiRFC/Api_service.dart';
 import 'package:app_actasalinstante/RFCDescargas/SearchapiRFC/search.dart';
@@ -141,7 +142,7 @@ class _HomePageState extends State<SERACHRFC> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: Colors.grey,
+         backgroundColor: Color.fromARGB(255, 127,137,146),
           appBar: AppBar(
             actions: [
               new Center(
@@ -235,360 +236,145 @@ class _HomePageState extends State<SERACHRFC> {
                         }
 
                         final _controller = Get.find<Controller>();
-                        return Card(
-                          elevation: 10,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(40),
-                              topLeft: Radius.circular(40),
+                        return FadeAnimation(
+                          1.3,
+                          Card(
+                            elevation: 10,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(40),
+                                topLeft: Radius.circular(40),
+                              ),
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                if ('${data[index].comments}' != "Descargado" &&
-                                    '${data[index].comments}' != "null")
-                                  new Center(
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.redAccent),
-                                      overflow: TextOverflow.ellipsis,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  if ('${data[index].comments}' !=
+                                          "Descargado" &&
+                                      '${data[index].comments}' != "null")
+                                    new Center(
+                                      child: Text(
+                                        (index + 1).toString(),
+                                        maxLines: 5,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.redAccent),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                if ('${data[index].descarga}' != "true" &&
-                                    '${data[index].email}' != "null" &&
-                                    '${data[index].comments}' == "Descargado")
-                                  new Center(
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.greenAccent),
-                                      overflow: TextOverflow.ellipsis,
+                                  if ('${data[index].descarga}' != "true" &&
+                                      '${data[index].email}' != "null" &&
+                                      '${data[index].comments}' == "Descargado")
+                                    new Center(
+                                      child: Text(
+                                        (index + 1).toString(),
+                                        maxLines: 5,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.greenAccent),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                if ('${data[index].comments}' == "null" &&
-                                        '${data[index].email}' == "null" ||
-                                    '${data[index].comments}' == "Descargado" &&
-                                        '${data[index].email}' == "null")
-                                  new Center(
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.yellow),
-                                      overflow: TextOverflow.ellipsis,
+                                  if ('${data[index].comments}' == "null" &&
+                                          '${data[index].email}' == "null" ||
+                                      '${data[index].comments}' ==
+                                              "Descargado" &&
+                                          '${data[index].email}' == "null")
+                                    new Center(
+                                      child: Text(
+                                        (index + 1).toString(),
+                                        maxLines: 5,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.yellow),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                if ('${data[index].descarga}' != "false" &&
-                                    '${data[index].email}' != "null" &&
-                                    '${data[index].comments}' == "Descargado")
-                                  new Center(
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.black),
-                                      overflow: TextOverflow.ellipsis,
+                                  if ('${data[index].descarga}' != "false" &&
+                                      '${data[index].email}' != "null" &&
+                                      '${data[index].comments}' == "Descargado")
+                                    new Center(
+                                      child: Text(
+                                        (index + 1).toString(),
+                                        maxLines: 5,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: Center(
+                                  Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Center(
 // Image radius
-                                        child: Image.asset('assets/rfc.png',
-                                            alignment: Alignment.center,
-                                            fit: BoxFit.cover),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 200,
-                                      width: double.infinity,
-                                      clipBehavior: Clip.antiAlias,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(54),
-                                      ),
-                                    ),
-                                    if ('${data[index].descarga}' != "true" &&
-                                        '${data[index].email}' != "null" &&
-                                        '${data[index].comments}' ==
-                                            "Descargado")
-                                      new Center(
-                                        child: Text(
-                                          "Nuevo ",
-                                          maxLines: 5,
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              fontFamily: 'avenir',
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.blueAccent),
-                                          overflow: TextOverflow.ellipsis,
+                                          child: Image.asset('assets/rfc.png',
+                                              alignment: Alignment.center,
+                                              fit: BoxFit.cover),
                                         ),
                                       ),
-                                    if ('${data[index].comments}' !=
-                                            "Descargado" &&
-                                        '${data[index].comments}' != "null")
-                                      new Center(
-                                        child: Container(
-                                          height: 180,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/error.gif'),
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6)),
+                                      Container(
+                                        height: 200,
+                                        width: double.infinity,
+                                        clipBehavior: Clip.antiAlias,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(54),
+                                        ),
+                                      ),
+                                      if ('${data[index].descarga}' != "true" &&
+                                          '${data[index].email}' != "null" &&
+                                          '${data[index].comments}' ==
+                                              "Descargado")
+                                        new Center(
+                                          child: Text(
+                                            "Nuevo ",
+                                            maxLines: 5,
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                fontFamily: 'avenir',
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.blueAccent),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                      ),
-                                    if ('${data[index].email}' != "null" &&
-                                        '${data[index].comments}' ==
-                                            "Descargado" &&
-                                        '${data[index].descarga}' == "true")
-                                      new Center(
-                                        child: InkWell(
-                                          onTap: () {
-                                            var snackBar = SnackBar(
-                                              elevation: 0,
-                                              behavior:
-                                                  SnackBarBehavior.floating,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              content: AwesomeSnackbarContent(
-                                                title: 'Si Tu PDF No Se Abre',
-                                                message:
-                                                    'Descargala Otra Vez \nNo Genera Ningun Costo ',
-                                                contentType: ContentType.help,
-                                              ),
-                                            );
-
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snackBar);
-
-                                            openFiles('${data[index].email}'
-                                                .toString());
-                                          },
+                                      if ('${data[index].comments}' !=
+                                              "Descargado" &&
+                                          '${data[index].comments}' != "null")
+                                        new Center(
                                           child: Container(
                                             height: 180,
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
                                                 image: AssetImage(
-                                                    'assets/pdf.gif'),
+                                                    'assets/error.gif'),
                                               ),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(6)),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    if ('${data[index].descarga}' != "true" &&
-                                        '${data[index].email}' != "null" &&
-                                        '${data[index].comments}' ==
-                                            "Descargado")
-                                      new Center(
-                                        child: Container(
-                                          height: 180,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  AssetImage('assets/new.gif'),
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6)),
-                                          ),
-                                        ),
-                                      ),
-                                    if ('${data[index].comments}' == "null" &&
-                                            '${data[index].email}' == "null" ||
-                                        '${data[index].comments}' ==
-                                                "Descargado" &&
-                                            '${data[index].email}' == "null")
-                                      new Center(
-                                        child: Container(
-                                          height: 180,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/particles.gif'),
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6)),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                SizedBox(height: 8),
-                                new Center(
-                                  child: Text(
-                                    "" + '${data[index].phone}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                new Center(
-                                  child: Text(
-                                    "" +
-                                        DateFormat("dd-MM-yyyy h:mm:a")
-                                            .format(data[index].fecha)
-                                            .toString(),
-                                    maxLines: 5,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  "Datos",
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 19,
-                                      fontFamily: 'avenir',
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.blueAccent),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  "Tipo de busqueda: " + '${data[index].phone}',
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'avenir',
-                                      fontWeight: FontWeight.w800),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  "Curp: " + '${data[index].data}',
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'avenir',
-                                      fontWeight: FontWeight.w800),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if ('${data[index].email}' != "null")
-                                  Text(
-                                    "Nombre del archivo: " +
-                                        '${data[index].email}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                SizedBox(height: 8),
-                                if ('${data[index].email}' != "null" &&
-                                    '${data[index].comments}' == "Descargado" &&
-                                    '${data[index].descarga}' != "true")
-                                  new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
-                                              _downloadFile(
-                                                  '${data[index].id}'
-                                                      .toString(),
-                                                  '${data[index].email}'
-                                                      .toString());
-
-                                              _controller.sendNotification();
-
-                                              AwesomeDialog(
-                                                context: context,
-                                                dialogType: DialogType.WARNING,
-                                                animType: AnimType.BOTTOMSLIDE,
-                                                title: 'Actas al instante',
-                                                desc: user.toString() +
-                                                    ' ¿quieres abrir tu PDF',
-                                                btnCancelOnPress: () {
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              NavBar()));
-                                                  //  Navigator.of(context).pop(true);
-                                                },
-                                                btnOkOnPress: () {
-                                                  openFiles(
-                                                      '${data[index].email}'
-                                                          .toString());
-
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              NavBar()));
-                                                },
-                                              )..show();
-                                            },
-                                            child: Text("Descargar"),
-                                            textColor: Colors.white,
-                                          ),
-                                          Icon(
-                                            Icons.download,
-                                            size: 15,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                SizedBox(height: 8),
-                                if ('${data[index].email}' != "null" &&
-                                    '${data[index].comments}' == "Descargado" &&
-                                    '${data[index].descarga}' == "true")
-                                  new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
+                                      if ('${data[index].email}' != "null" &&
+                                          '${data[index].comments}' ==
+                                              "Descargado" &&
+                                          '${data[index].descarga}' == "true")
+                                        new Center(
+                                          child: InkWell(
+                                            onTap: () {
                                               var snackBar = SnackBar(
                                                 elevation: 0,
                                                 behavior:
@@ -605,157 +391,399 @@ class _HomePageState extends State<SERACHRFC> {
 
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(snackBar);
-                                              openFiles('${data[index].email}');
-                                            },
-                                            child: Text("Abrir"),
-                                            textColor: Colors.white,
-                                          ),
-                                          Icon(
-                                            Icons.download_done,
-                                            size: 15,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                SizedBox(height: 8),
-                                if ('${data[index].email}' != "null" &&
-                                    '${data[index].comments}' == "Descargado" &&
-                                    '${data[index].descarga}' == "true")
-                                  new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.lightGreen,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
-                                              _downloadFile(
-                                                  '${data[index].id}'
-                                                      .toString(),
-                                                  '${data[index].email}'
-                                                      .toString());
 
-                                              _controller.sendNotification();
-
-                                              AwesomeDialog(
-                                                context: context,
-                                                dialogType: DialogType.WARNING,
-                                                animType: AnimType.BOTTOMSLIDE,
-                                                title: 'Actas al instante',
-                                                desc: user.toString() +
-                                                    ' ¿quieres abrir tu PDF',
-                                                btnCancelOnPress: () {
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              NavBar()));
-                                                  //  Navigator.of(context).pop(true);
-                                                },
-                                                btnOkOnPress: () {
-                                                  openFiles(
-                                                      '${data[index].email}'
-                                                          .toString());
-
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              NavBar()));
-                                                },
-                                              )..show();
+                                              openFiles('${data[index].email}'
+                                                  .toString());
                                             },
-                                            child: Text("Descargar otra vez"),
-                                            textColor: Colors.white,
+                                            child: Container(
+                                              height: 180,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/pdf.gif'),
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(6)),
+                                              ),
+                                            ),
                                           ),
-                                          Icon(
-                                            Icons.download_done,
-                                            size: 15,
-                                            color: Colors.white,
+                                        ),
+                                      if ('${data[index].descarga}' != "true" &&
+                                          '${data[index].email}' != "null" &&
+                                          '${data[index].comments}' ==
+                                              "Descargado")
+                                        new Center(
+                                          child: Container(
+                                            height: 180,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                    'assets/new.gif'),
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(6)),
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
+                                      if ('${data[index].comments}' == "null" &&
+                                              '${data[index].email}' ==
+                                                  "null" ||
+                                          '${data[index].comments}' ==
+                                                  "Descargado" &&
+                                              '${data[index].email}' == "null")
+                                        new Center(
+                                          child: Container(
+                                            height: 180,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                    'assets/particles.gif'),
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(6)),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                SizedBox(height: 8),
-                                if ('${data[index].comments}' == "null" &&
-                                        '${data[index].email}' == "null" ||
-                                    '${data[index].comments}' == "Descargado" &&
-                                        '${data[index].email}' == "null" &&
-                                        '${data[index].email}' == '')
+                                  SizedBox(height: 8),
                                   new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: null,
-                                            onLongPress: null,
-                                            child: Text("En Proceso"),
-                                            textColor: Colors.white,
-                                          ),
-                                          Icon(
-                                            Icons.priority_high_outlined,
-                                            size: 15,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
+                                    child: Text(
+                                      "" + '${data[index].phone}',
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontFamily: 'avenir',
+                                          fontWeight: FontWeight.w800),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                if ('${data[index].comments}' != "Descargado" &&
-                                    '${data[index].comments}' != "null")
                                   new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.redAccent,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
-                                              AwesomeDialog(
-                                                context: context,
-                                                dialogType: DialogType.ERROR,
-                                                animType: AnimType.BOTTOMSLIDE,
-                                                title: 'Error',
-                                                desc: '' +
-                                                    '${data[index].comments}',
-                                                btnOkOnPress: () {},
-                                              )..show();
-                                            },
-                                            child: Text("Detalles"),
-                                            textColor: Colors.white,
-                                          ),
-                                          Icon(
-                                            Icons.priority_high_outlined,
-                                            size: 15,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
+                                    child: Text(
+                                      "" +
+                                          DateFormat("dd-MM-yyyy h:mm:a")
+                                              .format(data[index].fecha)
+                                              .toString(),
+                                      maxLines: 5,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: 'avenir',
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.black),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                              ],
+                                  Text(
+                                    "Datos",
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontSize: 19,
+                                        fontFamily: 'avenir',
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.blueAccent),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    "Tipo de busqueda: " +
+                                        '${data[index].phone}',
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'avenir',
+                                        fontWeight: FontWeight.w800),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    "Curp: " + '${data[index].data}',
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'avenir',
+                                        fontWeight: FontWeight.w800),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  if ('${data[index].email}' != "null")
+                                    Text(
+                                      "Nombre del archivo: " +
+                                          '${data[index].email}',
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'avenir',
+                                          fontWeight: FontWeight.w800),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  SizedBox(height: 8),
+                                  if ('${data[index].email}' != "null" &&
+                                      '${data[index].comments}' ==
+                                          "Descargado" &&
+                                      '${data[index].descarga}' != "true")
+                                    new Center(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius:
+                                              BorderRadius.circular(82),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            MaterialButton(
+                                              onPressed: () {
+                                                _downloadFile(
+                                                    '${data[index].id}'
+                                                        .toString(),
+                                                    '${data[index].email}'
+                                                        .toString());
+
+                                                _controller.sendNotification();
+
+                                                AwesomeDialog(
+                                                  context: context,
+                                                  dialogType:
+                                                      DialogType.WARNING,
+                                                  animType:
+                                                      AnimType.BOTTOMSLIDE,
+                                                  title: 'Actas al instante',
+                                                  desc: user.toString() +
+                                                      ' ¿quieres abrir tu PDF',
+                                                  btnCancelOnPress: () {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                NavBar()));
+                                                    //  Navigator.of(context).pop(true);
+                                                  },
+                                                  btnOkOnPress: () {
+                                                    openFiles(
+                                                        '${data[index].email}'
+                                                            .toString());
+
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                NavBar()));
+                                                  },
+                                                )..show();
+                                              },
+                                              child: Text("Descargar"),
+                                              textColor: Colors.white,
+                                            ),
+                                            Icon(
+                                              Icons.download,
+                                              size: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  SizedBox(height: 8),
+                                  if ('${data[index].email}' != "null" &&
+                                      '${data[index].comments}' ==
+                                          "Descargado" &&
+                                      '${data[index].descarga}' == "true")
+                                    new Center(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(82),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            MaterialButton(
+                                              onPressed: () {
+                                                var snackBar = SnackBar(
+                                                  elevation: 0,
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  content:
+                                                      AwesomeSnackbarContent(
+                                                    title:
+                                                        'Si Tu PDF No Se Abre',
+                                                    message:
+                                                        'Descargala Otra Vez \nNo Genera Ningun Costo ',
+                                                    contentType:
+                                                        ContentType.help,
+                                                  ),
+                                                );
+
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                                openFiles(
+                                                    '${data[index].email}');
+                                              },
+                                              child: Text("Abrir"),
+                                              textColor: Colors.white,
+                                            ),
+                                            Icon(
+                                              Icons.download_done,
+                                              size: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  SizedBox(height: 8),
+                                  if ('${data[index].email}' != "null" &&
+                                      '${data[index].comments}' ==
+                                          "Descargado" &&
+                                      '${data[index].descarga}' == "true")
+                                    new Center(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightGreen,
+                                          borderRadius:
+                                              BorderRadius.circular(82),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            MaterialButton(
+                                              onPressed: () {
+                                                _downloadFile(
+                                                    '${data[index].id}'
+                                                        .toString(),
+                                                    '${data[index].email}'
+                                                        .toString());
+
+                                                _controller.sendNotification();
+
+                                                AwesomeDialog(
+                                                  context: context,
+                                                  dialogType:
+                                                      DialogType.WARNING,
+                                                  animType:
+                                                      AnimType.BOTTOMSLIDE,
+                                                  title: 'Actas al instante',
+                                                  desc: user.toString() +
+                                                      ' ¿quieres abrir tu PDF',
+                                                  btnCancelOnPress: () {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                NavBar()));
+                                                    //  Navigator.of(context).pop(true);
+                                                  },
+                                                  btnOkOnPress: () {
+                                                    openFiles(
+                                                        '${data[index].email}'
+                                                            .toString());
+
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                NavBar()));
+                                                  },
+                                                )..show();
+                                              },
+                                              child: Text("Descargar otra vez"),
+                                              textColor: Colors.white,
+                                            ),
+                                            Icon(
+                                              Icons.download_done,
+                                              size: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  SizedBox(height: 8),
+                                  if ('${data[index].comments}' == "null" &&
+                                          '${data[index].email}' == "null" ||
+                                      '${data[index].comments}' ==
+                                              "Descargado" &&
+                                          '${data[index].email}' == "null" &&
+                                          '${data[index].email}' == '')
+                                    new Center(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow,
+                                          borderRadius:
+                                              BorderRadius.circular(82),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            MaterialButton(
+                                              onPressed: null,
+                                              onLongPress: null,
+                                              child: Text("En Proceso"),
+                                              textColor: Colors.white,
+                                            ),
+                                            Icon(
+                                              Icons.priority_high_outlined,
+                                              size: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  if ('${data[index].comments}' !=
+                                          "Descargado" &&
+                                      '${data[index].comments}' != "null")
+                                    new Center(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.redAccent,
+                                          borderRadius:
+                                              BorderRadius.circular(82),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            MaterialButton(
+                                              onPressed: () {
+                                                AwesomeDialog(
+                                                  context: context,
+                                                  dialogType: DialogType.ERROR,
+                                                  animType:
+                                                      AnimType.BOTTOMSLIDE,
+                                                  title: 'Error',
+                                                  desc: '' +
+                                                      '${data[index].comments}',
+                                                  btnOkOnPress: () {},
+                                                )..show();
+                                              },
+                                              child: Text("Detalles"),
+                                              textColor: Colors.white,
+                                            ),
+                                            Icon(
+                                              Icons.priority_high_outlined,
+                                              size: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
                         );

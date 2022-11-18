@@ -255,7 +255,7 @@ class _CurpRfcBodyState extends State<CurpRfcBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey,
+      backgroundColor: Color.fromARGB(255, 127,137,146),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -269,7 +269,7 @@ class _CurpRfcBodyState extends State<CurpRfcBody> {
         ),
         elevation: 0,
         brightness: Brightness.light,
-        backgroundColor: Colors.grey,
+        backgroundColor: Color.fromARGB(255, 127,137,146),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -314,7 +314,7 @@ class _CurpRfcBodyState extends State<CurpRfcBody> {
                           Text(
                             "Solicitar RFC",
                             style: TextStyle(
-                                fontSize: 15, color: Colors.grey[700]),
+                                fontSize: 15, color: Color.fromARGB(255, 127,137,146),),
                           )
                         ],
                       ),

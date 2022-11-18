@@ -5,6 +5,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:app_actasalinstante/Widgets/carousel_example.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -12,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../FlatMessage/Message.dart';
 import '../LoginView/api/ProgressHUD.dart';
 import '../RFCDescargas/services/Variables.dart';
+import '../SplashScreen/Splashscreen1.dart';
 import '../views/controller/controller.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -54,7 +56,7 @@ class _BodyState extends State<Body> {
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
-
+    print(await response.stream.bytesToString());
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
 
@@ -87,76 +89,146 @@ class _BodyState extends State<Body> {
     }
   }
 
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
+  }
+
+  void _stop() async {
+    await flutterTts.stop();
+  }
+
   Send_FOLIO(String type, String data, String estado, int preferencess) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Token = prefs.getString('token');
+    
+    if (preferencess == 2 && estado == 'NACIDO EN EL EXTRANJERO' ||
+        preferencess == 3 && estado == 'NACIDO EN EL EXTRANJERO') {
+          _speak('Las actas de, NACIDO EN EL EXTRANJERO solo se pueden solicitar de forma simple');
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.BOTTOMSLIDE,
+        title: 'Actas al instante',
+        desc: 'NO APLICA PARA ACTAS DEL EXTRANJERO',
+        btnCancelOnPress: () {},
+        btnOkOnPress: () {},
+      )..show();
+    } else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      Token = prefs.getString('token');
 
-    var headers = {'Content-Type': 'application/json', 'x-access-token': Token};
-    var Body = jsonEncode({
-      "type": type,
-      "search": "CURP",
-      "data": data,
-      "estado": estado,
-      "preferences": preferencess.toInt()
-    });
+      var headers = {
+        'Content-Type': 'application/json',
+        'x-access-token': Token
+      };
+      var Body = jsonEncode({
+        "type": type,
+        "search": "CURP",
+        "data": data,
+        "estado": estado,
+        "preferences": preferencess.toInt()
+      });
 
-    var response = await post(
-        Uri.parse('https://actasalinstante.com:3030/api/services/actas/new/'),
-        body: Body,
-        headers: headers);
-    //  Show_cargando();
-    if (response.statusCode == 200) {
+      var response = await post(
+          Uri.parse('https://actasalinstante.com:3030/api/services/actas/new/'),
+          body: Body,
+          headers: headers);
+      //  Show_cargando();
       var Req = jsonDecode(response.body.toString());
       print(Req);
+      if (response.statusCode == 200) {
+        var Req = jsonDecode(response.body.toString());
+        print(Req);
 
-      if (Req['error'] == 'Contactar al administrador') {
+        if (Req['error'] == 'Contactar al administrador') {
+          ShowNotSistema();
+          print('error');
+        } else if (Req['error'] != 'Contactar al administrador') {
+          SharedPreferences set_acta = await SharedPreferences.getInstance();
+
+          if (Req['tipo'] == 'Matrimonio' || Req['tipo'] == 'MAmTRIMONIO') {
+            set_acta.setString('curp', Req['curp']);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => D_Actas(),
+              ),
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => D_Actas(),
+              ),
+            );
+          } else {
+            set_acta.setString('id', Req['id']);
+            set_acta.setString('tipo', Req['tipo']);
+            set_acta.setString('busqueda', Req['busqueda']);
+            set_acta.setString('cadena', Req['cadena']);
+            set_acta.setString('curp', Req['curp']);
+            set_acta.setString('nombres', Req['nombres']);
+            set_acta.setString('apellidos', Req['apellidos']);
+            set_acta.setString('estado', Req['estado']);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => D_Actas(),
+              ),
+            );
+          }
+
+          setState(() {
+            isApiCallProcess = false;
+          });
+        }
+
+        // var snackBar = SnackBar(
+        //   elevation: 0,
+        //   behavior: SnackBarBehavior.floating,
+        //   backgroundColor: Colors.transparent,
+        //   content: AwesomeSnackbarContent(
+        //     title: 'Acta enviada!',
+        //     message: 'Revisa la vista de actas',
+        //     contentType: ContentType.success,
+        //   ),
+        // );
+
+        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else if (response.statusCode == 404) {
+        show_acta_NotFound();
+           _speak('Tu acta solicitada, no se encuentra en el sistema');
+        print(response.statusCode);
+      } else if (response.statusCode == 401) {
+        print(Req);
+        ShowLimitUser();
+      } else if (response.statusCode == 500) {
         ShowNotSistema();
-        print('error');
-      } else if (Req['error'] != 'Contactar al administrador') {
-        SharedPreferences set_acta = await SharedPreferences.getInstance();
-        set_acta.setString('id', Req['id']);
-        set_acta.setString('tipo', Req['tipo']);
-        set_acta.setString('busqueda', Req['busqueda']);
-        set_acta.setString('cadena', Req['cadena']);
-        set_acta.setString('curp', Req['curp']);
-        set_acta.setString('nombres', Req['nombres']);
-        set_acta.setString('apellidos', Req['apellidos']);
-        set_acta.setString('estado', Req['estado']);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => D_Actas(),
-          ),
-        );
-
-        setState(() {
-          isApiCallProcess = false;
-        });
+      } else if (response.statusCode == 403) {
+        ShowServiceActaOrRFC();
+      } else {
+        print(response.reasonPhrase);
       }
-
-      // var snackBar = SnackBar(
-      //   elevation: 0,
-      //   behavior: SnackBarBehavior.floating,
-      //   backgroundColor: Colors.transparent,
-      //   content: AwesomeSnackbarContent(
-      //     title: 'Acta enviada!',
-      //     message: 'Revisa la vista de actas',
-      //     contentType: ContentType.success,
-      //   ),
-      // );
-
-      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else if (response.statusCode == 404) {
-      show_acta_NotFound();
-    } else if (response.statusCode == 401) {
-      ShowLimitUser();
-    } else if (response.statusCode == 500) {
-      ShowNotSistema();
-    } else if (response.statusCode == 403) {
-      ShowServiceActaOrRFC();
-    } else {
-      print(response.reasonPhrase);
     }
   }
 
@@ -182,6 +254,7 @@ class _BodyState extends State<Body> {
     setState(() {
       isApiCallProcess = true;
     });
+      // _speak('Solicitando acta, espere un momento');
     var snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
@@ -270,7 +343,14 @@ class _BodyState extends State<Body> {
     )..show();
   }
 
-  ShowNotSistema() {
+  ShowNotSistema() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+    prefs.remove('username');
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.ERROR,
@@ -315,7 +395,7 @@ class _BodyState extends State<Body> {
             SizedBox(height: 8),
             new Center(
                 child: Text(
-              '😡Error de formato!😡\n' +
+              '😡Error de Formato!😡\n' +
                   curpController.text.toString().toUpperCase(),
               style: TextStyle(
                   fontSize: 18,
@@ -368,40 +448,6 @@ class _BodyState extends State<Body> {
         );
       },
     );
-  }
-
-  var HTML = """     
-<table>
-    <tr class="header">
-      <th>Folio</th>
-      <th>Tipo</th>
-      <th>Busqueda</th>
-      <th>Cadena</th>
-      <th>CURP</th>
-      <th>Nombres</th>
-      <th>Apellidos</th>
-      <th>Estado</th>
-      <th>Acciones</th>
-    </tr>
-    <tr class="Result">
-      <td>7587db25-83ad-4dbf-b42e-16a30c6de97b</td>
-      <td>NACIMIENTO</td>
-      <td>CURP</td>
-      <td>N/A</td>
-      <td>GEPA010912HVZRRNA1</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>CHIAPAS</td>
-      <td>
-        <button>Descargar</button>
-      </td>
-    </tr>
-  </table>
-
-""";
-
-  showHTML() {
-    print(HTML);
   }
 
   CURP(String curps) {
@@ -477,7 +523,7 @@ class _BodyState extends State<Body> {
 
   int simple = 1;
   int ConReverso = 2;
-  //String ConReversoyFolio = "Foliado";
+  int ConReversoyFolio = 3;
   showAlert() {
     showDialog(
       context: context,
@@ -498,7 +544,7 @@ class _BodyState extends State<Body> {
               child: InkWell(
                 onTap: () {
                   Send_FOLIO(
-                      _currentSelectedValue,
+                      _currentSelectedValue.toString().toUpperCase(),
                       curpController.text.toString(),
                       entidad.toString(),
                       simple);
@@ -522,7 +568,7 @@ class _BodyState extends State<Body> {
               child: InkWell(
                 onTap: () {
                   Send_FOLIO(
-                      _currentSelectedValue,
+                      _currentSelectedValue.toString().toUpperCase(),
                       curpController.text.toString(),
                       entidad.toString(),
                       ConReverso);
@@ -542,22 +588,28 @@ class _BodyState extends State<Body> {
               ),
             ),
             Expanded(child: SizedBox.shrink()),
-            // Material(
-            //   child: InkWell(
-            //     onTap: () {
-            //       Send_RFC_CURP(
-            //           _currentSelectedValue.toString().toUpperCase(),
-            //           curpController.text.toString().toUpperCase(),
-            //           entidad.toString(),
-            //           ConReversoyFolio.toString());
-            //     },
-            //     child: ClipRRect(
-            //       borderRadius: BorderRadius.circular(20.0),
-            //       child: Image.asset('assets/logo.png',
-            //           width: 100.0, height: 150.0),
-            //     ),
-            //   ),
-            // ),
+            Material(
+              child: InkWell(
+                onTap: () {
+                  Send_FOLIO(
+                      _currentSelectedValue.toString().toUpperCase(),
+                      curpController.text.toString(),
+                      entidad.toString(),
+                      ConReversoyFolio);
+                  Show_cargando();
+                  // Send_RFC_CURP(
+                  //     _currentSelectedValue.toString().toUpperCase(),
+                  //     curpController.text.toString().toUpperCase(),
+                  //     entidad.toString(),
+                  //     ConReversoyFolio.toString());
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image.asset('assets/logo.png',
+                      width: 100.0, height: 150.0),
+                ),
+              ),
+            ),
           ]),
           //content: Text("Are You Sure Want To Proceed?"),
 
@@ -586,7 +638,7 @@ class _BodyState extends State<Body> {
                     MaterialButton(
                       onPressed: () {
                         Send_FOLIO(
-                            _currentSelectedValue,
+                            _currentSelectedValue.toString().toUpperCase(),
                             curpController.text.toString(),
                             entidad.toString(),
                             simple);
@@ -624,7 +676,7 @@ class _BodyState extends State<Body> {
                     MaterialButton(
                       onPressed: () {
                         Send_FOLIO(
-                            _currentSelectedValue,
+                            _currentSelectedValue.toString().toUpperCase(),
                             curpController.text.toString(),
                             entidad.toString(),
                             ConReverso);
@@ -650,36 +702,37 @@ class _BodyState extends State<Body> {
               ),
             ),
             SizedBox(height: 8),
-            // new Center(
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       color: Colors.black,
-            //       borderRadius: BorderRadius.circular(82),
-            //     ),
-            //     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            //     child: Row(
-            //       mainAxisSize: MainAxisSize.min,
-            //       children: [
-            //         MaterialButton(
-            //           onPressed: () {
-            //             Send_RFC_CURP(
-            //                 _currentSelectedValue.toString().toUpperCase(),
-            //                 curpController.text.toString().toUpperCase(),
-            //                 entidad.toString(),
-            //                 ConReversoyFolio.toString());
-            //           },
-            //           child: Text("Con Reverso y Folio"),
-            //           textColor: Colors.white,
-            //         ),
-            //         Icon(
-            //           Icons.amp_stories_sharp,
-            //           size: 19,
-            //           color: Colors.white,
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            new Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(82),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        Send_FOLIO(
+                            _currentSelectedValue.toString().toUpperCase(),
+                            curpController.text.toString(),
+                            entidad.toString(),
+                            ConReversoyFolio);
+                        Show_cargando();
+                      },
+                      child: Text("Con Reverso y Folio"),
+                      textColor: Colors.white,
+                    ),
+                    Icon(
+                      Icons.amp_stories_sharp,
+                      size: 19,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         );
       },
@@ -744,7 +797,7 @@ class _BodyState extends State<Body> {
     var crupestado;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey,
+      backgroundColor: Color.fromARGB(255, 127, 137, 146),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -758,7 +811,7 @@ class _BodyState extends State<Body> {
         ),
         elevation: 0,
         brightness: Brightness.light,
-        backgroundColor: Colors.grey,
+        backgroundColor: Color.fromARGB(255, 127, 137, 146),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

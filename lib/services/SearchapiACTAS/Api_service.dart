@@ -31,12 +31,12 @@ class FetchUserLists {
       Uri.parse('https://actasalinstante.com:3030/api/services/actas/regs'),
       headers: mainheader,
     );
-    print(data.toString());
+   // print(data.toString());
     try {
       if (response.statusCode == 200) {
         //_controller.sendNotification();
         data = jsonDecode(response.body);
-        print(data.toString());
+       // print(data.toString());
         results = data.map((e) => Userlists.fromJson(e)).toList();
 
         if (query != null) {

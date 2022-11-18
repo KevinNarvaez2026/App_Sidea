@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
 import 'package:app_actasalinstante/NavBar.dart';
 import 'package:app_actasalinstante/SplashScreen/Splashscreen1.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,6 +30,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
     GetImages();
     GetNames();
     getToken();
+    Lenguaje();
     // Welcomebakc();
   }
 
@@ -48,6 +51,36 @@ class _SplashScreen2State extends State<SplashScreen2> {
     setState(() {
       Token = prefs.getString('token');
     });
+  }
+
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
+  }
+
+  void _stop() async {
+    await flutterTts.stop();
   }
 
   var imagen;
@@ -88,7 +121,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
   }
 
   static const duration = Duration(milliseconds: 1000);
- 
+
   double _containerHeight = double.infinity;
   Color _containerColor = Colors.blue;
   final ImagePicker _picker = ImagePicker();
@@ -100,7 +133,9 @@ class _SplashScreen2State extends State<SplashScreen2> {
         fit: StackFit.expand,
         children: [
           Container(
-            decoration: const BoxDecoration(color: Colors.grey),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 127, 137, 146),
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -120,7 +155,9 @@ class _SplashScreen2State extends State<SplashScreen2> {
                       // duration: Duration(seconds: 5),
 
                       child: InkWell(
+                        
                           onTap: () {
+                              _speak('Bienvenido, '+user);
                             final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
@@ -178,6 +215,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
                       children: [
                         InkWell(
                           onTap: () {
+                             _speak('Bienvenido, '+user);
                             final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,

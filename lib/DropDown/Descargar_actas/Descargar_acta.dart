@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -99,6 +100,37 @@ class _D_Actastate extends State<D_Actas> {
     super.initState();
     GetNames();
     Get_Datos();
+    Lenguaje();
+  }
+
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
+  }
+
+  void _stop() async {
+    await flutterTts.stop();
   }
 
   String user = "";
@@ -147,6 +179,7 @@ class _D_Actastate extends State<D_Actas> {
       last_name = set_acta.getString('apellidos');
       state = set_acta.getString('estado');
     });
+    _speak(user+',Tu acta con la curp de,'+curp+', esta lista para descargar');
   }
 
   @override
@@ -343,6 +376,7 @@ class _D_Actastate extends State<D_Actas> {
                                     isApiCallProcess = true;
                                   });
                                   _downloadFile(id.toString(), curp.toString());
+                                   _speak('Espere un momento');
                                 },
                                 child: Text("Descargar"),
                                 textColor: Colors.white,
@@ -420,9 +454,7 @@ class _D_Actastate extends State<D_Actas> {
           SizedBox(
             height: 150,
           ),
-        ])
-        ))
-        ;
+        ])));
   }
 
   serviceContainer(String image, String name, int index) {

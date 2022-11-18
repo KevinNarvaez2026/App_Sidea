@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:android_intent/android_intent.dart';
 import 'package:android_intent/flag.dart';
+import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
 
 import 'package:app_actasalinstante/services/SearchapiACTAS/Api_service.dart';
 
@@ -9,10 +10,10 @@ import 'package:app_actasalinstante/services/SearchapiACTAS/search.dart';
 import 'package:app_actasalinstante/services/SearchapiACTAS/user_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:app_actasalinstante/RFCDescargas/services/Variables.dart';
-import 'package:app_actasalinstante/views/controller/controller.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:android_intent/android_intent.dart';
@@ -45,9 +46,56 @@ class _SERACHACTASState extends State<SERACHACTAS>
     this.getdates();
     // TODO: implement initState
     super.initState();
+ Lenguaje();
     GetNames();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+  }
+
+  //VOICE
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+    print(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
+  }
+
+  ShowDialog() {
+    var snackBar = SnackBar(
+      elevation: 0,
+      duration: const Duration(seconds: 10),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Toque la parte blanca',
+        message: 'Para ver más información del acta\n Solicitada',
+        contentType: ContentType.help,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    _speak(user +
+        ',Toque la parte blanca, Para ver mas información de su acta solicitada');
   }
 
   String user = "";
@@ -79,6 +127,9 @@ class _SERACHACTASState extends State<SERACHACTAS>
       headers: mainheader,
     );
     var resBody = json.decode(response.body);
+
+    ShowDialog();
+
     if (response.statusCode == 401) {
       // AnimationsError();
 
@@ -134,27 +185,25 @@ class _SERACHACTASState extends State<SERACHACTAS>
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    String dir;
-    if (Platform.isAndroid) {
-      dir = (await getExternalStorageDirectory()).path;
-    } else if (Platform.isIOS) {
-      dir = (await getApplicationDocumentsDirectory()).path;
-    }
 
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
+      print("Permisos denegados");
     } else {
       setState(() {
         setState(() {
           isApiCallProcess = false;
         });
       });
+      print(status);
       File file = new File('/storage/emulated/0/Download/$filename' + '.pdf');
       var decoded = base64.decode(bytes['b64'].toString());
 
       await file.writeAsBytes(decoded);
+
       Open_pdf(filename);
+     // _speak('Recuerde que debe tener un visor de pdf, para visualizar el acta');
       return file;
     }
   }
@@ -167,12 +216,14 @@ class _SERACHACTASState extends State<SERACHACTAS>
       title: 'Actas al instante',
       desc: user.toString() + ' ¿quieres abrir tu PDF',
       btnCancelOnPress: () {
+       
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => NavBar()));
         // Navigator.of(context).pop(true);
       },
       btnOkOnPress: () {
         openFiles(folio.toString());
+         _speak('abriendo pdf con el nombre de, '+ folio+',punto pdf');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => NavBar()));
       },
@@ -187,12 +238,182 @@ class _SERACHACTASState extends State<SERACHACTAS>
     _openResult = "${result.type}";
   }
 
+  // Image Name List Here
+  var imgList = [
+    "assets/NAC.png",
+    "assets/DEFUNCION.jpg",
+    "assets/matrimonio.png",
+  ];
   // final f = new DateFormat('yyyy-MM-dd hh:mm');
 // type=${result.type}
   var isFavorite = false.obs;
   int selectedIndex;
   int count;
   int index;
+  showDialogFunc(context, image, data, curp, estado, username, apellidos,
+      comments, descarga) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              padding: EdgeInsets.all(15),
+              height: 490,
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Image.asset(
+                      image,
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+
+                  // Text(
+                  //   title,
+                  //   style: TextStyle(
+                  //     fontSize: 25,
+                  //     color: Colors.grey,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        data.toString().toUpperCase(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Curp: " + curp?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Nombres: " + username?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Apellidos: " + apellidos?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Estado: " + estado?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (comments == 'Descargado' && descarga == true)
+                    new Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(82),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MaterialButton(
+                              onPressed: () {
+                                var snackBar = SnackBar(
+                                  elevation: 0,
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  content: AwesomeSnackbarContent(
+                                    title: 'Si Tu PDF No Se Abre',
+                                    message:
+                                        'Descargala Otra Vez \nNo Genera Ningun Costo ',
+                                    contentType: ContentType.help,
+                                  ),
+                                );
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                openFiles(curp);
+                                _speak('abriendo pdf con el nombre de, '+ curp+',punto pdf');
+                              },
+                              child: Text("Abrir"),
+                              textColor: Colors.white,
+                            ),
+                            Icon(
+                              Icons.download_done,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +429,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
   Widget Actas_De(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: Colors.grey,
+          backgroundColor: Color.fromARGB(255, 127, 137, 146),
           appBar: AppBar(
             actions: [
               new Center(
@@ -301,594 +522,720 @@ class _SERACHACTASState extends State<SERACHACTAS>
                             ),
                           );
                         }
+                        return FadeAnimation(
+                          1.3,
+                          GestureDetector(
+                            onTap: () {
+                              // This Will Call When User Click On ListView Item
+                              if (data[index].type != 'MATRIMONIO' &&
+                                  data[index].type != 'DIVORCIO')
+                                showDialogFunc(
+                                    context,
+                                    imgList[index],
+                                    data[index].type,
+                                    data[index].metadata,
+                                    data[index].metadataestado,
+                                    data[index].username,
+                                    data[index].apellido2,
+                                    data[index].comments,
+                                    data[index].descarga);
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              elevation: 10,
+                              // color: Color.fromARGB(255, 232, 234, 246),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(40),
+                                  topLeft: Radius.circular(40),
+                                ),
+                              ),
 
-                        final _controller = Get.find<Controller>();
-
-                        return Card(
-                          elevation: 10,
-                          // color: Color.fromARGB(255, 232, 234, 246),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(40),
-                              topLeft: Radius.circular(40),
-                            ),
-                          ),
-
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                if ('${data[index].descarga}' != "true" &&
-                                    '${data[index].comments}' == "Descargado")
-                                  new Center(
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.greenAccent),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-
-                                if ('${data[index].descarga}' != "false" &&
-                                    '${data[index].comments}' == "Descargado")
-                                  new Center(
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.black),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                if ('${data[index].comments}' != "Descargado" &&
-                                    '${data[index].comments}' != "null" &&
-                                    '${data[index].comments}' != ".")
-                                  new Center(
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.redAccent),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                Stack(
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    //  if ('${data[index].type}' == "Nacimiento")
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: Center(
-// Image radius
-                                        child: Image.asset('assets/NAC.png',
-                                            alignment: Alignment.center,
-                                            fit: BoxFit.cover),
+                                    if ('${data[index].descarga}' != "true" &&
+                                        '${data[index].comments}' ==
+                                            "Descargado")
+                                      new Center(
+                                        child: Text(
+                                          (index + 1).toString(),
+                                          maxLines: 5,
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontFamily: 'avenir',
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.greenAccent),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
+
+                                    if ('${data[index].descarga}' != "false" &&
+                                        '${data[index].comments}' ==
+                                            "Descargado")
+                                      new Center(
+                                        child: Text(
+                                          (index + 1).toString(),
+                                          maxLines: 5,
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontFamily: 'avenir',
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.black),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    if ('${data[index].comments}' !=
+                                            "Descargado" &&
+                                        '${data[index].comments}' != "null" &&
+                                        '${data[index].comments}' != ".")
+                                      new Center(
+                                        child: Text(
+                                          (index + 1).toString(),
+                                          maxLines: 5,
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontFamily: 'avenir',
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.redAccent),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    Stack(
+                                      children: [
+                                        //  if ('${data[index].type}' == "Nacimiento")
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Center(
+// Image radius
+                                            child: Image.asset('assets/NAC.png',
+                                                alignment: Alignment.center,
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        if ('${data[index].type}' ==
+                                            "Cadena Digital")
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/desconocido.png',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                        if ('${data[index].type}' ==
+                                            "MATRIMONIO")
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/matrimonio.png',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                        if ('${data[index].type}' == "DIVORCIO")
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/divorcio.png',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                        if ('${data[index].type}' ==
+                                            "Defuncion")
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/DEFUNCION.jpg',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                        Container(
+                                          height: 200,
+                                          width: double.infinity,
+                                          clipBehavior: Clip.antiAlias,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(54),
+                                          ),
+                                        ),
+                                        if ('${data[index].comments}' !=
+                                                "Descargado" &&
+                                            '${data[index].comments}' !=
+                                                "null" &&
+                                            '${data[index].comments}' != ".")
+                                          new Center(
+                                            child: Container(
+                                              height: 180,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/error.gif'),
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(6)),
+                                              ),
+                                            ),
+                                          ),
+                                        if ('${data[index].comments}' ==
+                                                "null" ||
+                                            '${data[index].comments}' ==
+                                                "Descargado")
+                                          new Center(
+                                            child: Container(
+                                              height: 180,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/particles.gif'),
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(6)),
+                                              ),
+                                            ),
+                                          ),
+                                        if ('${data[index].comments}' ==
+                                                "Descargado" &&
+                                            '${data[index].descarga}' == "true")
+                                          new Center(
+                                            child: InkWell(
+                                              onTap: () {
+                                                var snackBar = SnackBar(
+                                                  elevation: 0,
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  content:
+                                                      AwesomeSnackbarContent(
+                                                    title:
+                                                        'Si Tu PDF No Se Abre',
+                                                    message:
+                                                        'Descargala Otra Vez No Genera Ningun Costo ',
+                                                    contentType:
+                                                        ContentType.help,
+                                                  ),
+                                                );
+
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+
+                                                openFiles(
+                                                    '${data[index].website}'
+                                                        .toString());
+                                              },
+                                              child: Container(
+                                                height: 180,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: AssetImage(
+                                                        'assets/pdf.gif'),
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(6)),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        if ('${data[index].descarga}' !=
+                                                "true" &&
+                                            '${data[index].comments}' ==
+                                                "Descargado")
+                                          new Center(
+                                            child: Text(
+                                              "Nuevo ",
+                                              maxLines: 5,
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontFamily: 'avenir',
+                                                  fontWeight: FontWeight.w800,
+                                                  color: Colors.blueAccent),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        if ('${data[index].descarga}' !=
+                                                "true" &&
+                                            '${data[index].comments}' ==
+                                                "Descargado")
+                                          new Center(
+                                            child: Container(
+                                              height: 180,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/new.gif'),
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(6)),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                     if ('${data[index].type}' ==
                                         "Cadena Digital")
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Center(
-// Image radius
-                                          child: Image.asset(
-                                              'assets/desconocido.png',
-                                              alignment: Alignment.center,
-                                              fit: BoxFit.cover),
+                                      new Center(
+                                        child: Text(
+                                          "Cadena Digital ",
+                                          maxLines: 2,
+                                          style: GoogleFonts.lato(
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w700,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.black,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    if ('${data[index].type}' == "Matrimonio")
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Center(
-// Image radius
-                                          child: Image.asset(
-                                              'assets/matrimonio.png',
-                                              alignment: Alignment.center,
-                                              fit: BoxFit.cover),
+                                    if ('${data[index].type}' !=
+                                        "Cadena Digital")
+                                      new Center(
+                                        child: Text(
+                                          " " + '${data[index].metadatatype}',
+                                          maxLines: 5,
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontFamily: 'avenir',
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.black),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    if ('${data[index].type}' == "Divorcio")
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Center(
-// Image radius
-                                          child: Image.asset(
-                                              'assets/divorcio.png',
-                                              alignment: Alignment.center,
-                                              fit: BoxFit.cover),
-                                        ),
-                                      ),
-                                    if ('${data[index].type}' == "Defuncion")
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Center(
-// Image radius
-                                          child: Image.asset(
-                                              'assets/DEFUNCION.jpg',
-                                              alignment: Alignment.center,
-                                              fit: BoxFit.cover),
-                                        ),
-                                      ),
-                                    Container(
-                                      height: 200,
-                                      width: double.infinity,
-                                      clipBehavior: Clip.antiAlias,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(54),
+
+                                    new Center(
+                                      child: Text(
+                                        "" +
+                                            DateFormat("dd-MM-yyyy h:mm:a")
+                                                .format(data[index].horaTotal)
+                                                .toString(),
+                                        maxLines: 5,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
+                                    Text(
+                                      "Datos",
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontSize: 19,
+                                          fontFamily: 'avenir',
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.blueAccent),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(height: 8),
+
+                                    if ('${data[index].metadatatype}' == "CURP")
+                                      Text(
+                                        "Tipo de busqueda: " +
+                                            '${data[index].metadatatype}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == "NACIMIENTO")
+                                      Text(
+                                        "Tipo: " + '${data[index].type}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == "Nacimiento")
+                                      Text(
+                                        "Tipo: " + '${data[index].type}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == "MATRIMONIO" ||
+                                        '${data[index].type}' == "DIVORCIO")
+                                      Text(
+                                        "Tipo: " + '${data[index].type}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == 'DIVOCIO')
+                                      Text(
+                                        "Tipo: " + '${data[index].type}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == "Nacimiento")
+                                      Text(
+                                        "Curp: " + '${data[index].metadata}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == "NACIMIENTO")
+                                      Text(
+                                        "Curp: " + '${data[index].metadata}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == "Nacimiento")
+                                      Text(
+                                        "Estado: " +
+                                            '${data[index].metadataestado}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' == "NACIMIENTO")
+                                      Text(
+                                        "Estado: " +
+                                            '${data[index].metadataestado}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' ==
+                                        "Cadena Digital")
+                                      Text(
+                                        "Tipo de busqueda: " +
+                                            '${data[index].type}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' ==
+                                        "Cadena Digital")
+                                      Text(
+                                        "Cadena: " +
+                                            '${data[index].metadatacadena}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if ('${data[index].type}' ==
+                                        "Datos Personales")
+                                      Text(
+                                        "Nombre(s): " +
+                                            '${data[index].username}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+
+                                    if ('${data[index].type}' ==
+                                        "Datos Personales")
+                                      Text(
+                                        "Segundo Apellido: " +
+                                            '${data[index].apellido2}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+
+                                    if ('${data[index].website}' != "null")
+                                      Text(
+                                        "Nombre del archivo: " +
+                                            '${data[index].website}',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    // Container(
+                                    //   height: 100.0,
+                                    //   child: Lottie.network(
+                                    //     'https://assets5.lottiefiles.com/packages/lf20_hdmkzp2n.json',
+                                    //     controller: _animationController,
+                                    //     height: 180,
+                                    //     repeat: false,
+                                    //   ),
+                                    // ),
+                                    SizedBox(height: 8),
+                                    if ('${data[index].comments}' ==
+                                            "Descargado" &&
+                                        '${data[index].descarga}' != "true")
+                                      new Center(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius:
+                                                BorderRadius.circular(82),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4, vertical: 2),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    isApiCallProcess = true;
+                                                  });
+                                                  _downloadFile(
+                                                      '${data[index].id}',
+                                                      '${data[index].metadata}');
+                                                      _speak('Espere un momento porfavor, estamos descagando su acta');
+                                                  // _downloadFile(
+                                                  //     '${data[index].id}'
+                                                  //         .toString(),
+                                                  //     '${data[index].website}'
+                                                  //         .toString());
+                                                  // _animationController.forward();
+                                                  //  _controller.sendNotification();
+                                                },
+                                                child: Text("Descargar"),
+                                                textColor: Colors.white,
+                                              ),
+                                              Icon(
+                                                Icons.download,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     if ('${data[index].comments}' !=
                                             "Descargado" &&
                                         '${data[index].comments}' != "null" &&
                                         '${data[index].comments}' != ".")
                                       new Center(
                                         child: Container(
-                                          height: 180,
                                           decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/error.gif'),
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6)),
+                                            color: Colors.redAccent,
+                                            borderRadius:
+                                                BorderRadius.circular(82),
                                           ),
-                                        ),
-                                      ),
-                                    if ('${data[index].comments}' == "null" ||
-                                        '${data[index].comments}' ==
-                                            "Descargado")
-                                      new Center(
-                                        child: Container(
-                                          height: 180,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/particles.gif'),
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6)),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4, vertical: 2),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  AwesomeDialog(
+                                                    context: context,
+                                                    dialogType:
+                                                        DialogType.ERROR,
+                                                    animType:
+                                                        AnimType.BOTTOMSLIDE,
+                                                    title: '' +
+                                                        '${data[index].comments}',
+                                                    desc: '',
+                                                    // btnCancelOnPress: () {
+                                                    //   //  Navigator.of(context).pop(true);
+                                                    // },
+                                                    btnOkOnPress: () {},
+                                                  )..show();
+                                                },
+                                                child: Text("Detalles"),
+                                                textColor: Colors.white,
+                                              ),
+                                              Icon(
+                                                Icons.download_done,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
                                     if ('${data[index].comments}' ==
-                                            "Descargado" &&
-                                        '${data[index].descarga}' == "true")
+                                                "Descargado" &&
+                                            '${data[index].descarga}' == true &&
+                                            '${data[index].type}' ==
+                                                'MATRIMONIO' ||
+                                        '${data[index].type}' == 'DIVOCIO')
                                       new Center(
-                                        child: InkWell(
-                                          onTap: () {
-                                            var snackBar = SnackBar(
-                                              elevation: 0,
-                                              behavior:
-                                                  SnackBarBehavior.floating,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              content: AwesomeSnackbarContent(
-                                                title: 'Si Tu PDF No Se Abre',
-                                                message:
-                                                    'Descargala Otra Vez No Genera Ningun Costo ',
-                                                contentType: ContentType.help,
-                                              ),
-                                            );
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(82),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4, vertical: 2),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  var snackBar = SnackBar(
+                                                    elevation: 0,
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    content:
+                                                        AwesomeSnackbarContent(
+                                                      title:
+                                                          'Si Tu PDF No Se Abre',
+                                                      message:
+                                                          'Descargala Otra Vez \nNo Genera Ningun Costo ',
+                                                      contentType:
+                                                          ContentType.help,
+                                                    ),
+                                                  );
 
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snackBar);
-
-                                            openFiles('${data[index].website}'
-                                                .toString());
-                                          },
-                                          child: Container(
-                                            height: 180,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                    'assets/pdf.gif'),
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
+                                                  openFiles(
+                                                      '${data[index].metadata}');
+                                                },
+                                                child: Text("Abrir"),
+                                                textColor: Colors.white,
                                               ),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(6)),
-                                            ),
+                                              if ('${data[index].website}' !=
+                                                  "null")
+                                                Icon(
+                                                  Icons.download_done,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    if ('${data[index].descarga}' != "true" &&
-                                        '${data[index].comments}' ==
-                                            "Descargado")
-                                      new Center(
-                                        child: Text(
-                                          "Nuevo ",
-                                          maxLines: 5,
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              fontFamily: 'avenir',
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.blueAccent),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    if ('${data[index].descarga}' != "true" &&
-                                        '${data[index].comments}' ==
-                                            "Descargado")
+                                    SizedBox(height: 8),
+                                    if ('${data[index].comments}' ==
+                                            "Descargado" &&
+                                        '${data[index].descarga}' == "true")
                                       new Center(
                                         child: Container(
-                                          height: 180,
                                           decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  AssetImage('assets/new.gif'),
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6)),
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(82),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4, vertical: 2),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  var snackBar = SnackBar(
+                                                    elevation: 0,
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    content:
+                                                        AwesomeSnackbarContent(
+                                                      title: 'Descargando Acta',
+                                                      message:
+                                                          'Espere un momento',
+                                                      contentType:
+                                                          ContentType.success,
+                                                    ),
+                                                  );
+
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
+
+                                                  _downloadFile(
+                                                      '${data[index].id}',
+                                                      '${data[index].metadata}');
+                                                      _speak('Espere un momento porfavor, estamos descagando su acta');
+                                                },
+                                                child:
+                                                    Text("Descargar otra vez"),
+                                                textColor: Colors.white,
+                                              ),
+                                              if ('${data[index].website}' !=
+                                                  "null")
+                                                Icon(
+                                                  Icons.replay_outlined,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                            ],
                                           ),
                                         ),
                                       ),
                                   ],
                                 ),
-                                if ('${data[index].type}' == "Cadena Digital")
-                                  new Center(
-                                    child: Text(
-                                      "Cadena Digital ",
-                                      maxLines: 2,
-                                      style: GoogleFonts.lato(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w700,
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.black,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                if ('${data[index].type}' != "Cadena Digital")
-                                  new Center(
-                                    child: Text(
-                                      " " + '${data[index].metadatatype}',
-                                      maxLines: 5,
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'avenir',
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.black),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-
-                                new Center(
-                                  child: Text(
-                                    "" +
-                                        DateFormat("dd-MM-yyyy h:mm:a")
-                                            .format(data[index].fecha)
-                                            .toString(),
-                                    maxLines: 5,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  "Datos",
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 19,
-                                      fontFamily: 'avenir',
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.blueAccent),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 8),
-
-                                if ('${data[index].metadatatype}' == "CURP")
-                                  Text(
-                                    "Tipo de busqueda: " +
-                                        '${data[index].metadatatype}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                if ('${data[index].type}' == "Nacimiento")
-                                  Text(
-                                    "Tipo: " + '${data[index].type}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                //  if ('${data[index].metadata}' == "curp")
-                                Text(
-                                  "Curp: " + '${data[index].metadata}',
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'avenir',
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                //    if ('${data[index].metadataestado}' == "estado")
-                                Text(
-                                  "Estado: " + '${data[index].metadataestado}',
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'avenir',
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if ('${data[index].type}' == "Cadena Digital")
-                                  Text(
-                                    "Tipo de busqueda: " +
-                                        '${data[index].type}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                if ('${data[index].type}' == "Cadena Digital")
-                                  Text(
-                                    "Cadena: " +
-                                        '${data[index].metadatacadena}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                if ('${data[index].type}' == "Datos Personales")
-                                  Text(
-                                    "Nombre(s): " + '${data[index].username}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-
-                                if ('${data[index].type}' == "Datos Personales")
-                                  Text(
-                                    "Segundo Apellido: " +
-                                        '${data[index].apellido2}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-
-                                if ('${data[index].website}' != "null")
-                                  Text(
-                                    "Nombre del archivo: " +
-                                        '${data[index].website}',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'avenir',
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                // Container(
-                                //   height: 100.0,
-                                //   child: Lottie.network(
-                                //     'https://assets5.lottiefiles.com/packages/lf20_hdmkzp2n.json',
-                                //     controller: _animationController,
-                                //     height: 180,
-                                //     repeat: false,
-                                //   ),
-                                // ),
-                                SizedBox(height: 8),
-                                if ('${data[index].comments}' == "Descargado" &&
-                                    '${data[index].descarga}' != "true")
-                                  new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                isApiCallProcess = true;
-                                              });
-                                              _downloadFile('${data[index].id}',
-                                                  '${data[index].metadata}');
-                                              // _downloadFile(
-                                              //     '${data[index].id}'
-                                              //         .toString(),
-                                              //     '${data[index].website}'
-                                              //         .toString());
-                                              // _animationController.forward();
-                                              _controller.sendNotification();
-                                            },
-                                            child: Text("Descargar"),
-                                            textColor: Colors.white,
-                                          ),
-                                          Icon(
-                                            Icons.download,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                if ('${data[index].comments}' != "Descargado" &&
-                                    '${data[index].comments}' != "null" &&
-                                    '${data[index].comments}' != ".")
-                                  new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.redAccent,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
-                                              AwesomeDialog(
-                                                context: context,
-                                                dialogType: DialogType.ERROR,
-                                                animType: AnimType.BOTTOMSLIDE,
-                                                title: '' +
-                                                    '${data[index].comments}',
-                                                desc: '',
-                                                // btnCancelOnPress: () {
-                                                //   //  Navigator.of(context).pop(true);
-                                                // },
-                                                btnOkOnPress: () {},
-                                              )..show();
-                                            },
-                                            child: Text("Detalles"),
-                                            textColor: Colors.white,
-                                          ),
-                                          Icon(
-                                            Icons.download_done,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                if ('${data[index].comments}' == "Descargado" &&
-                                    '${data[index].descarga}' == "true")
-                                  new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
-                                              var snackBar = SnackBar(
-                                                elevation: 0,
-                                                behavior:
-                                                    SnackBarBehavior.floating,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                content: AwesomeSnackbarContent(
-                                                  title: 'Si Tu PDF No Se Abre',
-                                                  message:
-                                                      'Descargala Otra Vez \nNo Genera Ningun Costo ',
-                                                  contentType: ContentType.help,
-                                                ),
-                                              );
-
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-                                              openFiles(
-                                                  '${data[index].metadata}');
-                                            },
-                                            child: Text("Abrir"),
-                                            textColor: Colors.white,
-                                          ),
-                                          if ('${data[index].website}' !=
-                                              "null")
-                                            Icon(
-                                              Icons.download_done,
-                                              size: 20,
-                                              color: Colors.white,
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                SizedBox(height: 8),
-                                if ('${data[index].comments}' == "Descargado" &&
-                                    '${data[index].descarga}' == "true")
-                                  new Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.lightGreen,
-                                        borderRadius: BorderRadius.circular(82),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          MaterialButton(
-                                            onPressed: () {
-                                              var snackBar = SnackBar(
-                                                elevation: 0,
-                                                behavior:
-                                                    SnackBarBehavior.floating,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                content: AwesomeSnackbarContent(
-                                                  title: 'Descargando Acta',
-                                                  message: 'Espere un momento',
-                                                  contentType:
-                                                      ContentType.success,
-                                                ),
-                                              );
-
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-
-                                              _downloadFile('${data[index].id}',
-                                                  '${data[index].metadata}');
-                                            },
-                                            child: Text("Descargar otra vez"),
-                                            textColor: Colors.white,
-                                          ),
-                                          if ('${data[index].website}' !=
-                                              "null")
-                                            Icon(
-                                              Icons.replay_outlined,
-                                              size: 20,
-                                              color: Colors.white,
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                              ],
+                              ),
                             ),
                           ),
                         );

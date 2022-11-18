@@ -256,7 +256,7 @@ class _RFC_MORALState extends State<RFC_MORAL> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey,
+      backgroundColor: Color.fromARGB(255, 127,137,146),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -270,7 +270,7 @@ class _RFC_MORALState extends State<RFC_MORAL> {
         ),
         elevation: 0,
         brightness: Brightness.light,
-        backgroundColor: Colors.grey,
+        backgroundColor: Color.fromARGB(255, 127,137,146),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -315,7 +315,7 @@ class _RFC_MORALState extends State<RFC_MORAL> {
                           Text(
                             "Solicitar RFC MORAL",
                             style: TextStyle(
-                                fontSize: 15, color: Colors.grey[700]),
+                                fontSize: 15, color: Color.fromARGB(255, 127,137,146),),
                           )
                         ],
                       ),

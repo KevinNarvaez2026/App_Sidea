@@ -6,6 +6,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:app_actasalinstante/Widgets/carousel_example.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -111,11 +112,17 @@ class _LoginPageState extends State<LoginPage> {
               //  Navigator.of(context).pop(true);
             },
             btnOkOnPress: () async {
+              _speak('Hola' +
+                  userController.text +
+                  ', Bienvenido a actas al instante');
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => NavBar()));
             },
           )..show();
         } else {
+          _speak('Hola,' +
+              userController.text +
+              ', Bienvenido a actas al instante');
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => NavBar()));
         }
@@ -158,6 +165,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    Lenguaje();
     Check_VPN();
     hola();
     setState(() {
@@ -165,6 +173,36 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     //Notification();
+  }
+
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
+  }
+
+  void _stop() async {
+    await flutterTts.stop();
   }
 
   Aveptar_Terminos() {
