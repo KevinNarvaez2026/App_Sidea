@@ -166,7 +166,7 @@ class _BodyState extends State<Body> {
       dialogType: DialogType.ERROR,
       animType: AnimType.BOTTOMSLIDE,
       title: 'Actas al instante',
-      desc: '|',
+      desc: 'Acta no encontrada',
       btnCancelOnPress: () {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => Body()));

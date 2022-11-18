@@ -122,7 +122,18 @@ class _SERACHACTASState extends State<SERACHACTAS>
                 folio),
         headers: mainheader);
     var bytes = jsonDecode(req.body.toString());
+    var snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Descargando Acta',
+        message: 'Espere un momento',
+        contentType: ContentType.success,
+      ),
+    );
 
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
     String dir;
     if (Platform.isAndroid) {
       dir = (await getExternalStorageDirectory()).path;

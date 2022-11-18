@@ -12,6 +12,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'DropDown/Descargar_actas/animation/FadeAnimation.dart';
 import 'FlatMessage/Message.dart';
 import 'LoginView/api/ProgressHUD.dart';
 import 'RFCDescargas/services/Variables.dart';
@@ -282,177 +283,138 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Container(
-                  height: 757,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/fondoalterno.jpg'),
-                        fit: BoxFit.fill),
-                  ),
-                  // Foreground widget here
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-                  margin: EdgeInsets.symmetric(vertical: 140, horizontal: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(40),
-                      topLeft: Radius.circular(40),
+            FadeAnimation(
+              1.1,
+              Stack(
+                children: <Widget>[
+                  Container(
+                    height: 757,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/fondoalterno.jpg'),
+                          fit: BoxFit.fill),
                     ),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Theme.of(context).hintColor.withOpacity(0.1),
-                        offset: Offset(0, 20),
-                        blurRadius: 90,
-                      )
-                    ],
+                    // Foreground widget here
                   ),
-                  child: Form(
-                    key: globalFormKey,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 190,
-                          width: MediaQuery.of(context).size.width * 0.43,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            image: DecorationImage(
-                              image: AssetImage('assets/splash.png'),
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(26)),
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Ingresar",
-                          style: GoogleFonts.lato(
-                            textStyle: Theme.of(context).textTheme.headline4,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        new TextFormField(
-                          style: GoogleFonts.lato(
-                            textStyle: Theme.of(context).textTheme.headline4,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.black,
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          controller: userController,
-                          onSaved: (input) => userController.text = input,
-                          decoration: new InputDecoration(
-                            hintText: "Usuario",
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .accentColor
-                                        .withOpacity(0.2))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).accentColor)),
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        new TextFormField(
-                          style: GoogleFonts.lato(
-                            textStyle: Theme.of(context).textTheme.headline4,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.black,
-                          ),
-                          keyboardType: TextInputType.text,
-                          controller: passwordController,
-                          // onSaved: (input) => passwordController.text = input,
-                          // validator: (input) =>
-                          //     input.length < 3 ? "Contraseña no valida" : null,
-                          obscureText: hidePassword,
-                          decoration: new InputDecoration(
-                            hintText: "Contraseña",
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context)
-                                        .accentColor
-                                        .withOpacity(0.2))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).accentColor)),
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Theme.of(context).accentColor,
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  hidePassword = !hidePassword;
-                                });
-                              },
-                              color: Theme.of(context)
-                                  .accentColor
-                                  .withOpacity(0.9),
-                              icon: Icon(hidePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 39),
-                        new Center(
-                          child: Container(
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                    margin: EdgeInsets.symmetric(vertical: 140, horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(40),
+                        topLeft: Radius.circular(40),
+                      ),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).hintColor.withOpacity(0.1),
+                          offset: Offset(0, 20),
+                          blurRadius: 90,
+                        )
+                      ],
+                    ),
+                    child: Form(
+                      key: globalFormKey,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: 190,
+                            width: MediaQuery.of(context).size.width * 0.43,
                             decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 29, vertical: 5),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                MaterialButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isApiCallProcess = true;
-                                    });
-
-                                    login(userController.text.toString(),
-                                        passwordController.text.toString());
-                                  },
-                                  child: Text("Iniciar sesion",
-                                      style: GoogleFonts.lato(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.white,
-                                      )),
-                                ),
-                                // Icon(
-                                //   Icons.download_done,
-                                //   size: 20,
-                                //   color: Colors.white,
-                                // ),
-                              ],
+                              color: Colors.white,
+                              image: DecorationImage(
+                                image: AssetImage('assets/splash.png'),
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(26)),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 15),
-                        if (leerMatricula == null)
+                          SizedBox(height: 5),
+                          Text(
+                            "Ingresar",
+                            style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.headline4,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          new TextFormField(
+                            style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.headline4,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.black,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            controller: userController,
+                            onSaved: (input) => userController.text = input,
+                            decoration: new InputDecoration(
+                              hintText: "Usuario",
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .accentColor
+                                          .withOpacity(0.2))),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).accentColor)),
+                              prefixIcon: Icon(
+                                Icons.person,
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          new TextFormField(
+                            style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.headline4,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.black,
+                            ),
+                            keyboardType: TextInputType.text,
+                            controller: passwordController,
+                            // onSaved: (input) => passwordController.text = input,
+                            // validator: (input) =>
+                            //     input.length < 3 ? "Contraseña no valida" : null,
+                            obscureText: hidePassword,
+                            decoration: new InputDecoration(
+                              hintText: "Contraseña",
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .accentColor
+                                          .withOpacity(0.2))),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).accentColor)),
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    hidePassword = !hidePassword;
+                                  });
+                                },
+                                color: Theme.of(context)
+                                    .accentColor
+                                    .withOpacity(0.9),
+                                icon: Icon(hidePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 39),
                           new Center(
                             child: Container(
                               decoration: BoxDecoration(
@@ -466,9 +428,14 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   MaterialButton(
                                     onPressed: () {
-                                      Aveptar_Terminos();
+                                      setState(() {
+                                        isApiCallProcess = true;
+                                      });
+
+                                      login(userController.text.toString(),
+                                          passwordController.text.toString());
                                     },
-                                    child: Text("Registro",
+                                    child: Text("Iniciar sesion",
                                         style: GoogleFonts.lato(
                                           textStyle: Theme.of(context)
                                               .textTheme
@@ -488,11 +455,49 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                      ],
+                          SizedBox(height: 15),
+                          if (leerMatricula == null)
+                            new Center(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 29, vertical: 5),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    MaterialButton(
+                                      onPressed: () {
+                                        Aveptar_Terminos();
+                                      },
+                                      child: Text("Registro",
+                                          style: GoogleFonts.lato(
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.white,
+                                          )),
+                                    ),
+                                    // Icon(
+                                    //   Icons.download_done,
+                                    //   size: 20,
+                                    //   color: Colors.white,
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

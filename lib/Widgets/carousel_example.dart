@@ -831,7 +831,9 @@ class _CarouselExampleState extends State<CarouselExample> {
 //CAMBIO DE ACTAS O RFC
   void changeFrequency(String frequency) {
     selectedFrequency = frequency;
-    setState(() {});
+    setState(() {
+
+    });
   }
 
   Column extraWidget(String img, String name, bool isSelected) {
@@ -886,6 +888,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 
 //FUCNION PARA SABER SI ESTA EN ACTAS O RFC
   void OnchangeActas() {
+    
     if (selectedType == "Actas") {
       Navigator.push(
         context,

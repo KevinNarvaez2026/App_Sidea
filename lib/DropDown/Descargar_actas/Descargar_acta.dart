@@ -420,7 +420,9 @@ class _D_Actastate extends State<D_Actas> {
           SizedBox(
             height: 150,
           ),
-        ])));
+        ])
+        ))
+        ;
   }
 
   serviceContainer(String image, String name, int index) {

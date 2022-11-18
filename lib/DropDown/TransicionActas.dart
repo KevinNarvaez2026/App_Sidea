@@ -18,6 +18,7 @@ import '../RFC/RfcBody.dart';
 import '../RFC/Transicion.dart';
 import '../RFCDescargas/services/Variables.dart';
 import '../views/homepage.dart';
+import 'Descargar_actas/animation/FadeAnimation.dart';
 
 class transactas extends StatefulWidget {
   const transactas({key}) : super(key: key);
@@ -36,8 +37,8 @@ class _transactasState extends State<transactas>
   void initState() {
     super.initState();
     GetNames();
-    _controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 300));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
   }
 
   @override
@@ -97,71 +98,35 @@ class _transactasState extends State<transactas>
         elevation: 0,
         backgroundColor: Colors.grey,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),
-                  color: Colors.white),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            FadeAnimation(
+              1.1,
+              Stack(
                 children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  new Center(
-                    child: Text(
-                      "Selecciona el servicio: " + user.toString(),
-                      style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.headline4,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 1,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          changeCleaningType("Actas");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 100,
-                              width: MediaQuery.of(context).size.width * 0.43,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/BusquedaCurp.gif'),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16)),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Busqueda por Curp",
+                  Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 668,
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30)),
+                          color: Colors.white),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          new Center(
+                            child: Text(
+                              "Selecciona el servicio: " + user.toString(),
                               style: GoogleFonts.lato(
                                 textStyle:
                                     Theme.of(context).textTheme.headline4,
@@ -170,187 +135,240 @@ class _transactasState extends State<transactas>
                                 fontStyle: FontStyle.italic,
                                 color: Colors.black,
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffededed),
-                              ),
-                              child: (selectedType == "Actas")
-                                  ? Icon(
-                                      Icons.check_circle,
-                                      color: pink,
-                                      size: 40,
-                                    )
-                                  : Container(),
-                            )
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          changeCleaningType("Cadena");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 100,
-                              width: MediaQuery.of(context).size.width * 0.43,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/Cadena.gif'),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(29)),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Cadena digital",
-                              style: GoogleFonts.lato(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffededed),
-                              ),
-                              child: (selectedType == "Cadena")
-                                  ? Icon(
-                                      Icons.check_circle,
-                                      color: pink,
-                                      size: 40,
-                                    )
-                                  : Container(),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  //BUSQUEDA POR DATOS PERSONALES
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     InkWell(
-                  //       onTap: () {
-                  //         changeCleaningType("Personales");
-                  //       },
-                  //       child: Column(
-                  //         children: [
-                  //           Container(
-                  //             height: 100,
-                  //             width: MediaQuery.of(context).size.width * 0.44,
-                  //             decoration: BoxDecoration(
-                  //               color: Color.fromARGB(255, 255, 255, 255),
-                  //               image: DecorationImage(
-                  //                 image: AssetImage('assets/datosP.gif'),
-                  //               ),
-                  //               borderRadius:
-                  //                   BorderRadius.all(Radius.circular(26)),
-                  //             ),
-                  //           ),
-                  //           SizedBox(
-                  //             height: 10,
-                  //           ),
-                  //           Text(
-                  //             "Busqueda por Datos Personales",
-                  //             style: TextStyle(fontWeight: FontWeight.w600),
-                  //           ),
-                  //           SizedBox(
-                  //             height: 10,
-                  //           ),
-                  //           Container(
-                  //             height: 40,
-                  //             width: 40,
-                  //             decoration: BoxDecoration(
-                  //               shape: BoxShape.circle,
-                  //               color: Color(0xffededed),
-                  //             ),
-                  //             child: (selectedType == "Personales")
-                  //                 ? Icon(
-                  //                     Icons.check_circle,
-                  //                     color: pink,
-                  //                     size: 40,
-                  //                   )
-                  //                 : Container(),
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     // InkWell(
-                  //     //   onTap: () {
-                  //     //     changeCleaningType("Civil");
-                  //     //   },
-                  //     //   child: Column(
-                  //     //     children: [
-                  //     //       Container(
-                  //     //         height: 5,
-                  //     //         width: MediaQuery.of(context).size.width * 0.43,
-                  //     //         decoration: BoxDecoration(
-                  //     //           color: Color.fromARGB(255, 255, 255, 255),
-                  //     //           borderRadius:
-                  //     //               BorderRadius.all(Radius.circular(9)),
-                  //     //         ),
-                  //     //       ),
-                  //     //     ],
-                  //     //   ),
-                  //     // )
-                  //   ],
-                  // ),
-                  SizedBox(
-                    height: 90,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: OnchangeActas,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 60, vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              color: Colors.grey),
-                          child: Text(
-                            "Solicitar",
-                            style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.headline4,
-                              fontSize: 19,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.black,
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                          SizedBox(
+                            height: 1,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  changeCleaningType("Actas");
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.43,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                              'assets/BusquedaCurp.gif'),
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Busqueda por Curp",
+                                      style: GoogleFonts.lato(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xffededed),
+                                      ),
+                                      child: (selectedType == "Actas")
+                                          ? Icon(
+                                              Icons.check_circle,
+                                              color: pink,
+                                              size: 40,
+                                            )
+                                          : Container(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  changeCleaningType("Cadena");
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.43,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        image: DecorationImage(
+                                          image:
+                                              AssetImage('assets/Cadena.gif'),
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(29)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Cadena digital",
+                                      style: GoogleFonts.lato(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xffededed),
+                                      ),
+                                      child: (selectedType == "Cadena")
+                                          ? Icon(
+                                              Icons.check_circle,
+                                              color: pink,
+                                              size: 40,
+                                            )
+                                          : Container(),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          //BUSQUEDA POR DATOS PERSONALES
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     InkWell(
+                          //       onTap: () {
+                          //         changeCleaningType("Personales");
+                          //       },
+                          //       child: Column(
+                          //         children: [
+                          //           Container(
+                          //             height: 100,
+                          //             width: MediaQuery.of(context).size.width * 0.44,
+                          //             decoration: BoxDecoration(
+                          //               color: Color.fromARGB(255, 255, 255, 255),
+                          //               image: DecorationImage(
+                          //                 image: AssetImage('assets/datosP.gif'),
+                          //               ),
+                          //               borderRadius:
+                          //                   BorderRadius.all(Radius.circular(26)),
+                          //             ),
+                          //           ),
+                          //           SizedBox(
+                          //             height: 10,
+                          //           ),
+                          //           Text(
+                          //             "Busqueda por Datos Personales",
+                          //             style: TextStyle(fontWeight: FontWeight.w600),
+                          //           ),
+                          //           SizedBox(
+                          //             height: 10,
+                          //           ),
+                          //           Container(
+                          //             height: 40,
+                          //             width: 40,
+                          //             decoration: BoxDecoration(
+                          //               shape: BoxShape.circle,
+                          //               color: Color(0xffededed),
+                          //             ),
+                          //             child: (selectedType == "Personales")
+                          //                 ? Icon(
+                          //                     Icons.check_circle,
+                          //                     color: pink,
+                          //                     size: 40,
+                          //                   )
+                          //                 : Container(),
+                          //           )
+                          //         ],
+                          //       ),
+                          //     ),
+                          //     // InkWell(
+                          //     //   onTap: () {
+                          //     //     changeCleaningType("Civil");
+                          //     //   },
+                          //     //   child: Column(
+                          //     //     children: [
+                          //     //       Container(
+                          //     //         height: 5,
+                          //     //         width: MediaQuery.of(context).size.width * 0.43,
+                          //     //         decoration: BoxDecoration(
+                          //     //           color: Color.fromARGB(255, 255, 255, 255),
+                          //     //           borderRadius:
+                          //     //               BorderRadius.all(Radius.circular(9)),
+                          //     //         ),
+                          //     //       ),
+                          //     //     ],
+                          //     //   ),
+                          //     // )
+                          //   ],
+                          // ),
+                          SizedBox(
+                            height: 90,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: OnchangeActas,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 60, vertical: 15),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20)),
+                                      color: Colors.grey),
+                                  child: Text(
+                                    "Solicitar",
+                                    style: GoogleFonts.lato(
+                                      textStyle:
+                                          Theme.of(context).textTheme.headline4,
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -431,7 +449,7 @@ class _transactasState extends State<transactas>
         ),
       );
     } else if (selectedType == "Cadena") {
-       Navigator.push(
+      Navigator.push(
         context,
         PageRouteBuilder(
           pageBuilder: (context, animation, _) {
@@ -444,7 +462,6 @@ class _transactasState extends State<transactas>
           reverseTransitionDuration: duration,
         ),
       );
-     
     } else if (selectedType == "Personales") {
       // Lottie.asset(
       //   'assets/login.json',
