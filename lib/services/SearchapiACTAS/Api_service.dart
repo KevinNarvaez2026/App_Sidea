@@ -76,26 +76,23 @@ class FetchUserLists {
   }
 
   Future<List<Userlists>> serachapi({String query}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
     Token = prefs.getString('token');
+
     Map<String, String> mainheader = new Map();
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     var response = await get(
-      Uri.parse(
-          'https://actasalinstante.com:3030/api/actas/requests/obtainAll/'),
+      Uri.parse('https://actasalinstante.com:3030/api/services/actas/regs'),
       headers: mainheader,
     );
+   // print(data.toString());
     try {
       if (response.statusCode == 200) {
         //_controller.sendNotification();
         data = jsonDecode(response.body);
-        //  print(data.length.toString());
-        for (var i = 0; i < data.length; i++) {
-          // print(data[i].toString());
-        }
-
+       // print(data.toString());
         results = data.map((e) => Userlists.fromJson(e)).toList();
 
         if (query != null) {

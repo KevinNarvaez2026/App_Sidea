@@ -55,7 +55,7 @@ class SearchUser extends SearchDelegate {
     http.Client client = new http.Client();
     var req = await client.get(
         Uri.parse(
-            'https://actasalinstante.com:3030/api/actas/requests/getMyActa/' +
+            'https://actasalinstante.com:3030/api/services/actas/download/' +
                 id),
         headers: mainheader);
     var bytes = req.bodyBytes;
@@ -287,8 +287,7 @@ class SearchUser extends SearchDelegate {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
 
-                                    openFiles(
-                                        '${data[index].website}'.toString());
+                                    openFiles('${data[index].metadata}');
                                   },
                                   child: Container(
                                     height: 180,
@@ -608,8 +607,7 @@ class SearchUser extends SearchDelegate {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(snackBar);
 
-                                      openFiles(
-                                          '${data[index].website}'.toString());
+                                      openFiles('${data[index].metadata}');
                                     },
                                     child: Text("Abrir"),
                                     textColor: Colors.white,

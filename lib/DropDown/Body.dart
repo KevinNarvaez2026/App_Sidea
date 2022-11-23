@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:app_actasalinstante/Detalles/profile_page.dart';
 import 'package:app_actasalinstante/NavBar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +102,7 @@ class _BodyState extends State<Body> {
   double pitch = 1.0;
   double speechRate = 0.5;
   List<String> languages;
-  String langCode = "es-US";
+  String langCode = "es-AR";
   //VOICE INICIO
   void initSetting() async {
     // await flutterTts.setVolume(volume);
@@ -120,10 +121,10 @@ class _BodyState extends State<Body> {
   }
 
   Send_FOLIO(String type, String data, String estado, int preferencess) async {
-    
     if (preferencess == 2 && estado == 'NACIDO EN EL EXTRANJERO' ||
         preferencess == 3 && estado == 'NACIDO EN EL EXTRANJERO') {
-          _speak('Las actas de, NACIDO EN EL EXTRANJERO solo se pueden solicitar de forma simple');
+      _speak(
+          'Las actas de, NACIDO EN EL EXTRANJERO solo se pueden solicitar de forma simple');
       AwesomeDialog(
         context: context,
         dialogType: DialogType.ERROR,
@@ -217,15 +218,25 @@ class _BodyState extends State<Body> {
         // ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else if (response.statusCode == 404) {
         show_acta_NotFound();
-           _speak('Tu acta solicitada, no se encuentra en el sistema');
+        _speak('Tu acta solicitada, no se encuentra en el sistema');
         print(response.statusCode);
       } else if (response.statusCode == 401) {
-        print(Req);
-        ShowLimitUser();
+        print(Req['message']);
+        if (Req['message'] == 'Session Closed!') {
+          _speak('Parece que a ocurrido un error,' +
+              ',Cierra y abre sesion nuevamente,, si el problema persiste, contacta al administrador');
+        } else {
+          ShowServiceActaOrRFC();
+        }
+
+        //
+        //  ShowLimitUser();
       } else if (response.statusCode == 500) {
+        _speak('No hay sistema');
         ShowNotSistema();
       } else if (response.statusCode == 403) {
-        ShowServiceActaOrRFC();
+        ShowLimitUser();
+        _speak('Llegaste al limite de solicitudes, contacta al administrador');
       } else {
         print(response.reasonPhrase);
       }
@@ -254,7 +265,7 @@ class _BodyState extends State<Body> {
     setState(() {
       isApiCallProcess = true;
     });
-      // _speak('Solicitando acta, espere un momento');
+    // _speak('Solicitando acta, espere un momento');
     var snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,

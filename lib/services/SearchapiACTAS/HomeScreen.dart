@@ -46,7 +46,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
     this.getdates();
     // TODO: implement initState
     super.initState();
- Lenguaje();
+    Lenguaje();
     GetNames();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
@@ -108,7 +108,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
     // print(user);
   }
 
-  String _mySelection;
+
 
   List data = List();
   String Token = "";
@@ -123,11 +123,16 @@ class _SERACHACTASState extends State<SERACHACTAS>
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     var response = await get(
-      Uri.parse('https://actasalinstante.com:3030/api/actas/requests/myDates/'),
+      Uri.parse('https://actasalinstante.com:3030/api/actas/reg/corte/MyDates/'),
       headers: mainheader,
     );
     var resBody = json.decode(response.body);
-
+        if(response.statusCode == 200){
+          for (var i = 0; i < resBody.length; i++) {
+             print(resBody[i]);
+          }
+         
+        }
     ShowDialog();
 
     if (response.statusCode == 401) {
@@ -203,7 +208,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
       await file.writeAsBytes(decoded);
 
       Open_pdf(filename);
-     // _speak('Recuerde que debe tener un visor de pdf, para visualizar el acta');
+      // _speak('Recuerde que debe tener un visor de pdf, para visualizar el acta');
       return file;
     }
   }
@@ -216,14 +221,13 @@ class _SERACHACTASState extends State<SERACHACTAS>
       title: 'Actas al instante',
       desc: user.toString() + ' ¿quieres abrir tu PDF',
       btnCancelOnPress: () {
-       
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => NavBar()));
         // Navigator.of(context).pop(true);
       },
       btnOkOnPress: () {
         openFiles(folio.toString());
-         _speak('abriendo pdf con el nombre de, '+ folio+',punto pdf');
+        _speak('abriendo pdf');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => NavBar()));
       },
@@ -392,7 +396,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                                 openFiles(curp);
-                                _speak('abriendo pdf con el nombre de, '+ curp+',punto pdf');
+                                _speak('abriendo pdf');
                               },
                               child: Text("Abrir"),
                               textColor: Colors.white,
@@ -1054,7 +1058,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
                                                   _downloadFile(
                                                       '${data[index].id}',
                                                       '${data[index].metadata}');
-                                                      _speak('Espere un momento porfavor, estamos descagando su acta');
+                                                  _speak(
+                                                      'Espere un momento porfavor, estamos descagando su acta');
                                                   // _downloadFile(
                                                   //     '${data[index].id}'
                                                   //         .toString(),
@@ -1216,7 +1221,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
                                                   _downloadFile(
                                                       '${data[index].id}',
                                                       '${data[index].metadata}');
-                                                      _speak('Espere un momento porfavor, estamos descagando su acta');
+                                                  _speak(
+                                                      'Espere un momento porfavor, estamos descagando su acta');
                                                 },
                                                 child:
                                                     Text("Descargar otra vez"),

@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
+import 'Cortes/Cortes_Usuarios/HomeScreen_Cortes.dart';
 import 'DropDown/Body.dart';
 import 'DropDown/DropDown.dart';
 import 'Inicio/InicioActas.dart';
@@ -54,7 +55,7 @@ class _NavBarState extends State<NavBar> {
   // const NavBar({key}) : super(key: key);
   GlobalKey _NavKey = GlobalKey();
   FetchUserLists _userList = FetchUserLists();
-  var PagesAll = [CarouselExample(), SERACHACTAS(), SERACHRFC(), DateCortes()];
+  var PagesAll = [CarouselExample(), SERACHACTAS(), SERACHRFC(), Cortes_Screen()];
 
   var myindex = 0;
 

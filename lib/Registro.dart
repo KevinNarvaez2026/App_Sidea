@@ -7,6 +7,7 @@ import 'package:check_vpn_connection/check_vpn_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:app_actasalinstante/Widgets/carousel_example.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -51,12 +52,48 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+    Welcome();
     readCounter();
     _getCurrentLocation();
     // _fetchContacts();
     //Notification();
     _UpdateContacts();
     Check_VPN();
+    Lenguaje();
+  }
+  
+
+  //VOICE
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  Welcome() {
+    _speak(
+        "Bienvenido, recuerde dar en permitir a todos los permisos que la app le solicite");
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+    print(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
   }
 
 //VPN CHECK
@@ -120,6 +157,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       print('not connected');
+      _speak(
+          "Debe estar conectado a un red waifai, o puede usar datos moviles");
     }
   }
 
@@ -274,7 +313,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
+    _speak("Debe otrogar todos los permisos");
     await Future.delayed(Duration(seconds: 4));
     exit(0);
   }
@@ -776,7 +815,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
                                                     fontStyle: FontStyle.italic,
-                                                    color:  Colors.white,
+                                                    color: Colors.white,
                                                   )),
                                             ),
                                             // Icon(
@@ -836,6 +875,7 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         INE = null;
       });
+      _speak("Error de formato");
       print("Error de formato");
     } else {
       setState(() {
@@ -960,6 +1000,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      _speak("Error de formato");
       setState(() {
         DOMI = null;
       });
@@ -1064,6 +1105,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      _speak("Error de formato");
       setState(() {
         FOTO = null;
       });
@@ -1103,6 +1145,7 @@ class _RegisterPageState extends State<RegisterPage> {
           contentType: MediaType('image', 'jpg')));
       req.files.add(await http.MultipartFile.fromPath('Foto', fot.toString(),
           contentType: MediaType('image', 'jpg')));
+      _speak("Espere un momento");
       var status = await Permission.storage.status;
       if (!status.isGranted) {
         await Permission.storage.request();
@@ -1133,6 +1176,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     );
                     // matricula = val;
+                    _speak("Datos enviados, gracias por su registro");
                     print(val);
                     id = val;
 
@@ -1161,7 +1205,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             builder: (BuildContext context) => LoginPage()));
                   })
                 })
-            .catchError((err) => {print(err.toString())});
+            .catchError((err) => {
+                  print(err.toString()),
+                  _speak("A ocurrido un error, contacte al equipo de soporte,")
+                });
       }
     } catch (e) {
       print(e);

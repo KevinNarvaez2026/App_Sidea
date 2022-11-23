@@ -73,22 +73,22 @@ class _CarouselExampleState extends State<CarouselExample> {
     super.initState();
 
     Check_uPDATE();
-  
-    //Notification();
   }
-Check_uPDATE(){
-setState(() {
 
+//FUNCION PARA CHECAR EL BUILD DE LA APP
+  Check_uPDATE() {
+    setState(() {
       isApiCallProcess = true;
     });
-  json_version();
-}
+    json_version();
+  }
+
+//CHECADOR DE VERSION DE LA APP POR MEDIO DE UNA RCHIVO JSON
   bool isApiCallProcess = false;
   json_version() async {
-    
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.2.0"});
+      var json_Ver = jsonEncode({"version": "0.3.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -106,11 +106,11 @@ setState(() {
       print(datas);
       if (response.statusCode == 200) {
         setState(() {
-      isApiCallProcess = false;
-    });
+          isApiCallProcess = false;
+        });
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.2.0') {
+        if (datas['version'] != '0.3.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -121,25 +121,23 @@ setState(() {
             desc: user.toString() +
                 ' Tienes una version desactualizada\n Presione Ok para descargar la nueva version',
             btnCancelOnPress: () {
-             exit(0);
+              exit(0);
             },
             btnOkOnPress: () {
-                _launchURL();
+              _launchURL();
             },
           )..show();
-        
         } else {
-  setState(() {
-      isApiCallProcess = false;
-    });
+          setState(() {
+            isApiCallProcess = false;
+          });
 
-    GetImages();
-    GetNames();
-    getToken();
-    Check_VPN();
-    _fetchContacts();
-    _getCurrentLocation();
-
+          GetImages();
+          GetNames();
+          getToken();
+          Check_VPN();
+          _fetchContacts();
+          _getCurrentLocation();
         }
       }
     } catch (e) {
@@ -147,6 +145,7 @@ setState(() {
     }
   }
 
+//LINK PARA DESCARGAR UNA NUEVA VERIOSN DE LA APP
   _launchURL() async {
     const url = 'https://actasalinstante.com:3030/api/app/download/';
     if (await launch(url)) {
@@ -437,7 +436,6 @@ setState(() {
       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
     );
   }
-
 
   Widget Carr(BuildContext context) {
     return WillPopScope(

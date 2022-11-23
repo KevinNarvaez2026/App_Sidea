@@ -64,7 +64,7 @@ class _HomePageState extends State<SERACHRFC> {
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     var response = await get(
-      Uri.parse('https://actasalinstante.com:3030/api/rfc/requests/myDates/'),
+      Uri.parse('https://actasalinstante.com:3030/api/actas/reg/corte/MyDates/'),
       headers: mainheader,
     );
     var resBody = json.decode(response.body);
@@ -142,7 +142,7 @@ class _HomePageState extends State<SERACHRFC> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-         backgroundColor: Color.fromARGB(255, 127,137,146),
+          backgroundColor: Color.fromARGB(255, 127, 137, 146),
           appBar: AppBar(
             actions: [
               new Center(
@@ -462,7 +462,7 @@ class _HomePageState extends State<SERACHRFC> {
                                     child: Text(
                                       "" +
                                           DateFormat("dd-MM-yyyy h:mm:a")
-                                              .format(data[index].fecha)
+                                              .format(data[index].horaTotal)
                                               .toString(),
                                       maxLines: 5,
                                       style: TextStyle(

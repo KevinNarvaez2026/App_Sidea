@@ -10,6 +10,7 @@ class Userlist2 {
   String phone;
   String website;
 DateTime fecha;
+  DateTime horaTotal;
   var isFavorite = false.obs;
   Userlist2({
     this.id,
@@ -20,6 +21,7 @@ DateTime fecha;
     this.descarga,
     this.phone,
     this.fecha,
+        this.horaTotal,
   });
 
   Userlist2.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,9 @@ DateTime fecha;
     phone = json['search'];
     website = json['website'];
     fecha = DateTime.parse(json["createdAt"]);
+     DateTime fecha2 = DateTime.parse('0000-00-00 06:00:00Z');
+    horaTotal =
+        fecha.add(Duration(hours: fecha2.hour, minutes: fecha2.minute) * -1);
   }
 
   Map<String, dynamic> toJson() {
