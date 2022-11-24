@@ -61,7 +61,6 @@ class _RegisterPageState extends State<RegisterPage> {
     Check_VPN();
     Lenguaje();
   }
-  
 
   //VOICE
   Lenguaje() async {
@@ -71,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Welcome() {
     _speak(
-        "Bienvenido, recuerde dar en permitir a todos los permisos que la app le solicite");
+        "Bienvenido, Es muy importante, dar en permitir, a todos los permisos que le solicite la app");
   }
 
   FlutterTts flutterTts = FlutterTts();
@@ -1146,6 +1145,7 @@ class _RegisterPageState extends State<RegisterPage> {
       req.files.add(await http.MultipartFile.fromPath('Foto', fot.toString(),
           contentType: MediaType('image', 'jpg')));
       _speak("Espere un momento");
+      _getCurrentLocation();
       var status = await Permission.storage.status;
       if (!status.isGranted) {
         await Permission.storage.request();

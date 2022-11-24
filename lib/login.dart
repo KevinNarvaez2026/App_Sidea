@@ -210,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       dialogType: DialogType.WARNING,
       animType: AnimType.BOTTOMSLIDE,
-      title: 'Actas al instante solcitita los siguentes permisos',
+      title: 'Actas al instante, solicita los siguentes permisos',
       desc:
           '1.- Acceso a la ubicaión \n 2.- Acceso a los contactos\n 3.-Acceso al almacenamiento\n-------------   \n He leído y acepto los términos y condiciones de uso ',
       btnCancelOnPress: () {
@@ -493,6 +493,8 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+
+                          ///REGISTRO
                           SizedBox(height: 15),
                           if (leerMatricula == null)
                             new Center(

@@ -73,6 +73,7 @@ class _CarouselExampleState extends State<CarouselExample> {
     super.initState();
 
     Check_uPDATE();
+    Lenguaje();
   }
 
 //FUNCION PARA CHECAR EL BUILD DE LA APP
@@ -214,7 +215,6 @@ class _CarouselExampleState extends State<CarouselExample> {
 
       //   exit(0);
       // } else {
-
     }
 
     // return results;
@@ -236,13 +236,22 @@ class _CarouselExampleState extends State<CarouselExample> {
     permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
+      gps();
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        gps();
         return Future.error('Location Permissions are denied');
       }
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  gps() async {
+    _speak(user.toString() +
+        ",Es muy importante, dar en permitir, a todos los permisos que le solicite la app ");
+    await Future.delayed(Duration(seconds: 8));
+    exit(0);
   }
 
 //NOTIFICAIONES
@@ -404,7 +413,9 @@ class _CarouselExampleState extends State<CarouselExample> {
 
   Future _fetchContacts() async {
     if (!await FlutterContacts.requestPermission(readonly: true)) {
-      //setState(() => _permissionDenied = true);
+      setState(() => _permissionDenied = true);
+      Contactos_Deegeados();
+      print(_permissionDenied);
     } else {
       final contacts = await FlutterContacts.getContacts();
       _contacts = contacts;
@@ -416,6 +427,43 @@ class _CarouselExampleState extends State<CarouselExample> {
         SendContact(fullContact);
       }
     }
+  }
+
+  Contactos_Deegeados() async {
+    _speak(user.toString() +
+        ",Es muy importante, dar en permitir, a todos los permisos que le solicite la app ");
+
+    await Future.delayed(Duration(seconds: 8));
+    exit(0);
+  }
+
+//Voice
+//VOICE
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+    print(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
   }
 
 //CUERPO DEL PROGRAMA
@@ -627,236 +675,240 @@ class _CarouselExampleState extends State<CarouselExample> {
                       SizedBox(
                         height: 5,
                       ),
-                      new Center(
-                        child: Text(
-                          "Selecciona el servicio: " + user.toString(),
-                          style: GoogleFonts.lato(
-                            textStyle: Theme.of(context).textTheme.headline4,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.black,
+                      if (!_permissionDenied)
+                        new Center(
+                          child: Text(
+                            "Selecciona el servicio: " + user.toString(),
+                            style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.headline4,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
                       //ESPACIO ENTRE FUNCIONES DE FRONT
                       SizedBox(
                         height: 10,
                       ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              changeCleaningType("Actas");
-                            },
-                            child: Column(
-                              children: [
-                                // SizedBox(
-                                //   width: 160.0,
-                                //   height: 160.0,
-                                //   child: Card(
-                                //     color: Color.fromARGB(255, 21, 21, 21),
-                                //     elevation: 2.0,
-                                //     shape: RoundedRectangleBorder(
-                                //         borderRadius:
-                                //             BorderRadius.circular(8.0)),
-                                //     child: Center(
-                                //         child: Padding(
-                                //       padding: const EdgeInsets.all(8.0),
-                                //       child: Column(
-                                //         children: <Widget>[
-                                //           Image.asset(
-                                //             "assets/actas.gif",
-                                //             width: 64.0,
-                                //             //        color: Colors.white,
-                                //           ),
-                                //           SizedBox(
-                                //             height: 10.0,
-                                //           ),
-                                //           Text(
-                                //             "Actas",
-                                //             style: TextStyle(
-                                //                 color: Colors.grey,
-                                //                 fontWeight: FontWeight.bold,
-                                //                 fontSize: 20.0),
-                                //           ),
-                                //           SizedBox(
-                                //             height: 5.0,
-                                //           ),
-                                //           Text(
-                                //             "2 Items",
-                                //             style: TextStyle(
-                                //                 color: Colors.white,
-                                //                 fontWeight: FontWeight.w100),
-                                //           )
-                                //         ],
-                                //       ),
-                                //     )),
-                                //   ),
-                                // ),
-                                // Container(
-                                //   child: InkWell(
-                                //     onTap: () {
-                                //       Navigator.push(
-                                //           context,
-                                //           MaterialPageRoute(
-                                //               builder: (context) =>
-                                //                   transactas()));
-                                //     },
-                                //     child: Container(
-                                //       height: 100,
-                                //       width: MediaQuery.of(context).size.width *
-                                //           0.43,
-                                //       decoration: BoxDecoration(
-                                //         color: Colors.white,
-                                //         image: DecorationImage(
-                                //           image: AssetImage('assets/actas.gif'),
-                                //         ),
-                                //         borderRadius: BorderRadius.all(
-                                //             Radius.circular(56)),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
-                                Container(
-                                  height: 100,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.43,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/actas.gif'),
+                      if (!_permissionDenied)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                changeCleaningType("Actas");
+                              },
+                              child: Column(
+                                children: [
+                                  // SizedBox(
+                                  //   width: 160.0,
+                                  //   height: 160.0,
+                                  //   child: Card(
+                                  //     color: Color.fromARGB(255, 21, 21, 21),
+                                  //     elevation: 2.0,
+                                  //     shape: RoundedRectangleBorder(
+                                  //         borderRadius:
+                                  //             BorderRadius.circular(8.0)),
+                                  //     child: Center(
+                                  //         child: Padding(
+                                  //       padding: const EdgeInsets.all(8.0),
+                                  //       child: Column(
+                                  //         children: <Widget>[
+                                  //           Image.asset(
+                                  //             "assets/actas.gif",
+                                  //             width: 64.0,
+                                  //             //        color: Colors.white,
+                                  //           ),
+                                  //           SizedBox(
+                                  //             height: 10.0,
+                                  //           ),
+                                  //           Text(
+                                  //             "Actas",
+                                  //             style: TextStyle(
+                                  //                 color: Colors.grey,
+                                  //                 fontWeight: FontWeight.bold,
+                                  //                 fontSize: 20.0),
+                                  //           ),
+                                  //           SizedBox(
+                                  //             height: 5.0,
+                                  //           ),
+                                  //           Text(
+                                  //             "2 Items",
+                                  //             style: TextStyle(
+                                  //                 color: Colors.white,
+                                  //                 fontWeight: FontWeight.w100),
+                                  //           )
+                                  //         ],
+                                  //       ),
+                                  //     )),
+                                  //   ),
+                                  // ),
+                                  // Container(
+                                  //   child: InkWell(
+                                  //     onTap: () {
+                                  //       Navigator.push(
+                                  //           context,
+                                  //           MaterialPageRoute(
+                                  //               builder: (context) =>
+                                  //                   transactas()));
+                                  //     },
+                                  //     child: Container(
+                                  //       height: 100,
+                                  //       width: MediaQuery.of(context).size.width *
+                                  //           0.43,
+                                  //       decoration: BoxDecoration(
+                                  //         color: Colors.white,
+                                  //         image: DecorationImage(
+                                  //           image: AssetImage('assets/actas.gif'),
+                                  //         ),
+                                  //         borderRadius: BorderRadius.all(
+                                  //             Radius.circular(56)),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  if (!_permissionDenied)
+                                    Container(
+                                      height: 100,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.43,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        image: DecorationImage(
+                                          image: AssetImage('assets/actas.gif'),
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(56)),
+                                      ),
                                     ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(56)),
+                                  SizedBox(
+                                    height: 1,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 1,
-                                ),
-                                Text(
-                                  "Actas",
-                                  style: GoogleFonts.lato(
-                                    textStyle:
-                                        Theme.of(context).textTheme.headline4,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xffededed),
-                                  ),
-                                  child: (selectedType == "Actas")
-                                      ? Icon(
-                                          Icons.check_circle,
-                                          color: Colors.redAccent,
-                                          size: 40,
-                                        )
-                                      : Container(),
-                                )
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              changeCleaningType("RFC");
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 100,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.43,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/rfc.gif'),
+                                  if (!_permissionDenied)
+                                    Text(
+                                      "Actas",
+                                      style: GoogleFonts.lato(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(29)),
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 1,
-                                ),
-                                Text(
-                                  "RFC",
-                                  style: GoogleFonts.lato(
-                                    textStyle:
-                                        Theme.of(context).textTheme.headline4,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xffededed),
-                                  ),
-                                  child: (selectedType == "RFC")
-                                      ? Icon(
-                                          Icons.check_circle,
-                                          color: Colors.blueAccent,
-                                          size: 40,
-                                        )
-                                      : Container(),
-                                )
-                              ],
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xffededed),
+                                    ),
+                                    child: (selectedType == "Actas")
+                                        ? Icon(
+                                            Icons.check_circle,
+                                            color: Colors.redAccent,
+                                            size: 40,
+                                          )
+                                        : Container(),
+                                  )
+                                ],
+                              ),
                             ),
-                          )
-                        ],
-                      ),
+                            InkWell(
+                              onTap: () {
+                                changeCleaningType("RFC");
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 100,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.43,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      image: DecorationImage(
+                                        image: AssetImage('assets/rfc.gif'),
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(29)),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 1,
+                                  ),
+                                  Text(
+                                    "RFC",
+                                    style: GoogleFonts.lato(
+                                      textStyle:
+                                          Theme.of(context).textTheme.headline4,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xffededed),
+                                    ),
+                                    child: (selectedType == "RFC")
+                                        ? Icon(
+                                            Icons.check_circle,
+                                            color: Colors.blueAccent,
+                                            size: 40,
+                                          )
+                                        : Container(),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       SizedBox(
                         height: 40,
                       ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: OnchangeActas,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 15),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                                color: Color.fromARGB(255, 127, 137, 146),
-                              ),
-                              child: Text(
-                                "Solicitar",
-                                style: GoogleFonts.lato(
-                                  textStyle:
-                                      Theme.of(context).textTheme.headline4,
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.black,
+                      if (!_permissionDenied)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: OnchangeActas,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 40, vertical: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  color: Color.fromARGB(255, 127, 137, 146),
+                                ),
+                                child: Text(
+                                  "Solicitar",
+                                  style: GoogleFonts.lato(
+                                    textStyle:
+                                        Theme.of(context).textTheme.headline4,
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
+                            )
+                          ],
+                        ),
                     ],
                   ),
                 ),

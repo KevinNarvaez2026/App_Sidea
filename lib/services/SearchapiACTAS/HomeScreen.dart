@@ -108,8 +108,6 @@ class _SERACHACTASState extends State<SERACHACTAS>
     // print(user);
   }
 
-
-
   List data = List();
   String Token = "";
   Future<String> getdates({String query}) async {
@@ -123,16 +121,16 @@ class _SERACHACTASState extends State<SERACHACTAS>
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     var response = await get(
-      Uri.parse('https://actasalinstante.com:3030/api/actas/reg/corte/MyDates/'),
+      Uri.parse(
+          'https://actasalinstante.com:3030/api/actas/reg/corte/MyDates/'),
       headers: mainheader,
     );
     var resBody = json.decode(response.body);
-        if(response.statusCode == 200){
-          for (var i = 0; i < resBody.length; i++) {
-             print(resBody[i]);
-          }
-         
-        }
+    if (response.statusCode == 200) {
+      for (var i = 0; i < resBody.length; i++) {
+        print(resBody[i]);
+      }
+    }
     ShowDialog();
 
     if (response.statusCode == 401) {
@@ -395,6 +393,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
 
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
+                                     _speak(
+                                                      'Si tu pdf, no se abre, descargalo otra vez, no genera nungun costo');
                                 openFiles(curp);
                                 _speak('abriendo pdf');
                               },
