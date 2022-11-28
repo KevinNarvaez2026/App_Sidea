@@ -89,7 +89,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.5.0"});
+      var json_Ver = jsonEncode({"version": "0.7.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -111,7 +111,7 @@ class _CarouselExampleState extends State<CarouselExample> {
         });
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.5.0') {
+        if (datas['version'] != '0.7.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -120,7 +120,7 @@ class _CarouselExampleState extends State<CarouselExample> {
             animType: AnimType.BOTTOMSLIDE,
             title: 'Actas al instante',
             desc: user.toString() +
-                ' Tienes una version desactualizada\n Presione Ok para descargar la nueva version',
+                ' Tienes una versión desactualizada\n Presione Ok para descargar la nueva version',
             btnCancelOnPress: () {
               exit(0);
             },

@@ -8,21 +8,18 @@ class Robots_model {
   String comments;
 
   Robots_model({
-  
     this.data,
     this.username,
     this.email,
     this.comments,
-  
   });
 
   Robots_model.fromJson(Map<String, dynamic> json) {
     data = json['status'];
-    
+
     username = json['name'];
     email = json['source'];
     comments = json['system'];
-   
   }
 
   Map<String, dynamic> toJson() {
@@ -32,7 +29,6 @@ class Robots_model {
     data['username'] = this.username;
     data['namefile'] = this.email;
 
-  
     return data;
   }
 }

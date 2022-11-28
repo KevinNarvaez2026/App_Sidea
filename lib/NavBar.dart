@@ -208,28 +208,28 @@ class _NavBarState extends State<NavBar> {
               ),
             ],
           ),
-          if(rol =='Admin')
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              new Center(
-                child: Icon(
-                  (myindex == 4) ? Icons.wysiwyg_outlined : Icons.wysiwyg,
-                  color: Colors.amber,
+          if (rol == 'Admin')
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                new Center(
+                  child: Icon(
+                    (myindex == 4) ? Icons.wysiwyg_outlined : Icons.wysiwyg,
+                    color: Colors.amber,
+                  ),
                 ),
-              ),
-              new Center(
-                child: Text(' Robots ',
-                    style: GoogleFonts.lato(
-                      textStyle: Theme.of(context).textTheme.headline4,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      fontStyle: FontStyle.italic,
-                         color: Colors.amber,
-                    )),
-              ),
-            ],
-          ),
+                new Center(
+                  child: Text(' Robots ',
+                      style: GoogleFonts.lato(
+                        textStyle: Theme.of(context).textTheme.headline4,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.amber,
+                      )),
+                ),
+              ],
+            ),
           // Wrap(
           //WordList(this._wordModal);
           //   crossAxisAlignment: WrapCrossAlignment.center,

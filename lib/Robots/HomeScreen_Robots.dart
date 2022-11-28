@@ -40,6 +40,8 @@ class _RobotsState extends State<Robots> {
     super.initState();
   }
 
+  TextEditingController etadoController = TextEditingController();
+  String estado = "Cambiar Token\n";
   Welcome() {
     _speak('Hola,' + user + ', Bienvenido, al apartado de robots');
   }
@@ -51,7 +53,6 @@ class _RobotsState extends State<Robots> {
   }
 
   FlutterTts flutterTts = FlutterTts();
-  TextEditingController controller = TextEditingController();
 
   double volume = 1.0;
   double pitch = 1.0;
@@ -104,6 +105,12 @@ class _RobotsState extends State<Robots> {
           send(instructionse);
         });
         break;
+      case 'changeAccessToken':
+        setState(() {
+          instructionse = [instruction, robot.toString()];
+          send(instructionse);
+        });
+        break;
       default:
     }
   }
@@ -149,7 +156,7 @@ class _RobotsState extends State<Robots> {
       }
     } catch (e) {
       print(e);
-      _speak(e.toString());
+      //  _speak(e.toString());
     }
   }
 
@@ -167,6 +174,12 @@ class _RobotsState extends State<Robots> {
         print(robot_instruction[0] + robot_instruction[1]);
 
         break;
+      case 'changeAccessToken':
+        PostRobot(robot_instruction[0] = '${etadoController.text.toString()}',
+            robot_instruction[1]);
+        _speak("Se cambió el Token");
+        break;
+
       default:
     }
   }
@@ -221,7 +234,7 @@ class _RobotsState extends State<Robots> {
                     title: '' + user.toString(),
                     desc: 'Tienes: ' +
                         _userList.data.length.toString() +
-                        'Robots',
+                        ' Robots',
                     btnOkOnPress: () {
                       // exit(0);
                     },
@@ -315,7 +328,8 @@ class _RobotsState extends State<Robots> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  if ('${data[index].data}' == 'Apagado')
+                                  if ('${data[index].data}' == 'Apagado' ||
+                                      '${data[index].data}' == 'Apagando')
                                     Stack(
                                       children: [
                                         ClipRRect(
@@ -342,7 +356,8 @@ class _RobotsState extends State<Robots> {
                                         ),
                                       ],
                                     ),
-                                  if ('${data[index].data}' != 'Apagado')
+                                  if ('${data[index].data}' != 'Apagado' &&
+                                      '${data[index].data}' != 'Apagando')
                                     Stack(
                                       children: [
                                         ClipRRect(
@@ -415,8 +430,85 @@ class _RobotsState extends State<Robots> {
                                         fontWeight: FontWeight.w800),
                                     overflow: TextOverflow.ellipsis,
                                   ),
+                                  SizedBox(height: 18),
+                                  if ('${data[index].comments}' == 'SID' &&
+                                      '${data[index].data}' != 'Apagado' &&
+                                      '${data[index].data}' != 'Apagando')
+                                    TextFormField(
+                                      controller: etadoController,
+                                      decoration: InputDecoration(
+                                          hintText: '' + estado.toString(),
+                                          contentPadding:
+                                              const EdgeInsets.all(10),
+                                          fillColor: Colors.green,
+                                          filled: true, // dont forget this line
+                                          hintStyle:
+                                              TextStyle(color: Colors.white)),
+                                      readOnly: false,
+
+                                      // obscureText: true,
+                                    ),
                                   SizedBox(height: 8),
-                                  if ('${data[index].data}' == 'Apagado')
+                                  if ('${data[index].data}' != 'Apagado' &&
+                                      '${data[index].data}' != 'Apagando')
+                                    new Center(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(82),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            MaterialButton(
+                                              onPressed: () {
+                                                AwesomeDialog(
+                                                  context: context,
+                                                  dialogType:
+                                                      DialogType.QUESTION,
+                                                  animType:
+                                                      AnimType.BOTTOMSLIDE,
+                                                  title: 'Actas al instante',
+                                                  desc: user.toString() +
+                                                      ' ¿quieres camiar el token del robot? ' +
+                                                      '${data[index].username}',
+                                                  btnCancelOnPress: () {
+                                                    //  Navigator.of(context).pop(true);
+                                                  },
+                                                  btnOkOnPress: () {
+                                                    print(etadoController.text
+                                                        .toString());
+                                                    if (etadoController.text ==
+                                                        '') {
+                                                      _speak(
+                                                          "Debes de proporcionar, un nuevo Token");
+                                                    } else {
+                                                      instructions(
+                                                          'changeAccessToken',
+                                                          etadoController.text
+                                                              .toString());
+                                                    }
+                                                  },
+                                                )..show();
+                                              },
+                                              child: Text("Cambiar Token "),
+                                              textColor: Colors.white,
+                                            ),
+                                            Icon(
+                                              Icons.download_done,
+                                              size: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  SizedBox(height: 8),
+                                  if ('${data[index].data}' == 'Apagado' ||
+                                      '${data[index].data}' == 'Apagando')
                                     new Center(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -462,7 +554,8 @@ class _RobotsState extends State<Robots> {
                                         ),
                                       ),
                                     ),
-                                  if ('${data[index].data}' != 'Apagado')
+                                  if ('${data[index].data}' != 'Apagado' &&
+                                      '${data[index].data}' != 'Apagando')
                                     new Center(
                                       child: Container(
                                         decoration: BoxDecoration(
