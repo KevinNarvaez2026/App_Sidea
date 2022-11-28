@@ -18,6 +18,7 @@ class Robots_model {
 
   Robots_model.fromJson(Map<String, dynamic> json) {
     data = json['status'];
+    
     username = json['name'];
     email = json['source'];
     comments = json['system'];

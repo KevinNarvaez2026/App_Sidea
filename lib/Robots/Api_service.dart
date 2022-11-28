@@ -32,10 +32,14 @@ class Robots_get {
         data = json.decode(response.body);
 
         for (var i = 0; i < data.length; i++) {
-          print(data[i]);
+       //   print(data[i]['name']);
+
+        
+            results = data.map((e) => Robots_model.fromJson(e)).toList();
+        
+         
         }
 
-        results = data.map((e) => Robots_model.fromJson(e)).toList();
         // if (query != null) {
         //   results = results
         //       .where((element) =>

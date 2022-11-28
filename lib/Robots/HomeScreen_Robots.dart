@@ -6,6 +6,7 @@ import 'package:app_actasalinstante/NavBar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:android_intent/android_intent.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,9 +35,41 @@ class _RobotsState extends State<Robots> {
   @override
   void initState() {
     GetNames();
-
+    Lenguaje();
     // TODO: implement initState
     super.initState();
+  }
+
+  Welcome() {
+    _speak('Hola,' + user + ', Bienvenido, al apartado de robots');
+  }
+
+  //VOICE
+  Lenguaje() async {
+    languages = List<String>.from(await flutterTts.getLanguages);
+    setState(() {});
+  }
+
+  FlutterTts flutterTts = FlutterTts();
+  TextEditingController controller = TextEditingController();
+
+  double volume = 1.0;
+  double pitch = 1.0;
+  double speechRate = 0.5;
+  List<String> languages;
+  String langCode = "es-US";
+  //VOICE INICIO
+  void initSetting() async {
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setPitch(pitch);
+    // await flutterTts.setSpeechRate(speechRate);
+    await flutterTts.setLanguage(langCode);
+    // print(langCode);
+  }
+
+  void _speak(voice) async {
+    initSetting();
+    await flutterTts.speak(voice);
   }
 
   String user = "";
@@ -46,7 +79,8 @@ class _RobotsState extends State<Robots> {
     setState(() {
       user = prefs.getString('username');
     });
-    print(user);
+    Welcome();
+    //  print(user);
   }
 
   String Token = "";
@@ -74,6 +108,7 @@ class _RobotsState extends State<Robots> {
     }
   }
 
+  static const duration = Duration(milliseconds: 300);
   PostRobot(instruction, name) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -87,7 +122,7 @@ class _RobotsState extends State<Robots> {
         "name": name,
         "instruction": instruction,
       });
-      print(body);
+      //  print(body);
       var req = await post(
         Uri.parse(
             'https://actasalinstante.com:3030/api/robots/controller/instruction/new/'),
@@ -97,10 +132,24 @@ class _RobotsState extends State<Robots> {
       var datas = json.decode(req.body);
 
       if (req.statusCode == 200) {
-        print(datas);
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, _) {
+              return FadeTransition(
+                opacity: animation,
+                child: NavBar(),
+              );
+            },
+            transitionDuration: duration,
+            reverseTransitionDuration: duration,
+          ),
+        );
+        // print(datas);
       }
     } catch (e) {
       print(e);
+      _speak(e.toString());
     }
   }
 
@@ -108,11 +157,13 @@ class _RobotsState extends State<Robots> {
     switch (robot_instruction[0]) {
       case 'off':
         PostRobot(robot_instruction[0], robot_instruction[1]);
+        _speak("Apagando el robot," + robot_instruction[1]);
         print(robot_instruction[0] + robot_instruction[1]);
 
         break;
       case 'on':
         PostRobot(robot_instruction[0], robot_instruction[1]);
+        _speak("Encendiendo el robot," + robot_instruction[1]);
         print(robot_instruction[0] + robot_instruction[1]);
 
         break;
@@ -157,26 +208,28 @@ class _RobotsState extends State<Robots> {
               //     value: _userList.datesforuserrfc,
               //   ),
               // ),
-              // new IconButton(
-              //   icon: new Icon(Icons.info),
-              //   iconSize: 30.0,
-              //   highlightColor: Colors.white,
-              //   color: Colors.black,
-              //   onPressed: () {
-              //     AwesomeDialog(
-              //       context: context,
-              //       dialogType: DialogType.SUCCES,
-              //       animType: AnimType.BOTTOMSLIDE,
-              //       title: '' + user.toString(),
-              //       desc: 'Tienes: ' + _userList.data.length.toString() + 'PDF',
-              //       btnOkOnPress: () {
-              //         // exit(0);
-              //       },
-              //     )..show();
-              //     print(_userList.data.length.toString());
-              //     // _userList.data.length.toString();
-              //   },
-              // ),
+              new IconButton(
+                icon: new Icon(Icons.info),
+                iconSize: 30.0,
+                highlightColor: Colors.white,
+                color: Colors.black,
+                onPressed: () {
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.SUCCES,
+                    animType: AnimType.BOTTOMSLIDE,
+                    title: '' + user.toString(),
+                    desc: 'Tienes: ' +
+                        _userList.data.length.toString() +
+                        'Robots',
+                    btnOkOnPress: () {
+                      // exit(0);
+                    },
+                  )..show();
+                  //   print(_userList.data.length.toString());
+                  // _userList.data.length.toString();
+                },
+              ),
               // IconButton(
               //   onPressed: () {
               //     showSearch(context: context, delegate: SearchUser());
@@ -251,29 +304,71 @@ class _RobotsState extends State<Robots> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Center(
-// Image radius
-                                          child: Image.asset('assets/rfc.png',
-                                              alignment: Alignment.center,
-                                              fit: BoxFit.cover),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 200,
-                                        width: double.infinity,
-                                        clipBehavior: Clip.antiAlias,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(54),
-                                        ),
-                                      ),
-                                    ],
+                                  new Center(
+                                    child: Text(
+                                      '${data[index].username}',
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: 'avenir',
+                                          fontWeight: FontWeight.w800),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
+                                  if ('${data[index].data}' == 'Apagado')
+                                    Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Center(
+// Image radius
+                                            child: Image.asset(
+                                                'assets/ststus_close.gif',
+                                                alignment: Alignment.center,
+                                                width: 200,
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 10,
+                                          width: double.infinity,
+                                          clipBehavior: Clip.antiAlias,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(54),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  if ('${data[index].data}' != 'Apagado')
+                                    Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Center(
+// Image radius
+                                            child: Image.asset(
+                                                'assets/ststus_ok.gif',
+                                                alignment: Alignment.center,
+                                                width: 200,
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 10,
+                                          width: double.infinity,
+                                          clipBehavior: Clip.antiAlias,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(54),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   Text(
                                     "Robots",
                                     maxLines: 2,
@@ -336,8 +431,7 @@ class _RobotsState extends State<Robots> {
                                           children: [
                                             MaterialButton(
                                               onPressed: () {
-
-                                                      AwesomeDialog(
+                                                AwesomeDialog(
                                                   context: context,
                                                   dialogType:
                                                       DialogType.QUESTION,
@@ -351,11 +445,10 @@ class _RobotsState extends State<Robots> {
                                                     //  Navigator.of(context).pop(true);
                                                   },
                                                   btnOkOnPress: () {
-                                                       instructions('on',
-                                                    '${data[index].username}');
+                                                    instructions('on',
+                                                        '${data[index].username}');
                                                   },
                                                 )..show();
-                                             
                                               },
                                               child: Text("Encender"),
                                               textColor: Colors.white,

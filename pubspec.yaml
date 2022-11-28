@@ -160,6 +160,8 @@ flutter:
     - assets/close.gif
     - assets/Principal.gif
     - assets/error404.gif
+    - assets/ststus_close.gif
+    - assets/ststus_ok.gif
     
     
   # To add assets to your application, add an assets section, like this:

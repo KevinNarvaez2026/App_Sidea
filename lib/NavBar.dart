@@ -215,7 +215,7 @@ class _NavBarState extends State<NavBar> {
               new Center(
                 child: Icon(
                   (myindex == 4) ? Icons.wysiwyg_outlined : Icons.wysiwyg,
-                  color: Color.fromARGB(255, 127, 137, 146),
+                  color: Colors.amber,
                 ),
               ),
               new Center(
@@ -225,7 +225,7 @@ class _NavBarState extends State<NavBar> {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Color.fromARGB(255, 127, 137, 146),
+                         color: Colors.amber,
                     )),
               ),
             ],

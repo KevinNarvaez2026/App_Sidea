@@ -89,7 +89,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.4.0"});
+      var json_Ver = jsonEncode({"version": "0.5.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -111,7 +111,7 @@ class _CarouselExampleState extends State<CarouselExample> {
         });
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.4.0') {
+        if (datas['version'] != '0.5.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
