@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
@@ -15,6 +16,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:excel/excel.dart';
+import 'package:syncfusion_flutter_datagrid_export/export.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row;
+
+import '../../SplashScreen/Splashscreen1.dart';
+// Local import
+import 'helper/save_file_mobile_desktop.dart'
+    if (dart.library.html) 'helper/save_file_web.dart' as helper;
 
 import '../../SplashScreen/Splashscreen1.dart';
 
@@ -49,13 +57,14 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
   double speechRate = 0.5;
   List<String> languages;
   String langCode = "es-US";
+
   //VOICE INICIO
   void initSetting() async {
     // await flutterTts.setVolume(volume);
     // await flutterTts.setPitch(pitch);
     // await flutterTts.setSpeechRate(speechRate);
     await flutterTts.setLanguage(langCode);
-    print(langCode);
+    // print(langCode);
   }
 
   void _speak(voice) async {
@@ -114,7 +123,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
     var resBody = json.decode(response.body);
     if (response.statusCode == 200) {
       for (var i = 0; i < resBody.length; i++) {
-        print(resBody[i]);
+        // print(resBody[i]);
       }
     }
 
@@ -149,7 +158,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
 
   int selectedIndex;
   int count;
-
+  final GlobalKey<SfDataGridState> _datosgrid = GlobalKey<SfDataGridState>();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -203,7 +212,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
                         onPressed: () {
                           _speak(
                               'Espere un momento porfavor, estamos descagando su corte');
-                          exportReport();
+                          exportDataGridToExcel();
                           // _downloadFile(
                           //     '${data[index].id}'
                           //         .toString(),
@@ -244,10 +253,13 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
             future: getProductDataSource(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               return snapshot.hasData
-                  ? SfDataGrid(source: snapshot.data, columns: getColumns())
+                  ? SfDataGrid(
+                      key: _datosgrid,
+                      source: snapshot.data,
+                      columns: getColumns())
                   : Center(
                       child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                        strokeWidth: 8,
                       ),
                     );
             },
@@ -256,8 +268,26 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
         onWillPop: _onWillPopScope);
   }
 
+  Future<void> exportDataGridToExcel() async {
+    try {
+      print(_datosgrid.currentState);
+      //  await Future.delayed(Duration(seconds: 5));
+      final Workbook workbook =
+          _datosgrid.currentState?.exportToExcelWorkbook();
+      print(workbook);
+      final List<int> bytes = workbook.saveAsStream();
+      workbook.dispose();
+
+      await helper.saveAndLaunchFile(bytes, 'DataGrid.xlsx');
+    } catch (e) {
+      print(e);
+      _speak(e.toString());
+    }
+  }
+
   Future<ProductDataGridSource> getProductDataSource() async {
     var productList = await generateProductList();
+
     return ProductDataGridSource(productList);
   }
 
@@ -388,10 +418,23 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
     //   }
     // }
   }
+
 //EXCEL
 
   Future exportReport() async {
-    var excel = Excel.createExcel();
+    final excel = Excel.createExcel();
+
+    final sheet = excel.sheets[excel.getDefaultSheet() as String];
+    sheet.setColWidth(2, 50);
+    sheet.setColAutoFit(3);
+
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 1)).value =
+        'Id';
+
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 2)).value =
+        'Documento';
+
+    //var excel = Excel.createExcel();
     DateTime _now = DateTime.now();
     String _name = DateFormat('yyyy-MM-dd').format(_now);
     String _fileName = user.toString() + _name;
@@ -533,7 +576,8 @@ class ProductDataGridSource extends DataGridSource {
         DataGridCell<String>(columnName: 'Nombre', value: dataGridRow.nombre),
         DataGridCell<DateTime>(
             columnName: 'Fecha', value: dataGridRow.orderDate),
-        DataGridCell<int>(columnName: 'Precio', value: dataGridRow.freight)
+        DataGridCell<int>(columnName: 'Precio', value: dataGridRow.freight),
+        DataGridCell<int>(columnName: 'Total', value: dataGridRow.freight)
       ]);
     }).toList(growable: false);
   }
@@ -576,30 +620,7 @@ class Product {
 
 
 
-// import 'dart:ffi';
-// import 'dart:io';
 
-// import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
-// import 'package:awesome_dialog/awesome_dialog.dart';
-// import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_tts/flutter_tts.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:http/http.dart';
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:intl/intl.dart';
-// import 'package:excel/excel.dart';
-// import 'package:syncfusion_flutter_datagrid_export/export.dart';
-// import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row;
-
-// import '../../SplashScreen/Splashscreen1.dart';
-// // Local import
-// import 'helper/save_file_mobile_desktop.dart'
-//     if (dart.library.html) 'helper/save_file_web.dart' as helper;
 
 // class Cortes_Screen extends StatefulWidget {
 //   @override

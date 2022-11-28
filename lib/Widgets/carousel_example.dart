@@ -12,7 +12,7 @@ import 'package:app_actasalinstante/main.dart';
 import 'package:app_actasalinstante/recent_files_json.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:carousel_pro/carousel_pro.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:check_vpn_connection/check_vpn_connection.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -89,7 +89,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.3.0"});
+      var json_Ver = jsonEncode({"version": "0.4.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -111,7 +111,7 @@ class _CarouselExampleState extends State<CarouselExample> {
         });
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.3.0') {
+        if (datas['version'] != '0.4.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(

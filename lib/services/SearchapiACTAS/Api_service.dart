@@ -28,15 +28,16 @@ class FetchUserLists {
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     var response = await get(
-      Uri.parse('https://actasalinstante.com:3030/api/services/actas/regs'),
+      Uri.parse('https://actasalinstante.com:3030/api/get/myRequests/' +
+          datesforuser.toString()),
       headers: mainheader,
     );
-   // print(data.toString());
+    // print(data.toString());
     try {
       if (response.statusCode == 200) {
         //_controller.sendNotification();
         data = jsonDecode(response.body);
-       // print(data.toString());
+        // print(data.toString());
         results = data.map((e) => Userlists.fromJson(e)).toList();
 
         if (query != null) {
@@ -76,7 +77,7 @@ class FetchUserLists {
   }
 
   Future<List<Userlists>> serachapi({String query}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     Token = prefs.getString('token');
 
@@ -87,12 +88,12 @@ class FetchUserLists {
       Uri.parse('https://actasalinstante.com:3030/api/services/actas/regs'),
       headers: mainheader,
     );
-   // print(data.toString());
+    // print(data.toString());
     try {
       if (response.statusCode == 200) {
         //_controller.sendNotification();
         data = jsonDecode(response.body);
-       // print(data.toString());
+        // print(data.toString());
         results = data.map((e) => Userlists.fromJson(e)).toList();
 
         if (query != null) {

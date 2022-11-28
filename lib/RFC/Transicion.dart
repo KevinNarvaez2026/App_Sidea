@@ -2,7 +2,7 @@ import 'package:app_actasalinstante/DropDown/Body.dart';
 import 'package:app_actasalinstante/RFC/RFC_Moral.dart';
 import 'package:app_actasalinstante/RFCDescargas/views/homepage.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:carousel_pro/carousel_pro.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_background/animated_background.dart';

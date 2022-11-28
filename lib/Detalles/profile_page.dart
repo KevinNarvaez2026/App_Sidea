@@ -10,7 +10,7 @@ import 'package:app_actasalinstante/login.dart';
 import 'package:app_actasalinstante/recent_files_json.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:carousel_pro/carousel_pro.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';

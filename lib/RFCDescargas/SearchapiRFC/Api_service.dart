@@ -7,7 +7,7 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FetchUserList {
-  var data = []; 
+  var data = [];
   String datesforuserrfc;
   List<Userlist2> results = [];
   List<Userlist2> resultsid = [];
@@ -29,7 +29,7 @@ class FetchUserList {
     try {
       if (response.statusCode == 200) {
         data = json.decode(response.body);
-       // print(data);
+        // print(data);
         results = data.map((e) => Userlist2.fromJson(e)).toList();
         if (query != null) {
           results = results
@@ -54,10 +54,8 @@ class FetchUserList {
 
   Future<List<Userlist2>> searchrfc({String query}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-  
-  
 
- Token= prefs.getString('token');
+    Token = prefs.getString('token');
     Map<String, String> mainheader = new Map();
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
@@ -69,7 +67,7 @@ class FetchUserList {
     try {
       if (response.statusCode == 200) {
         data = json.decode(response.body);
-       // print(data);
+        // print(data);
         results = data.map((e) => Userlist2.fromJson(e)).toList();
         if (query != null) {
           results = results

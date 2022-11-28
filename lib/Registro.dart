@@ -14,6 +14,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'FlatMessage/Message.dart';
 import 'LoginView/api/ProgressHUD.dart';
 import 'RFCDescargas/services/Variables.dart';
@@ -52,14 +53,77 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    Welcome();
+
     readCounter();
-    _getCurrentLocation();
-    // _fetchContacts();
-    //Notification();
-    _UpdateContacts();
-    Check_VPN();
-    Lenguaje();
+    setState(() {
+      isApiCallProcess = true;
+    });
+    json_version();
+  }
+
+  json_version() async {
+    //  print("Token: " + Token);
+    try {
+      var json_Ver = jsonEncode({"version": "0.4.0"});
+      print(json_Ver.toString());
+
+      Map<String, String> mainheader = new Map();
+      mainheader["content-type"] = "application/json";
+
+      var response = await get(
+          Uri.parse('https://actasalinstante.com:3030/api/app/version/'),
+          headers: mainheader);
+      var datas = json.decode(response.body);
+      print(datas);
+      if (response.statusCode == 200) {
+        datas['version'];
+        print(datas['version']);
+        if (datas['version'] != '0.4.0') {
+          print("Debe actualizar su version");
+
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.WARNING,
+            animType: AnimType.BOTTOMSLIDE,
+            title: 'Actas al instante',
+            desc:
+                ' Tienes una version desactualizada\n Presione Ok para descargar la nueva version',
+            btnCancelOnPress: () {
+              exit(0);
+            },
+            btnOkOnPress: () {
+              _launchURL();
+            },
+          )..show();
+
+          _speak(
+              "Tienes una versión desactualizada, Presione Ok para descargar la nueva versión");
+        } else {
+          setState(() {
+            isApiCallProcess = false;
+          });
+          Welcome();
+          _getCurrentLocation();
+          // _fetchContacts();
+          //Notification();
+          _UpdateContacts();
+          Check_VPN();
+          Lenguaje();
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+//LINK PARA DESCARGAR UNA NUEVA VERIOSN DE LA APP
+  _launchURL() async {
+    const url = 'https://actasalinstante.com:3030/api/app/download/';
+    if (await launch(url)) {
+      await canLaunch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   //VOICE

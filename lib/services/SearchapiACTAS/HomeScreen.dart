@@ -122,10 +122,12 @@ class _SERACHACTASState extends State<SERACHACTAS>
     mainheader['x-access-token'] = Token;
     var response = await get(
       Uri.parse(
-          'https://actasalinstante.com:3030/api/actas/reg/corte/MyDates/'),
+          'https://actasalinstante.com:3030/api/requests/dates'),
       headers: mainheader,
     );
     var resBody = json.decode(response.body);
+
+    print(resBody);
     if (response.statusCode == 200) {
       for (var i = 0; i < resBody.length; i++) {
         print(resBody[i]);
@@ -451,8 +453,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
                   dropdownColor: Colors.white,
                   items: data.map((item) {
                     return new DropdownMenuItem(
-                      child: new Text(item['corte'].toString()),
-                      value: item['corte'].toString(),
+                      child: new Text(item['deadline'].toString()),
+                      value: item['deadline'].toString(),
                     );
                   }).toList(),
                   onChanged: (newVal) {
