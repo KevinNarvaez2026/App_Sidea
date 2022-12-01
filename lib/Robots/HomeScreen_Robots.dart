@@ -108,6 +108,7 @@ class _RobotsState extends State<Robots> {
       case 'changeAccessToken':
         setState(() {
           instructionse = [instruction, robot.toString()];
+          print(instructionse);
           send(instructionse);
         });
         break;
@@ -137,7 +138,7 @@ class _RobotsState extends State<Robots> {
         headers: mainheader,
       );
       var datas = json.decode(req.body);
-
+      print(datas);
       if (req.statusCode == 200) {
         Navigator.push(
           context,
@@ -175,8 +176,9 @@ class _RobotsState extends State<Robots> {
 
         break;
       case 'changeAccessToken':
-        PostRobot(robot_instruction[0] = '${etadoController.text.toString()}',
+        PostRobot('${robot_instruction[0]}=${etadoController.text} ',
             robot_instruction[1]);
+        // print(robot_instruction[0]);
         _speak("Se cambió el Token");
         break;
 
@@ -488,8 +490,7 @@ class _RobotsState extends State<Robots> {
                                                     } else {
                                                       instructions(
                                                           'changeAccessToken',
-                                                          etadoController.text
-                                                              .toString());
+                                                          '${data[index].username}');
                                                     }
                                                   },
                                                 )..show();

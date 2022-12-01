@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
@@ -9,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -19,6 +18,7 @@ import 'package:excel/excel.dart';
 import 'package:syncfusion_flutter_datagrid_export/export.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row;
 
+import '../../NavBar.dart';
 import '../../SplashScreen/Splashscreen1.dart';
 // Local import
 import 'helper/save_file_mobile_desktop.dart'
@@ -210,9 +210,8 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
                         height: 20,
                         elevation: 5,
                         onPressed: () {
-                          _speak(
-                              'Espere un momento porfavor, estamos descagando su corte');
-                          exportDataGridToExcel();
+                          exportDataGridToExcel(
+                              Cortes.toString(), user + '_Corte');
                           // _downloadFile(
                           //     '${data[index].id}'
                           //         .toString(),
@@ -259,7 +258,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
                       columns: getColumns())
                   : Center(
                       child: CircularProgressIndicator(
-                        strokeWidth: 8,
+                        strokeWidth: 4,
                       ),
                     );
             },
@@ -268,20 +267,155 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
         onWillPop: _onWillPopScope);
   }
 
-  Future<void> exportDataGridToExcel() async {
-    try {
-      print(_datosgrid.currentState);
-      //  await Future.delayed(Duration(seconds: 5));
-      final Workbook workbook =
-          _datosgrid.currentState?.exportToExcelWorkbook();
-      print(workbook);
-      final List<int> bytes = workbook.saveAsStream();
-      workbook.dispose();
+//EXCEK GET FOR DATES
 
-      await helper.saveAndLaunchFile(bytes, 'DataGrid.xlsx');
+  main() async {
+    var headers = {
+      'x-access-token':
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkVkd2luIFBvb3QiLCJyb2wiOiJBZG1pbiIsImlkIjoxLCJpYXQiOjE2Njk3NTY2NDEsImV4cCI6MTY2OTg0MzA0MX0.aak8SOOMZWsZFzkWlBx3_qFafswXl8A9MLUf82LtCXI'
+    };
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://actasalinstante.com:3030/api/actas/reg/myCorte/excel/null'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future<File> exportDataGridToExcel(String corte, String filename) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      setState(() {
+        Token = prefs.getString('token');
+      });
+      Map<String, String> mainheader = new Map();
+
+      mainheader['x-access-token'] = Token;
+      http.Client client = new http.Client();
+      var req = await client.get(
+          Uri.parse(
+              'https://actasalinstante.com:3030/api/actas/reg/myCorte/excel/' +
+                  corte),
+          headers: mainheader);
+
+      var bytes = jsonDecode(req.bodyBytes.toString());
+
+      // Map bytes = json.decode(req.bodyBytes.toString());
+      // print(bytes['token']);
+      // bytes['data'].forEach((key, value) {
+      //   print(key);
+      //   print(value);
+      // });
+      var decoded = base64.decode(bytes['b64'].toString());
+      var snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Descargando Acta',
+          message: 'Espere un momento',
+          contentType: ContentType.success,
+        ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      _speak('Espere un momento porfavor, estamos descagando su corte');
+
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+        print("Permisos denegados");
+      } else {
+        setState(() {
+          //   isApiCallProcess = false;
+        });
+
+        File file =
+            new File('/storage/emulated/0/Download/$filename' + '.xlsx');
+
+        await file.writeAsBytes(decoded);
+
+        Open_pdf(filename);
+
+        // _speak('Recuerde que debe tener un visor de pdf, para visualizar el acta');
+        return file;
+      }
     } catch (e) {
       print(e);
-      _speak(e.toString());
+    }
+  }
+
+  Open_pdf(folio) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.WARNING,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Actas al instante',
+      desc: user.toString() + ' ¿quieres abrir tu Corte',
+      btnCancelOnPress: () {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => NavBar()));
+        // Navigator.of(context).pop(true);
+      },
+      btnOkOnPress: () {
+        openFiles(folio.toString());
+        _speak('abriendo Excel');
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => NavBar()));
+      },
+    )..show();
+  }
+
+  var _openResult = 'Unknown';
+
+  Future<void> openFiles(String filename) async {
+    final filePath = "/storage/emulated/0/Download/" + filename;
+    final result = await OpenFilex.open(filePath);
+    _openResult = "${result.type}";
+  }
+
+  exportDataGridToExcels() async {
+    print(Cortes);
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      setState(() {
+        Token = prefs.getString('token');
+      });
+      //print(Token);
+      Map<String, String> mainheader = new Map();
+
+      mainheader['x-access-token'] = Token;
+      var response = await get(
+        Uri.parse(
+            'https://actasalinstante.com:3030/api/actas/reg/myCorte/excel/' +
+                Cortes.toString()),
+        headers: mainheader,
+      );
+      var resBody = response.body;
+      print(resBody);
+      if (response.statusCode == 200) {}
+
+      // if (response.statusCode == 200) {
+      //   //_controller.sendNotification();
+      //   data = jsonDecode(response.body);
+      //  // print(data);
+      // } else {
+      //   print("fetch error");
+      // }
+
+      // return results;
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -613,15 +747,6 @@ class Product {
   final int freight;
 }
 
-
-
-
-
-
-
-
-
-
 // class Cortes_Screen extends StatefulWidget {
 //   @override
 //   _Cortes_ScreenState createState() => _Cortes_ScreenState();
@@ -703,7 +828,6 @@ class Product {
 //         ]));
 //   }
 
-  
 //   var document;
 //   var Cortes;
 //     int indexs;
@@ -728,12 +852,11 @@ class Product {
 //         // print("hola");
 //         for (var i = 0; i < decodedProducts.length; i++) {
 //        //    print(decodedProducts[i]['document']);
-          
+
 //              document = decodedProducts[i]['document'];
 //              print(document);
-      
+
 //         }
-       
 
 //         return productList;
 //       } else {
@@ -756,12 +879,11 @@ class Product {
 //     List<Employee> getEmployeeData() {
 
 //       return <Employee>[
-      
+
 //       Employee("10001", document.toString(), 'Project Lead', 20000),
-   
+
 //     ];
- 
-    
+
 //   }
 //   String _mySelection;
 
@@ -814,7 +936,7 @@ class Product {
 //     // }
 
 //     // return results;
-  
+
 //   }
 // }
 
@@ -838,7 +960,6 @@ class Product {
 //     id = json['document'];
 //   }
 
-  
 // }
 
 // /// An object to set the employee collection data source to the datagrid. This
