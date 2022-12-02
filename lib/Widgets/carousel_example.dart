@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:math' as math;
 import 'package:app_actasalinstante/Detalles/profile_page.dart';
 import 'package:app_actasalinstante/DropDown/Body.dart';
 import 'package:app_actasalinstante/DropDown/TransicionActas.dart';
@@ -22,17 +22,21 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../ColorScheme.dart';
+import '../DropDown/Descargar_actas/animation/FadeAnimation.dart';
 import '../DropDown/DropDown.dart';
 import '../Inicio/InicioActas.dart';
 import '../LoginView/api/ProgressHUD.dart';
 import '../LoginView/api/model/login_model.dart';
 import '../NavBar.dart';
+import '../New_Home/theme/colors/light_colors.dart';
+import '../New_Home/widgets/active_project_card.dart';
 import '../RFC/RfcBody.dart';
 import '../RFC/Transicion.dart';
 import '../RFCDescargas/services/Variables.dart';
@@ -55,6 +59,7 @@ import 'dart:typed_data';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class CarouselExample extends StatefulWidget {
   const CarouselExample({Key key}) : super(key: key);
@@ -64,16 +69,65 @@ class CarouselExample extends StatefulWidget {
 
 LoginRequestModel loginRequestModel;
 
+enum LegendShape { circle, rectangle }
+
 class _CarouselExampleState extends State<CarouselExample> {
   List<Contact> _contacts;
-  bool _permissionDenied = false;
+
   IO.Socket socket;
   @override
   void initState() {
     super.initState();
-
+    Inicial_pORCENTAJE();
     Check_uPDATE();
     Lenguaje();
+  }
+
+  Map<String, double> dataMap = {
+    "Actas limite": 5,
+    "Actas actual": 5,
+    "Almacenamiento": 3,
+  };
+  Inicial_pORCENTAJE() {
+    setState(() {
+      limite = 0.0;
+      current = 0.0;
+    });
+  }
+
+  var ids_user;
+  var nombre;
+  var limite;
+  var current;
+
+  Find_User(user) async {
+    Map<String, String> mainheader = new Map();
+    mainheader["content-type"] = "application/json";
+    mainheader['private-key'] =
+        'SgVkYp2s5v8y/B?E(H+MbQeThWmZq4t6w9z\$C&F)J@NcRfUjXn2r5u8x!A%D*G-KaPdSgVkYp3s6v9y\$B?E(H+MbQeThWmZq4t7w!z%C*F)J@NcRfUjXn2r5u8x/A?D(';
+    var response = await get(
+      Uri.parse('https://actasalinstante.com:3030/api/user/limits/search/' +
+          user.toString()),
+      headers: mainheader,
+    );
+    var GetRobots = json.decode(response.body.toString());
+    //vista = true;
+    if (response.statusCode == 200) {
+      setState(() {
+        isApiCallProcess = false;
+      });
+
+      for (var i = 0; i < GetRobots.length; i++) {
+        print(GetRobots[i]);
+        setState(() {
+          ids_user = GetRobots[i]['id'];
+          nombre = GetRobots[i]['username'];
+          limite = GetRobots[i]['actas_limit'] / 1000;
+          current = GetRobots[i]['actas_current'] / 1000;
+          print(limite + current);
+        });
+      }
+    }
   }
 
 //FUNCION PARA CHECAR EL BUILD DE LA APP
@@ -89,7 +143,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.7.0"});
+      var json_Ver = jsonEncode({"version": "0.8.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -111,7 +165,7 @@ class _CarouselExampleState extends State<CarouselExample> {
         });
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.7.0') {
+        if (datas['version'] != '0.8.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -137,7 +191,6 @@ class _CarouselExampleState extends State<CarouselExample> {
           GetNames();
           getToken();
           Check_VPN();
-          _fetchContacts();
           _getCurrentLocation();
         }
       }
@@ -226,7 +279,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 
     _latitude = position.latitude.toString();
     _longitud = position.longitude.toString();
-
+    print(_latitude + _longitud);
     Put_GPS(_latitude, _longitud);
   }
 
@@ -248,9 +301,9 @@ class _CarouselExampleState extends State<CarouselExample> {
   }
 
   gps() async {
-    _speak(user.toString() +
-        ",Es muy importante, dar en permitir, a todos los permisos que le solicite la app ");
-    await Future.delayed(Duration(seconds: 8));
+    // _speak(user.toString() +
+    //     ",Es muy importante, dar en permitir, a todos los permisos que le solicite la app ");
+    await Future.delayed(Duration(seconds: 10));
     exit(0);
   }
 
@@ -284,6 +337,7 @@ class _CarouselExampleState extends State<CarouselExample> {
     setState(() {
       user = prefs.getString('username');
     });
+    Find_User(user);
   }
 
   String Token = "";
@@ -378,65 +432,6 @@ class _CarouselExampleState extends State<CarouselExample> {
     return (bytes != null ? base64Encode(bytes) : null);
   }
 
-//ENVIAR CONTACTOS
-  var contac;
-  var data = [];
-  String names, lastname, email;
-
-  Putnames(String names, String lastname, String phone, String email,
-      int ids) async {
-    Map<String, String> mainheader = new Map();
-    mainheader["content-type"] = "application/json";
-    mainheader['x-access-token'] = Token;
-    Map<String, dynamic> body = {
-      'name': names,
-      'lastname': lastname,
-      'phone': phone,
-      'email': email,
-      "id_send": ids,
-    };
-
-    var response = await post(
-        Uri.parse('https://actasalinstante.com:3030/api/app/contacts/add/'),
-        headers: mainheader,
-        body: json.encode(body));
-  }
-
-  SendContact(Contact contact) async {
-    Putnames(
-        contact.name.first,
-        contact.name.last,
-        contact.phones.isNotEmpty ? contact.phones.first.number : '(none)',
-        contact.emails.isNotEmpty ? contact.emails.first.address : '(none)',
-        getIt<AuthModel>().id);
-  }
-
-  Future _fetchContacts() async {
-    if (!await FlutterContacts.requestPermission(readonly: true)) {
-      setState(() => _permissionDenied = true);
-      Contactos_Deegeados();
-      print(_permissionDenied);
-    } else {
-      final contacts = await FlutterContacts.getContacts();
-      _contacts = contacts;
-      //  setState(() => _contacts = contacts);
-
-      for (var i = 0; i < _contacts.length; i++) {
-        final fullContact = await FlutterContacts.getContact(_contacts[i].id);
-
-        SendContact(fullContact);
-      }
-    }
-  }
-
-  Contactos_Deegeados() async {
-    _speak(user.toString() +
-        ",Es muy importante, dar en permitir, a todos los permisos que le solicite la app ");
-
-    await Future.delayed(Duration(seconds: 8));
-    exit(0);
-  }
-
 //Voice
 //VOICE
   Lenguaje() async {
@@ -466,11 +461,180 @@ class _CarouselExampleState extends State<CarouselExample> {
     await flutterTts.speak(voice);
   }
 
+  final colorList = <Color>[
+    const Color(0xfffdcb6e),
+    const Color(0xff0984e3),
+    const Color(0xfffd79a8),
+    const Color(0xffe17055),
+    const Color(0xff6c5ce7),
+  ];
+
+  // Image Name List Here
+  var imgList = [
+    "assets/NAC.png",
+    "assets/DEFUNCION.jpg",
+    "assets/matrimonio.png",
+  ];
+  // final f = new DateFormat('yyyy-MM-dd hh:mm');
+// type=${result.type}
+  var isFavorite = false.obs;
+  int selectedIndex;
+  int count;
+
+  showDialogFunc(context, image, data, curp, estado, username, apellidos,
+      comments, descarga) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              padding: EdgeInsets.all(15),
+              height: 490,
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Image.asset(
+                      image,
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+
+                  // Text(
+                  //   title,
+                  //   style: TextStyle(
+                  //     fontSize: 25,
+                  //     color: Colors.grey,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        data.toString().toUpperCase(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Curp: " + curp?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Nombres: " + username?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Apellidos: " + apellidos?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Estado: " + estado?.toString(),
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (comments == 'Descargado' && descarga == true)
+                    new Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(82),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MaterialButton(
+                              onPressed: () {},
+                              child: Text("Abrir"),
+                              textColor: Colors.white,
+                            ),
+                            Icon(
+                              Icons.download_done,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  LegendShape _legendShape = LegendShape.circle;
 //CUERPO DEL PROGRAMA
   static const duration = Duration(milliseconds: 300);
   String selectedType = "initial";
   String selectedFrequency = "monthly";
-  int selectedIndex;
+
   final ImagePicker _picker = ImagePicker();
   PickedFile _imageFile;
 
@@ -485,6 +649,7 @@ class _CarouselExampleState extends State<CarouselExample> {
     );
   }
 
+  FetchUserLists _userList = FetchUserLists();
   Widget Carr(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
@@ -512,28 +677,17 @@ class _CarouselExampleState extends State<CarouselExample> {
               // if (_contacts == null) Center(child: CircularProgressIndicator()),
               //IMAGEN D EPERFIL
               imageProfile(),
-              if (_permissionDenied)
-                new Center(
-                  child: Text("" + user.toString(),
-                      style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.headline4,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.redAccent,
-                      )),
-                ),
-              if (!_permissionDenied)
-                new Center(
-                  child: Text("" + user.toString(),
-                      style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.headline4,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.blueAccent,
-                      )),
-                ),
+
+              new Center(
+                child: Text("" + user.toString(),
+                    style: GoogleFonts.lato(
+                      textStyle: Theme.of(context).textTheme.headline4,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.blueAccent,
+                    )),
+              ),
               Expanded(
                 child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -672,243 +826,1026 @@ class _CarouselExampleState extends State<CarouselExample> {
                       // banner en entrada
                       //Fin Banner
                       //getRecentFiles(),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      if (!_permissionDenied)
-                        new Center(
-                          child: Text(
-                            "Selecciona el servicio: " + user.toString(),
-                            style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.headline4,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.black,
+
+                      // new Center(
+                      //   child: Text(
+                      //     "Selecciona el servicio: " + user.toString(),
+                      //     style: GoogleFonts.lato(
+                      //       textStyle: Theme.of(context).textTheme.headline4,
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.w700,
+                      //       fontStyle: FontStyle.italic,
+                      //       color: Colors.black,
+                      //     ),
+                      //     textAlign: TextAlign.center,
+                      //   ),
+                      // ),
+
+//                         new Center(
+//                           child: Container(
+//                             height: 120,
+//                             child: FutureBuilder<List<Userlists>>(
+//                                 future: _userList.getuserLists(),
+//                                 builder: (context, snapshot) {
+//                                   var data = snapshot.data;
+//                                   return ListView.builder(
+//                                       itemCount: data?.length,
+
+//                                       itemBuilder: (context, index) {
+//                                         if (!snapshot.hasData) {
+//                                           return Center(
+//                                             child: CircularProgressIndicator(
+//                                               backgroundColor: Colors.black,
+//                                               valueColor:
+//                                                   AlwaysStoppedAnimation<Color>(
+//                                                       Colors.greenAccent),
+//                                             ),
+//                                           );
+//                                         }
+
+//                                         return FadeAnimation(
+//                                           1.3,
+//                                           GestureDetector(
+//                                             onTap: () {
+//                                               // This Will Call When User Click On ListView Item
+//                                               if (data[index].type !=
+//                                                       'MATRIMONIO' &&
+//                                                   data[index].type !=
+//                                                       'DIVORCIO')
+//                                                 showDialogFunc(
+//                                                     context,
+//                                                     imgList[index],
+//                                                     data[index].type,
+//                                                     data[index].metadata,
+//                                                     data[index].metadataestado,
+//                                                     data[index].username,
+//                                                     data[index].apellido2,
+//                                                     data[index].comments,
+//                                                     data[index].descarga);
+//                                             },
+//                                             child: Card(
+
+//                                               color: Colors.white,
+//                                               elevation: 0,
+//                                               // color: Color.fromARGB(255, 232, 234, 246),
+//                                               shape: RoundedRectangleBorder(
+//                                                 borderRadius: BorderRadius.only(
+//                                                   bottomRight:
+//                                                       Radius.circular(40),
+//                                                   topLeft: Radius.circular(40),
+//                                                 ),
+//                                               ),
+
+//                                               child: Padding(
+//                                                 padding:
+//                                                     const EdgeInsets.all(15.0),
+//                                                 child: Column(
+//                                                   crossAxisAlignment:
+//                                                       CrossAxisAlignment.start,
+//                                                   mainAxisAlignment:
+//                                                       MainAxisAlignment.start,
+//                                                   children: [
+//                                                     if ('${data[index].descarga}' !=
+//                                                             "true" &&
+//                                                         '${data[index].comments}' ==
+//                                                             "Descargado")
+//                                                       new Center(
+//                                                         child: Text(
+//                                                           (index + 1)
+//                                                               .toString(),
+//                                                           maxLines: 5,
+//                                                           style: TextStyle(
+//                                                               fontSize: 22,
+//                                                               fontFamily:
+//                                                                   'avenir',
+//                                                               fontWeight:
+//                                                                   FontWeight
+//                                                                       .w800,
+//                                                               color: Colors
+//                                                                   .greenAccent),
+//                                                           overflow: TextOverflow
+//                                                               .ellipsis,
+//                                                         ),
+//                                                       ),
+
+//                                                     if ('${data[index].descarga}' !=
+//                                                             "false" &&
+//                                                         '${data[index].comments}' ==
+//                                                             "Descargado")
+//                                                       new Center(
+//                                                         child: Text(
+//                                                           (index + 1)
+//                                                               .toString(),
+//                                                           maxLines: 5,
+//                                                           style: TextStyle(
+//                                                               fontSize: 22,
+//                                                               fontFamily:
+//                                                                   'avenir',
+//                                                               fontWeight:
+//                                                                   FontWeight
+//                                                                       .w800,
+//                                                               color:
+//                                                                   Colors.black),
+//                                                           overflow: TextOverflow
+//                                                               .ellipsis,
+//                                                         ),
+//                                                       ),
+//                                                     if ('${data[index].comments}' !=
+//                                                             "Descargado" &&
+//                                                         '${data[index].comments}' !=
+//                                                             "null" &&
+//                                                         '${data[index].comments}' !=
+//                                                             ".")
+//                                                       new Center(
+//                                                         child: Text(
+//                                                           (index + 1)
+//                                                               .toString(),
+//                                                           maxLines: 5,
+//                                                           style: TextStyle(
+//                                                               fontSize: 22,
+//                                                               fontFamily:
+//                                                                   'avenir',
+//                                                               fontWeight:
+//                                                                   FontWeight
+//                                                                       .w800,
+//                                                               color: Colors
+//                                                                   .redAccent),
+//                                                           overflow: TextOverflow
+//                                                               .ellipsis,
+//                                                         ),
+//                                                       ),
+//                                                     Stack(
+//                                                       children: [
+//                                                         //  if ('${data[index].type}' == "Nacimiento")
+//                                                         ClipRRect(
+//                                                           borderRadius:
+//                                                               BorderRadius
+//                                                                   .circular(50),
+//                                                           child: Center(
+// // Image radius
+//                                                             child: Image.asset(
+//                                                                 'assets/NAC.png',
+//                                                                 alignment:
+//                                                                     Alignment
+//                                                                         .center,
+//                                                                 fit: BoxFit
+//                                                                     .cover),
+//                                                           ),
+//                                                         ),
+//                                                         if ('${data[index].type}' ==
+//                                                             "Cadena Digital")
+//                                                           ClipRRect(
+//                                                             borderRadius:
+//                                                                 BorderRadius
+//                                                                     .circular(
+//                                                                         50),
+//                                                             child: Center(
+// // Image radius
+//                                                               child: Image.asset(
+//                                                                   'assets/desconocido.png',
+//                                                                   alignment:
+//                                                                       Alignment
+//                                                                           .center,
+//                                                                   fit: BoxFit
+//                                                                       .cover),
+//                                                             ),
+//                                                           ),
+//                                                         if ('${data[index].type}' ==
+//                                                             "MATRIMONIO")
+//                                                           ClipRRect(
+//                                                             borderRadius:
+//                                                                 BorderRadius
+//                                                                     .circular(
+//                                                                         50),
+//                                                             child: Center(
+// // Image radius
+//                                                               child: Image.asset(
+//                                                                   'assets/matrimonio.png',
+//                                                                   alignment:
+//                                                                       Alignment
+//                                                                           .center,
+//                                                                   fit: BoxFit
+//                                                                       .cover),
+//                                                             ),
+//                                                           ),
+//                                                         if ('${data[index].type}' ==
+//                                                             "DIVORCIO")
+//                                                           ClipRRect(
+//                                                             borderRadius:
+//                                                                 BorderRadius
+//                                                                     .circular(
+//                                                                         50),
+//                                                             child: Center(
+// // Image radius
+//                                                               child: Image.asset(
+//                                                                   'assets/divorcio.png',
+//                                                                   alignment:
+//                                                                       Alignment
+//                                                                           .center,
+//                                                                   fit: BoxFit
+//                                                                       .cover),
+//                                                             ),
+//                                                           ),
+//                                                         if ('${data[index].type}' ==
+//                                                             "Defuncion")
+//                                                           ClipRRect(
+//                                                             borderRadius:
+//                                                                 BorderRadius
+//                                                                     .circular(
+//                                                                         50),
+//                                                             child: Center(
+// // Image radius
+//                                                               child: Image.asset(
+//                                                                   'assets/DEFUNCION.jpg',
+//                                                                   alignment:
+//                                                                       Alignment
+//                                                                           .center,
+//                                                                   fit: BoxFit
+//                                                                       .cover),
+//                                                             ),
+//                                                           ),
+//                                                         Container(
+//                                                           height: 100,
+//                                                           width:
+//                                                               double.infinity,
+//                                                           clipBehavior:
+//                                                               Clip.antiAlias,
+//                                                           alignment:
+//                                                               Alignment.center,
+//                                                           decoration:
+//                                                               BoxDecoration(
+//                                                             borderRadius:
+//                                                                 BorderRadius
+//                                                                     .circular(
+//                                                                         54),
+//                                                           ),
+//                                                         ),
+//                                                         if ('${data[index].comments}' !=
+//                                                                 "Descargado" &&
+//                                                             '${data[index].comments}' !=
+//                                                                 "null" &&
+//                                                             '${data[index].comments}' !=
+//                                                                 ".")
+//                                                           new Center(
+//                                                             child: Container(
+//                                                               height: 180,
+//                                                               decoration:
+//                                                                   BoxDecoration(
+//                                                                 image:
+//                                                                     DecorationImage(
+//                                                                   image: AssetImage(
+//                                                                       'assets/error.gif'),
+//                                                                 ),
+//                                                                 borderRadius: BorderRadius
+//                                                                     .all(Radius
+//                                                                         .circular(
+//                                                                             6)),
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                         if ('${data[index].comments}' ==
+//                                                                 "null" ||
+//                                                             '${data[index].comments}' ==
+//                                                                 "Descargado")
+//                                                           new Center(
+//                                                             child: Container(
+//                                                               height: 100,
+//                                                               decoration:
+//                                                                   BoxDecoration(
+//                                                                 image:
+//                                                                     DecorationImage(
+//                                                                   image: AssetImage(
+//                                                                       'assets/particles.gif'),
+//                                                                 ),
+//                                                                 borderRadius: BorderRadius
+//                                                                     .all(Radius
+//                                                                         .circular(
+//                                                                             6)),
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                         if ('${data[index].comments}' ==
+//                                                                 "Descargado" &&
+//                                                             '${data[index].descarga}' ==
+//                                                                 "true")
+//                                                           new Center(
+//                                                             child: InkWell(
+//                                                               onTap: () {},
+//                                                               child: Container(
+//                                                                 height: 180,
+//                                                                 decoration:
+//                                                                     BoxDecoration(
+//                                                                   image:
+//                                                                       DecorationImage(
+//                                                                     image: AssetImage(
+//                                                                         'assets/pdf.gif'),
+//                                                                   ),
+//                                                                   borderRadius:
+//                                                                       BorderRadius.all(
+//                                                                           Radius.circular(
+//                                                                               6)),
+//                                                                 ),
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                         if ('${data[index].descarga}' !=
+//                                                                 "true" &&
+//                                                             '${data[index].comments}' ==
+//                                                                 "Descargado")
+//                                                           new Center(
+//                                                             child: Text(
+//                                                               "Nuevo ",
+//                                                               maxLines: 5,
+//                                                               style: TextStyle(
+//                                                                   fontSize: 30,
+//                                                                   fontFamily:
+//                                                                       'avenir',
+//                                                                   fontWeight:
+//                                                                       FontWeight
+//                                                                           .w800,
+//                                                                   color: Colors
+//                                                                       .blueAccent),
+//                                                               overflow:
+//                                                                   TextOverflow
+//                                                                       .ellipsis,
+//                                                             ),
+//                                                           ),
+//                                                         if ('${data[index].descarga}' !=
+//                                                                 "true" &&
+//                                                             '${data[index].comments}' ==
+//                                                                 "Descargado")
+//                                                           new Center(
+//                                                             child: Container(
+//                                                               height: 180,
+//                                                               decoration:
+//                                                                   BoxDecoration(
+//                                                                 image:
+//                                                                     DecorationImage(
+//                                                                   image: AssetImage(
+//                                                                       'assets/new.gif'),
+//                                                                 ),
+//                                                                 borderRadius: BorderRadius
+//                                                                     .all(Radius
+//                                                                         .circular(
+//                                                                             6)),
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                       ],
+//                                                     ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "Cadena Digital")
+//                                                       new Center(
+//                                                         child: Text(
+//                                                           "Cadena Digital ",
+//                                                           maxLines: 2,
+//                                                           style:
+//                                                               GoogleFonts.lato(
+//                                                             textStyle: Theme.of(
+//                                                                     context)
+//                                                                 .textTheme
+//                                                                 .headline4,
+//                                                             fontSize: 22,
+//                                                             fontWeight:
+//                                                                 FontWeight.w700,
+//                                                             fontStyle: FontStyle
+//                                                                 .italic,
+//                                                             color: Colors.black,
+//                                                           ),
+//                                                           overflow: TextOverflow
+//                                                               .ellipsis,
+//                                                         ),
+//                                                       ),
+//                                                     if ('${data[index].type}' !=
+//                                                         "Cadena Digital")
+//                                                       new Center(
+//                                                         child: Text(
+//                                                           " " +
+//                                                               '${data[index].metadatatype}',
+//                                                           maxLines: 5,
+//                                                           style: TextStyle(
+//                                                               fontSize: 22,
+//                                                               fontFamily:
+//                                                                   'avenir',
+//                                                               fontWeight:
+//                                                                   FontWeight
+//                                                                       .w800,
+//                                                               color:
+//                                                                   Colors.black),
+//                                                           overflow: TextOverflow
+//                                                               .ellipsis,
+//                                                         ),
+//                                                       ),
+
+//                                                     new Center(
+//                                                       child: Text(
+//                                                         "" +
+//                                                             DateFormat(
+//                                                                     "dd-MM-yyyy h:mm:a")
+//                                                                 .format(data[
+//                                                                         index]
+//                                                                     .horaTotal)
+//                                                                 .toString(),
+//                                                         maxLines: 5,
+//                                                         style: TextStyle(
+//                                                             fontSize: 14,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     ),
+//                                                     Text(
+//                                                       "Datos",
+//                                                       maxLines: 2,
+//                                                       style: TextStyle(
+//                                                           fontSize: 19,
+//                                                           fontFamily: 'avenir',
+//                                                           fontWeight:
+//                                                               FontWeight.w800,
+//                                                           color: Colors
+//                                                               .blueAccent),
+//                                                       overflow:
+//                                                           TextOverflow.ellipsis,
+//                                                     ),
+//                                                     SizedBox(height: 8),
+
+//                                                     if ('${data[index].metadatatype}' ==
+//                                                         "CURP")
+//                                                       Text(
+//                                                         "Tipo de busqueda: " +
+//                                                             '${data[index].metadatatype}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "NACIMIENTO")
+//                                                       Text(
+//                                                         "Tipo: " +
+//                                                             '${data[index].type}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "Nacimiento")
+//                                                       Text(
+//                                                         "Tipo: " +
+//                                                             '${data[index].type}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                             "MATRIMONIO" ||
+//                                                         '${data[index].type}' ==
+//                                                             "DIVORCIO")
+//                                                       Text(
+//                                                         "Tipo: " +
+//                                                             '${data[index].type}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         'DIVOCIO')
+//                                                       Text(
+//                                                         "Tipo: " +
+//                                                             '${data[index].type}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "Nacimiento")
+//                                                       Text(
+//                                                         "Curp: " +
+//                                                             '${data[index].metadata}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "NACIMIENTO")
+//                                                       Text(
+//                                                         "Curp: " +
+//                                                             '${data[index].metadata}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "Nacimiento")
+//                                                       Text(
+//                                                         "Estado: " +
+//                                                             '${data[index].metadataestado}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "NACIMIENTO")
+//                                                       Text(
+//                                                         "Estado: " +
+//                                                             '${data[index].metadataestado}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "Cadena Digital")
+//                                                       Text(
+//                                                         "Tipo de busqueda: " +
+//                                                             '${data[index].type}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "Cadena Digital")
+//                                                       Text(
+//                                                         "Cadena: " +
+//                                                             '${data[index].metadatacadena}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     if ('${data[index].type}' ==
+//                                                         "Datos Personales")
+//                                                       Text(
+//                                                         "Nombre(s): " +
+//                                                             '${data[index].username}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+
+//                                                     if ('${data[index].type}' ==
+//                                                         "Datos Personales")
+//                                                       Text(
+//                                                         "Segundo Apellido: " +
+//                                                             '${data[index].apellido2}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+
+//                                                     if ('${data[index].website}' !=
+//                                                         "null")
+//                                                       Text(
+//                                                         "Nombre del archivo: " +
+//                                                             '${data[index].website}',
+//                                                         maxLines: 2,
+//                                                         style: TextStyle(
+//                                                             fontSize: 16,
+//                                                             fontFamily:
+//                                                                 'avenir',
+//                                                             fontWeight:
+//                                                                 FontWeight.w800,
+//                                                             color:
+//                                                                 Colors.black),
+//                                                         overflow: TextOverflow
+//                                                             .ellipsis,
+//                                                       ),
+//                                                     // Container(
+//                                                     //   height: 100.0,
+//                                                     //   child: Lottie.network(
+//                                                     //     'https://assets5.lottiefiles.com/packages/lf20_hdmkzp2n.json',
+//                                                     //     controller: _animationController,
+//                                                     //     height: 180,
+//                                                     //     repeat: false,
+//                                                     //   ),
+//                                                     // ),
+//                                                   ],
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                         );
+//                                       });
+//                                 }),
+//                           ),
+//                         ),
+
+                      Container(
+                        color: Colors.transparent,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            //   subheading('Active Projects'),
+                            SizedBox(height: 5.0),
+                            Row(
+                              children: <Widget>[
+                                ActiveProjectsCard(
+                                  cardColor: LightColors.kDarkYellow,
+                                  loadingPercent: limite,
+                                  title: 'Actas Limite',
+                                  subtitle: '',
+                                ),
+                                SizedBox(width: 20.0),
+                                ActiveProjectsCard(
+                                  cardColor: LightColors.kDarkYellow,
+                                  loadingPercent: current,
+                                  title: 'Actas descargadas',
+                                  subtitle: '',
+                                ),
+                              ],
                             ),
-                            textAlign: TextAlign.center,
-                          ),
+                            SizedBox(
+                              height: 10,
+                            ),
+
+                            Row(
+                              children: <Widget>[],
+                            ),
+                          ],
                         ),
+                      ),
+                      // PieChart(
+                      //   dataMap: dataMap,
+                      //   animationDuration: Duration(milliseconds: 800),
+                      //   chartLegendSpacing: 32,
+                      //   chartRadius: MediaQuery.of(context).size.width / 3.2,
+                      //   colorList: colorList,
+                      //   initialAngleInDegree: 0,
+                      //   chartType: ChartType.ring,
+                      //   ringStrokeWidth: 32,
+                      //   centerText: "Limite",
+                      //   legendOptions: LegendOptions(
+                      //     showLegendsInRow: false,
+                      //     legendPosition: LegendPosition.right,
+                      //     showLegends: true,
+                      //     legendShape: BoxShape.circle,
+                      //     legendTextStyle: TextStyle(
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      //   chartValuesOptions: ChartValuesOptions(
+                      //     showChartValueBackground: true,
+                      //     showChartValues: false,
+                      //     showChartValuesInPercentage: true,
+                      //     showChartValuesOutside: false,
+                      //     decimalPlaces: 1,
+                      //   ),
+                      //   // gradientList: ---To add gradient colors---
+                      //   // emptyColorGradient: ---Empty Color gradient---
+                      // ),
                       //ESPACIO ENTRE FUNCIONES DE FRONT
                       SizedBox(
                         height: 10,
                       ),
-                      if (!_permissionDenied)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                changeCleaningType("Actas");
-                              },
-                              child: Column(
-                                children: [
-                                  // SizedBox(
-                                  //   width: 160.0,
-                                  //   height: 160.0,
-                                  //   child: Card(
-                                  //     color: Color.fromARGB(255, 21, 21, 21),
-                                  //     elevation: 2.0,
-                                  //     shape: RoundedRectangleBorder(
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(8.0)),
-                                  //     child: Center(
-                                  //         child: Padding(
-                                  //       padding: const EdgeInsets.all(8.0),
-                                  //       child: Column(
-                                  //         children: <Widget>[
-                                  //           Image.asset(
-                                  //             "assets/actas.gif",
-                                  //             width: 64.0,
-                                  //             //        color: Colors.white,
-                                  //           ),
-                                  //           SizedBox(
-                                  //             height: 10.0,
-                                  //           ),
-                                  //           Text(
-                                  //             "Actas",
-                                  //             style: TextStyle(
-                                  //                 color: Colors.grey,
-                                  //                 fontWeight: FontWeight.bold,
-                                  //                 fontSize: 20.0),
-                                  //           ),
-                                  //           SizedBox(
-                                  //             height: 5.0,
-                                  //           ),
-                                  //           Text(
-                                  //             "2 Items",
-                                  //             style: TextStyle(
-                                  //                 color: Colors.white,
-                                  //                 fontWeight: FontWeight.w100),
-                                  //           )
-                                  //         ],
-                                  //       ),
-                                  //     )),
-                                  //   ),
-                                  // ),
-                                  // Container(
-                                  //   child: InkWell(
-                                  //     onTap: () {
-                                  //       Navigator.push(
-                                  //           context,
-                                  //           MaterialPageRoute(
-                                  //               builder: (context) =>
-                                  //                   transactas()));
-                                  //     },
-                                  //     child: Container(
-                                  //       height: 100,
-                                  //       width: MediaQuery.of(context).size.width *
-                                  //           0.43,
-                                  //       decoration: BoxDecoration(
-                                  //         color: Colors.white,
-                                  //         image: DecorationImage(
-                                  //           image: AssetImage('assets/actas.gif'),
-                                  //         ),
-                                  //         borderRadius: BorderRadius.all(
-                                  //             Radius.circular(56)),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  if (!_permissionDenied)
-                                    Container(
-                                      height: 100,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.43,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        image: DecorationImage(
-                                          image: AssetImage('assets/actas.gif'),
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(56)),
-                                      ),
-                                    ),
-                                  SizedBox(
-                                    height: 1,
-                                  ),
-                                  if (!_permissionDenied)
-                                    Text(
-                                      "Actas",
-                                      style: GoogleFonts.lato(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xffededed),
-                                    ),
-                                    child: (selectedType == "Actas")
-                                        ? Icon(
-                                            Icons.check_circle,
-                                            color: Colors.redAccent,
-                                            size: 40,
-                                          )
-                                        : Container(),
-                                  )
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                changeCleaningType("RFC");
-                              },
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 100,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.43,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      image: DecorationImage(
-                                        image: AssetImage('assets/rfc.gif'),
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(29)),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 1,
-                                  ),
-                                  Text(
-                                    "RFC",
-                                    style: GoogleFonts.lato(
-                                      textStyle:
-                                          Theme.of(context).textTheme.headline4,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xffededed),
-                                    ),
-                                    child: (selectedType == "RFC")
-                                        ? Icon(
-                                            Icons.check_circle,
-                                            color: Colors.blueAccent,
-                                            size: 40,
-                                          )
-                                        : Container(),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      if (!_permissionDenied)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: OnchangeActas,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 15),
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                  color: Color.fromARGB(255, 127, 137, 146),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, _) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: transactas(),
+                                    );
+                                  },
+                                  transitionDuration: duration,
+                                  reverseTransitionDuration: duration,
                                 ),
-                                child: Text(
-                                  "Solicitar",
+                              );
+                              // changeCleaningType("Actas");
+                            },
+                            child: Column(
+                              children: [
+                                // SizedBox(
+                                //   width: 160.0,
+                                //   height: 160.0,
+                                //   child: Card(
+                                //     color: Color.fromARGB(255, 21, 21, 21),
+                                //     elevation: 2.0,
+                                //     shape: RoundedRectangleBorder(
+                                //         borderRadius:
+                                //             BorderRadius.circular(8.0)),
+                                //     child: Center(
+                                //         child: Padding(
+                                //       padding: const EdgeInsets.all(8.0),
+                                //       child: Column(
+                                //         children: <Widget>[
+                                //           Image.asset(
+                                //             "assets/actas.gif",
+                                //             width: 64.0,
+                                //             //        color: Colors.white,
+                                //           ),
+                                //           SizedBox(
+                                //             height: 10.0,
+                                //           ),
+                                //           Text(
+                                //             "Actas",
+                                //             style: TextStyle(
+                                //                 color: Colors.grey,
+                                //                 fontWeight: FontWeight.bold,
+                                //                 fontSize: 20.0),
+                                //           ),
+                                //           SizedBox(
+                                //             height: 5.0,
+                                //           ),
+                                //           Text(
+                                //             "2 Items",
+                                //             style: TextStyle(
+                                //                 color: Colors.white,
+                                //                 fontWeight: FontWeight.w100),
+                                //           )
+                                //         ],
+                                //       ),
+                                //     )),
+                                //   ),
+                                // ),
+                                // Container(
+                                //   child: InkWell(
+                                //     onTap: () {
+                                //       Navigator.push(
+                                //           context,
+                                //           MaterialPageRoute(
+                                //               builder: (context) =>
+                                //                   transactas()));
+                                //     },
+                                //     child: Container(
+                                //       height: 100,
+                                //       width: MediaQuery.of(context).size.width *
+                                //           0.43,
+                                //       decoration: BoxDecoration(
+                                //         color: Colors.white,
+                                //         image: DecorationImage(
+                                //           image: AssetImage('assets/actas.gif'),
+                                //         ),
+                                //         borderRadius: BorderRadius.all(
+                                //             Radius.circular(56)),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+
+                                Container(
+                                  height: 200,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.43,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    image: DecorationImage(
+                                      image: AssetImage('assets/actas.gif'),
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(56)),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 1,
+                                ),
+
+                                Text(
+                                  "Actas",
                                   style: GoogleFonts.lato(
                                     textStyle:
                                         Theme.of(context).textTheme.headline4,
-                                    fontSize: 19,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                     fontStyle: FontStyle.italic,
                                     color: Colors.black,
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                // Container(
+                                //   height: 40,
+                                //   width: 40,
+                                //   decoration: BoxDecoration(
+                                //     shape: BoxShape.circle,
+                                //     color: Color(0xffededed),
+                                //   ),
+                                //   child: (selectedType == "Actas")
+                                //       ? Icon(
+                                //           Icons.check_circle,
+                                //           color: Colors.redAccent,
+                                //           size: 40,
+                                //         )
+                                //       : Container(),
+                                // )
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              // changeCleaningType("RFC");
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, _) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: trans(),
+                                    );
+                                  },
+                                  transitionDuration: duration,
+                                  reverseTransitionDuration: duration,
+                                ),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 200,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.43,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    image: DecorationImage(
+                                      image: AssetImage('assets/rfc.gif'),
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(29)),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 1,
+                                ),
+                                Text(
+                                  "RFC",
+                                  style: GoogleFonts.lato(
+                                    textStyle:
+                                        Theme.of(context).textTheme.headline4,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                // SizedBox(
+                                //   height: 10,
+                                // ),
+                                // Container(
+                                //   height: 40,
+                                //   width: 40,
+                                //   decoration: BoxDecoration(
+                                //     shape: BoxShape.circle,
+                                //     color: Color(0xffededed),
+                                //   ),
+                                //   child: (selectedType == "RFC")
+                                //       ? Icon(
+                                //           Icons.check_circle,
+                                //           color: Colors.blueAccent,
+                                //           size: 40,
+                                //         )
+                                //       : Container(),
+                                // )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     InkWell(
+                      //       onTap: OnchangeActas,
+                      //       child: Container(
+                      //         padding: EdgeInsets.symmetric(
+                      //             horizontal: 40, vertical: 15),
+                      //         decoration: BoxDecoration(
+                      //           borderRadius:
+                      //               BorderRadius.all(Radius.circular(20)),
+                      //           color: Color.fromARGB(255, 127, 137, 146),
+                      //         ),
+                      //         child: Text(
+                      //           "Solicitar",
+                      //           style: GoogleFonts.lato(
+                      //             textStyle:
+                      //                 Theme.of(context).textTheme.headline4,
+                      //             fontSize: 19,
+                      //             fontWeight: FontWeight.w700,
+                      //             fontStyle: FontStyle.italic,
+                      //             color: Colors.black,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     )
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

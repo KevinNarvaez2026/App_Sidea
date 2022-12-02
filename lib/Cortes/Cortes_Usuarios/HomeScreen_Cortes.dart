@@ -315,7 +315,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
       //   print(key);
       //   print(value);
       // });
-      var decoded = base64.decode(bytes['b64'].toString());
+    
       var snackBar = SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
@@ -339,12 +339,12 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
           //   isApiCallProcess = false;
         });
 
-        File file =
-            new File('/storage/emulated/0/Download/$filename' + '.xlsx');
+       File file = new File('/storage/emulated/0/Download/$filename' + '.pdf');
+      var decoded = base64.decode(bytes['b64'].toString());
 
-        await file.writeAsBytes(decoded);
+      await file.writeAsBytes(decoded);
 
-        Open_pdf(filename);
+      Open_pdf(filename);
 
         // _speak('Recuerde que debe tener un visor de pdf, para visualizar el acta');
         return file;

