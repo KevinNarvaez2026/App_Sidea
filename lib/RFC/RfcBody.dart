@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:app_actasalinstante/Widgets/carousel_example.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -171,7 +172,7 @@ class _RfcBodyState extends State<RfcBody> {
     print(resultado);
     print(curps);
   }
-
+ final Color color = HexColor('#D61C4E');
   String curp = "Ingresa tu Curp";
   final dropvalue = ValueNotifier('');
   final dropOpcoes = ['Nacimiento', 'Defuncion', 'Matrimonio', 'Divorcio'];
@@ -179,7 +180,7 @@ class _RfcBodyState extends State<RfcBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color.fromARGB(255, 127,137,146),
+      backgroundColor: color,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -188,12 +189,12 @@ class _RfcBodyState extends State<RfcBody> {
             fontSize: 20,
             fontFamily: 'RobotoMono',
             fontWeight: FontWeight.w800,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         elevation: 0,
         brightness: Brightness.light,
-        backgroundColor: Color.fromARGB(255, 127,137,146),
+        backgroundColor: color,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -201,7 +202,7 @@ class _RfcBodyState extends State<RfcBody> {
           icon: Icon(
             Icons.arrow_back_ios,
             size: 20,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),

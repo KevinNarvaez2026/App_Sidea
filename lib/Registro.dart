@@ -53,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-
+    hasNetwork_Init();
     readCounter();
     setState(() {
       isApiCallProcess = true;
@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
   json_version() async {
     //  print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.8.0"});
+      var json_Ver = jsonEncode({"version": "0.9.0"});
       print(json_Ver.toString());
 
       Map<String, String> mainheader = new Map();
@@ -78,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (response.statusCode == 200) {
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.8.0') {
+        if (datas['version'] != '0.9.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -103,6 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
             isApiCallProcess = false;
           });
           Welcome();
+
           _getCurrentLocation();
           // _fetchContacts();
           //Notification();
@@ -183,6 +184,32 @@ class _RegisterPageState extends State<RegisterPage> {
       exit(0);
     } else {
       print("VPN_OFF");
+    }
+  }
+
+  Future<bool> hasNetwork_Init() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+      }
+    } on SocketException catch (_) {
+      var snackBar = SnackBar(
+        elevation: 0,
+        width: 400,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Conectate a una Red ',
+          message: 'Contacte al equipo de software!',
+          contentType: ContentType.failure,
+        ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      print('not connected');
+      _speak(
+          "Debe estar conectado a un red waifai, o puede usar datos moviles");
     }
   }
 
@@ -1269,9 +1296,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             builder: (BuildContext context) => LoginPage()));
                   })
                 })
+    
             .catchError((err) => {
-                  print(err.toString()),
-                  _speak("A ocurrido un error, contacte al equipo de soporte,")
+            
+             _speak("A ocurrido un error, contacte al equipo de soporte," +
+                      err.toString())
+                    
                 });
       }
     } catch (e) {

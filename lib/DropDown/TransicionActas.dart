@@ -8,6 +8,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_background/animated_background.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ColorScheme.dart';
@@ -78,10 +79,11 @@ class _transactasState extends State<transactas>
   ];
   String selectedType = "initial";
   String selectedFrequency = "monthly";
+  final Color color = HexColor('#D61C4E');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 127,137,146),
+      backgroundColor: color,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -91,11 +93,11 @@ class _transactasState extends State<transactas>
             fontSize: 22,
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 127,137,146),
+        backgroundColor: color,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -331,7 +333,7 @@ class _transactasState extends State<transactas>
                           decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20)),
-                              color: Color.fromARGB(255, 127,137,146),),
+                              color: color,),
                           child: Text(
                             "Solicitar",
                             style: GoogleFonts.lato(
@@ -339,7 +341,7 @@ class _transactasState extends State<transactas>
                               fontSize: 19,
                               fontWeight: FontWeight.w700,
                               fontStyle: FontStyle.italic,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                         ),

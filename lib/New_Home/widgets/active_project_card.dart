@@ -39,11 +39,11 @@ class ActiveProjectsCard extends StatelessWidget {
                 lineWidth: 5.0,
                 circularStrokeCap: CircularStrokeCap.round,
                 backgroundColor: Colors.white10,
-                progressColor: Colors.black,
+                progressColor: Colors.white,
                 center: Text(
-                  '${(loadingPercent*1000).round()}%',
+                  '${(loadingPercent*10000).round()}%',
                   style: TextStyle(
-                      fontWeight: FontWeight.w700, color: Colors.black),
+                      fontWeight: FontWeight.w700, color: Colors.white),
                 ),
               ),
             ),
@@ -56,7 +56,7 @@ class ActiveProjectsCard extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: 15.0,
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                     
                   ),
@@ -67,7 +67,7 @@ class ActiveProjectsCard extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Colors.white54,
+                    color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),
                 ),

@@ -19,6 +19,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 import 'package:image_picker/image_picker.dart';
@@ -122,8 +123,8 @@ class _CarouselExampleState extends State<CarouselExample> {
         setState(() {
           ids_user = GetRobots[i]['id'];
           nombre = GetRobots[i]['username'];
-          limite = GetRobots[i]['actas_limit'] / 1000;
-          current = GetRobots[i]['actas_current'] / 1000;
+          limite = GetRobots[i]['actas_limit'] / 10000;
+          current = GetRobots[i]['actas_current'] / 10000;
           print(limite + current);
         });
       }
@@ -143,7 +144,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.8.0"});
+      var json_Ver = jsonEncode({"version": "0.9.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -165,7 +166,7 @@ class _CarouselExampleState extends State<CarouselExample> {
         });
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.8.0') {
+        if (datas['version'] != '0.9.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -607,7 +608,10 @@ class _CarouselExampleState extends State<CarouselExample> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+
+
+                              },
                               child: Text("Abrir"),
                               textColor: Colors.white,
                             ),
@@ -637,7 +641,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 
   final ImagePicker _picker = ImagePicker();
   PickedFile _imageFile;
-
+ 
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
@@ -648,12 +652,13 @@ class _CarouselExampleState extends State<CarouselExample> {
       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
     );
   }
-
+ final Color color = HexColor('#D61C4E');
+  final Color color_Card = HexColor('#01081f');
   FetchUserLists _userList = FetchUserLists();
   Widget Carr(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: Color.fromARGB(255, 127, 137, 146),
+          backgroundColor: color,
           appBar: AppBar(
             automaticallyImplyLeading: false,
             centerTitle: true,
@@ -663,10 +668,10 @@ class _CarouselExampleState extends State<CarouselExample> {
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   fontStyle: FontStyle.italic,
-                  color: Colors.black,
+                  color: Colors.white,
                 )),
             elevation: 0,
-            backgroundColor: Color.fromARGB(255, 127, 137, 146),
+            backgroundColor: color,
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -685,7 +690,7 @@ class _CarouselExampleState extends State<CarouselExample> {
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Colors.blueAccent,
+                      color: Colors.white,
                     )),
               ),
               Expanded(
@@ -693,10 +698,18 @@ class _CarouselExampleState extends State<CarouselExample> {
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40)),
-                      color: Colors.white),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 4,
+                        offset: Offset(4, 8), // Shadow position
+                      ),
+                    ],
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1535,6 +1548,37 @@ class _CarouselExampleState extends State<CarouselExample> {
 //                                 }),
 //                           ),
 //                         ),
+// Container(
+//   color: color_Card,
+//             margin: EdgeInsets.only(top: 10),
+//             child: SingleChildScrollView(
+//               child: Padding(
+//                 padding: EdgeInsets.all(17.0),
+//                 child: Column(
+//                   children: [
+//                     InkWell(
+//                       onTap: () {
+//                        // BlocProvider.of<NavigationBloc> (context).add(NavigationEvents.HomePageClickedEvents);
+//                       },
+//                       child: Container(
+                        
+//                         margin: EdgeInsets.only(bottom: 8),
+//                         height: 100,
+//                         child: Card(
+//                           color: color_Card,
+//                           semanticContainer: true,
+//                           clipBehavior: Clip.antiAliasWithSaveLayer,
+//                           child: Image.asset('assets/actas.gif', fit: BoxFit.fill,),
+//                           //shadowColor: Colors.white,
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(10.0),
+//                           ),
+//                           elevation: 0,
+//                           margin: EdgeInsets.all(10.0),
+                        
+//                         ),
+//                       ),
+//                     )])))),
 
                       Container(
                         color: Colors.transparent,
@@ -1548,14 +1592,14 @@ class _CarouselExampleState extends State<CarouselExample> {
                             Row(
                               children: <Widget>[
                                 ActiveProjectsCard(
-                                  cardColor: LightColors.kDarkYellow,
+                                  cardColor: color_Card,
                                   loadingPercent: limite,
                                   title: 'Actas Limite',
                                   subtitle: '',
                                 ),
                                 SizedBox(width: 20.0),
                                 ActiveProjectsCard(
-                                  cardColor: LightColors.kDarkYellow,
+                                  cardColor: color_Card,
                                   loadingPercent: current,
                                   title: 'Actas descargadas',
                                   subtitle: '',
@@ -1567,11 +1611,17 @@ class _CarouselExampleState extends State<CarouselExample> {
                             ),
 
                             Row(
-                              children: <Widget>[],
+                              children: <Widget>[
+
+
+                              ],
                             ),
                           ],
                         ),
                       ),
+
+
+                      
                       // PieChart(
                       //   dataMap: dataMap,
                       //   animationDuration: Duration(milliseconds: 800),

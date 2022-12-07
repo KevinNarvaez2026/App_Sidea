@@ -7,6 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_background/animated_background.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ColorScheme.dart';
 import '../DropDown/DropDown.dart';
@@ -67,6 +68,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
     'assets/NACIMIENTO.jpg',
     'assets/RFC.jpg',
   ];
+   final Color color = HexColor('#D61C4E');
   var _currentSelectedValue;
   String label = "Persona";
   var _currencies = ["Fisica", "Moral"];
@@ -75,7 +77,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 127,137,146),
+      backgroundColor: color,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -85,11 +87,11 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
             fontSize: 22,
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 127,137,146),
+        backgroundColor: color,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -323,7 +325,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                "RFC por curp",
+                                "Curp",
                                 style: GoogleFonts.lato(
                                   textStyle:
                                       Theme.of(context).textTheme.headline4,
@@ -427,7 +429,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
-                                color: Color.fromARGB(255, 127,137,146),),
+                                color: color,),
                             child: Text(
                               "Solicitar",
                               style: GoogleFonts.lato(
@@ -436,7 +438,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                                 fontSize: 19,
                                 fontWeight: FontWeight.w700,
                                 fontStyle: FontStyle.italic,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                           ),

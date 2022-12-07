@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:android_intent/android_intent.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
@@ -138,11 +139,12 @@ class _HomePageState extends State<SERACHRFC> {
   var now = new DateTime.now();
   var isFavorite = false.obs;
   int index;
+   final Color color = HexColor('#D61C4E');
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: Color.fromARGB(255, 127, 137, 146),
+          backgroundColor: color,
           appBar: AppBar(
             actions: [
               new Center(
@@ -154,7 +156,7 @@ class _HomePageState extends State<SERACHRFC> {
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   dropdownColor: Colors.white,
@@ -176,7 +178,7 @@ class _HomePageState extends State<SERACHRFC> {
                 icon: new Icon(Icons.info),
                 iconSize: 30.0,
                 highlightColor: Colors.white,
-                color: Colors.black,
+                color: Colors.white,
                 onPressed: () {
                   AwesomeDialog(
                     context: context,
@@ -197,7 +199,7 @@ class _HomePageState extends State<SERACHRFC> {
                   showSearch(context: context, delegate: SearchUser());
                 },
                 icon: Icon(Icons.search_sharp),
-                color: Colors.black,
+                color: Colors.white,
                 iconSize: 30.0,
               )
             ],
@@ -212,7 +214,7 @@ class _HomePageState extends State<SERACHRFC> {
                 fontSize: 19,
                 fontWeight: FontWeight.w700,
                 fontStyle: FontStyle.italic,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),

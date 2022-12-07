@@ -13,6 +13,7 @@ import 'package:app_actasalinstante/views/homepage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,6 +72,7 @@ class _NavBarState extends State<NavBar> {
   }
 
   var rol;
+  var id;
   get_Rol() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -90,6 +92,7 @@ class _NavBarState extends State<NavBar> {
     print(GetRobots);
     setState(() {
       rol = GetRobots['rol'];
+      id = GetRobots['id'];
       print(rol);
     });
   }
@@ -106,7 +109,7 @@ class _NavBarState extends State<NavBar> {
   ];
 
   var myindex = 0;
-
+ final Color color = HexColor('#D61C4E');
   @override
   Widget build(BuildContext context) {
     final args =
@@ -123,7 +126,7 @@ class _NavBarState extends State<NavBar> {
               new Center(
                 child: Icon(
                   (myindex == 0) ? Icons.home_outlined : Icons.home,
-                  color: Color.fromARGB(255, 127, 137, 146),
+                  color: Colors.white
                 ),
               ),
               new Center(
@@ -134,7 +137,7 @@ class _NavBarState extends State<NavBar> {
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    color: Color.fromARGB(255, 127, 137, 146),
+                    color: Colors.white
                   ),
                 ),
               ),
@@ -149,7 +152,7 @@ class _NavBarState extends State<NavBar> {
                   (myindex == 1)
                       ? Ionicons.documents_outline
                       : Ionicons.documents,
-                  color: Color.fromARGB(255, 127, 137, 146),
+                  color: Colors.white
                 ),
               ),
               new Center(
@@ -159,7 +162,7 @@ class _NavBarState extends State<NavBar> {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Color.fromARGB(255, 127, 137, 146),
+                      color: Colors.white
                     )),
               ),
             ],
@@ -172,7 +175,7 @@ class _NavBarState extends State<NavBar> {
                   (myindex == 2)
                       ? Ionicons.document_outline
                       : Ionicons.document,
-                  color: Color.fromARGB(255, 127, 137, 146),
+                  color: Colors.white
                 ),
               ),
               new Center(
@@ -182,7 +185,7 @@ class _NavBarState extends State<NavBar> {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Color.fromARGB(255, 127, 137, 146),
+                      color: Colors.white
                     )),
               ),
             ],
@@ -193,7 +196,7 @@ class _NavBarState extends State<NavBar> {
               new Center(
                 child: Icon(
                   (myindex == 3) ? Icons.settings_outlined : Icons.settings,
-                  color: Color.fromARGB(255, 127, 137, 146),
+                  color: Colors.white
                 ),
               ),
               new Center(
@@ -203,7 +206,7 @@ class _NavBarState extends State<NavBar> {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Color.fromARGB(255, 127, 137, 146),
+                      color: Colors.white
                     )),
               ),
             ],

@@ -12,6 +12,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -431,11 +432,11 @@ class _SERACHACTASState extends State<SERACHACTAS>
       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
     );
   }
-
+ final Color color = HexColor('#D61C4E');
   Widget Actas_De(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: Color.fromARGB(255, 127, 137, 146),
+          backgroundColor: color,
           appBar: AppBar(
             actions: [
               new Center(
@@ -447,7 +448,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   dropdownColor: Colors.white,
@@ -469,7 +470,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                 icon: new Icon(Icons.info),
                 iconSize: 30.0,
                 highlightColor: Colors.white,
-                color: Colors.black,
+                color: Colors.white,
                 onPressed: () {
                   AwesomeDialog(
                     context: context,
@@ -491,7 +492,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                   showSearch(context: context, delegate: SearchUser());
                 },
                 icon: Icon(Icons.search_sharp),
-                color: Colors.black,
+                color: Colors.white,
                 iconSize: 30.0,
               ),
             ],
@@ -506,7 +507,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                 fontSize: 19,
                 fontWeight: FontWeight.w700,
                 fontStyle: FontStyle.italic,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
