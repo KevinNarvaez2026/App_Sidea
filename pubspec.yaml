@@ -164,6 +164,8 @@ flutter:
     - assets/error404.gif
     - assets/ststus_close.gif
     - assets/ststus_ok.gif
+    - assets/NEW_Acta.png
+    - assets/NEW_RFC.png
     
     
   # To add assets to your application, add an assets section, like this:

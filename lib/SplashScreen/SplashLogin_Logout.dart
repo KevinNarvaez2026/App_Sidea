@@ -8,6 +8,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,6 +127,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
   Color _containerColor = Colors.blue;
   final ImagePicker _picker = ImagePicker();
   PickedFile _imageFile;
+   final Color color = HexColor('#D61C4E');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +136,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
         children: [
           Container(
             decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 127, 137, 146),
+              color: Color.fromARGB(255, 214, 28, 78),
             ),
           ),
           Column(
@@ -146,6 +148,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ColorSonar(
+                      
                       // wavesDisabled: true,
                       // waveMotion: WaveMotion.synced,
                       contentAreaRadius: 58.0,
@@ -205,7 +208,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 29.0,
-                          color: Colors.black),
+                          color: Colors.white),
                     ),
                     SizedBox(
                       height: 40,
@@ -376,7 +379,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
               ),

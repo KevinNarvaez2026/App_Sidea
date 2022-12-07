@@ -35,6 +35,7 @@ import '../DropDown/DropDown.dart';
 import '../Inicio/InicioActas.dart';
 import '../LoginView/api/ProgressHUD.dart';
 import '../LoginView/api/model/login_model.dart';
+import '../Merry/snow-animation.dart';
 import '../NavBar.dart';
 import '../New_Home/theme/colors/light_colors.dart';
 import '../New_Home/widgets/active_project_card.dart';
@@ -139,12 +140,12 @@ class _CarouselExampleState extends State<CarouselExample> {
     json_version();
   }
 
-//CHECADOR DE VERSION DE LA APP POR MEDIO DE UNA RCHIVO JSON
+//CHECADOR DE VERSION DE LA APP POR MEDIO DE UNA ARCHIVO JSON
   bool isApiCallProcess = false;
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.9.0"});
+      var json_Ver = jsonEncode({"version": "0.10.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -166,7 +167,7 @@ class _CarouselExampleState extends State<CarouselExample> {
         });
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.9.0') {
+        if (datas['version'] != '0.10.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -608,10 +609,7 @@ class _CarouselExampleState extends State<CarouselExample> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             MaterialButton(
-                              onPressed: () {
-
-
-                              },
+                              onPressed: () {},
                               child: Text("Abrir"),
                               textColor: Colors.white,
                             ),
@@ -641,7 +639,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 
   final ImagePicker _picker = ImagePicker();
   PickedFile _imageFile;
- 
+
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
@@ -652,7 +650,9 @@ class _CarouselExampleState extends State<CarouselExample> {
       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
     );
   }
- final Color color = HexColor('#D61C4E');
+
+  bool _isRunning = true;
+  final Color color = HexColor('#D61C4E');
   final Color color_Card = HexColor('#01081f');
   FetchUserLists _userList = FetchUserLists();
   Widget Carr(BuildContext context) {
@@ -1548,37 +1548,6 @@ class _CarouselExampleState extends State<CarouselExample> {
 //                                 }),
 //                           ),
 //                         ),
-// Container(
-//   color: color_Card,
-//             margin: EdgeInsets.only(top: 10),
-//             child: SingleChildScrollView(
-//               child: Padding(
-//                 padding: EdgeInsets.all(17.0),
-//                 child: Column(
-//                   children: [
-//                     InkWell(
-//                       onTap: () {
-//                        // BlocProvider.of<NavigationBloc> (context).add(NavigationEvents.HomePageClickedEvents);
-//                       },
-//                       child: Container(
-                        
-//                         margin: EdgeInsets.only(bottom: 8),
-//                         height: 100,
-//                         child: Card(
-//                           color: color_Card,
-//                           semanticContainer: true,
-//                           clipBehavior: Clip.antiAliasWithSaveLayer,
-//                           child: Image.asset('assets/actas.gif', fit: BoxFit.fill,),
-//                           //shadowColor: Colors.white,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(10.0),
-//                           ),
-//                           elevation: 0,
-//                           margin: EdgeInsets.all(10.0),
-                        
-//                         ),
-//                       ),
-//                     )])))),
 
                       Container(
                         color: Colors.transparent,
@@ -1607,21 +1576,154 @@ class _CarouselExampleState extends State<CarouselExample> {
                               ],
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 30,
                             ),
 
                             Row(
                               children: <Widget>[
-
-
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: color_Card,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: SingleChildScrollView(
+                                        child: Padding(
+                                            padding: EdgeInsets.all(17.0),
+                                            child: Column(children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    PageRouteBuilder(
+                                                      pageBuilder: (context,
+                                                          animation, _) {
+                                                        return FadeTransition(
+                                                          opacity: animation,
+                                                          child: transactas(),
+                                                        );
+                                                      },
+                                                      transitionDuration:
+                                                          duration,
+                                                      reverseTransitionDuration:
+                                                          duration,
+                                                    ),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 8),
+                                                  height: 100,
+                                                  child: Card(
+                                                    color: color_Card,
+                                                    semanticContainer: true,
+                                                    clipBehavior: Clip
+                                                        .antiAliasWithSaveLayer,
+                                                    child: Image.asset(
+                                                      'assets/NEW_Acta.png',
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                    //shadowColor: Colors.white,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                    elevation: 0,
+                                                    margin:
+                                                        EdgeInsets.all(10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                "Actas",
+                                                style: GoogleFonts.lato(
+                                                  textStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .headline4,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ])))),
+                                SizedBox(width: 25.0),
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: color_Card,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: SingleChildScrollView(
+                                        child: Padding(
+                                            padding: EdgeInsets.all(17.0),
+                                            child: Column(children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    PageRouteBuilder(
+                                                      pageBuilder: (context,
+                                                          animation, _) {
+                                                        return FadeTransition(
+                                                          opacity: animation,
+                                                          child: trans(),
+                                                        );
+                                                      },
+                                                      transitionDuration:
+                                                          duration,
+                                                      reverseTransitionDuration:
+                                                          duration,
+                                                    ),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 8),
+                                                  height: 100,
+                                                  child: Card(
+                                                    color: color_Card,
+                                                    semanticContainer: true,
+                                                    clipBehavior: Clip
+                                                        .antiAliasWithSaveLayer,
+                                                    child: Image.asset(
+                                                      'assets/NEW_RFC.png',
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                    //shadowColor: Colors.white,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                    elevation: 0,
+                                                    margin:
+                                                        EdgeInsets.all(10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                "RFC",
+                                                style: GoogleFonts.lato(
+                                                  textStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .headline4,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ])))),
                               ],
                             ),
                           ],
                         ),
                       ),
 
-
-                      
                       // PieChart(
                       //   dataMap: dataMap,
                       //   animationDuration: Duration(milliseconds: 800),
@@ -1659,209 +1761,209 @@ class _CarouselExampleState extends State<CarouselExample> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, _) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: transactas(),
-                                    );
-                                  },
-                                  transitionDuration: duration,
-                                  reverseTransitionDuration: duration,
-                                ),
-                              );
-                              // changeCleaningType("Actas");
-                            },
-                            child: Column(
-                              children: [
-                                // SizedBox(
-                                //   width: 160.0,
-                                //   height: 160.0,
-                                //   child: Card(
-                                //     color: Color.fromARGB(255, 21, 21, 21),
-                                //     elevation: 2.0,
-                                //     shape: RoundedRectangleBorder(
-                                //         borderRadius:
-                                //             BorderRadius.circular(8.0)),
-                                //     child: Center(
-                                //         child: Padding(
-                                //       padding: const EdgeInsets.all(8.0),
-                                //       child: Column(
-                                //         children: <Widget>[
-                                //           Image.asset(
-                                //             "assets/actas.gif",
-                                //             width: 64.0,
-                                //             //        color: Colors.white,
-                                //           ),
-                                //           SizedBox(
-                                //             height: 10.0,
-                                //           ),
-                                //           Text(
-                                //             "Actas",
-                                //             style: TextStyle(
-                                //                 color: Colors.grey,
-                                //                 fontWeight: FontWeight.bold,
-                                //                 fontSize: 20.0),
-                                //           ),
-                                //           SizedBox(
-                                //             height: 5.0,
-                                //           ),
-                                //           Text(
-                                //             "2 Items",
-                                //             style: TextStyle(
-                                //                 color: Colors.white,
-                                //                 fontWeight: FontWeight.w100),
-                                //           )
-                                //         ],
-                                //       ),
-                                //     )),
-                                //   ),
-                                // ),
-                                // Container(
-                                //   child: InkWell(
-                                //     onTap: () {
-                                //       Navigator.push(
-                                //           context,
-                                //           MaterialPageRoute(
-                                //               builder: (context) =>
-                                //                   transactas()));
-                                //     },
-                                //     child: Container(
-                                //       height: 100,
-                                //       width: MediaQuery.of(context).size.width *
-                                //           0.43,
-                                //       decoration: BoxDecoration(
-                                //         color: Colors.white,
-                                //         image: DecorationImage(
-                                //           image: AssetImage('assets/actas.gif'),
-                                //         ),
-                                //         borderRadius: BorderRadius.all(
-                                //             Radius.circular(56)),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
+                          // InkWell(
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       PageRouteBuilder(
+                          //         pageBuilder: (context, animation, _) {
+                          //           return FadeTransition(
+                          //             opacity: animation,
+                          //             child: transactas(),
+                          //           );
+                          //         },
+                          //         transitionDuration: duration,
+                          //         reverseTransitionDuration: duration,
+                          //       ),
+                          //     );
+                          //     // changeCleaningType("Actas");
+                          //   },
+                          //   child: Column(
+                          //     children: [
+                          //       // SizedBox(
+                          //       //   width: 160.0,
+                          //       //   height: 160.0,
+                          //       //   child: Card(
+                          //       //     color: Color.fromARGB(255, 21, 21, 21),
+                          //       //     elevation: 2.0,
+                          //       //     shape: RoundedRectangleBorder(
+                          //       //         borderRadius:
+                          //       //             BorderRadius.circular(8.0)),
+                          //       //     child: Center(
+                          //       //         child: Padding(
+                          //       //       padding: const EdgeInsets.all(8.0),
+                          //       //       child: Column(
+                          //       //         children: <Widget>[
+                          //       //           Image.asset(
+                          //       //             "assets/actas.gif",
+                          //       //             width: 64.0,
+                          //       //             //        color: Colors.white,
+                          //       //           ),
+                          //       //           SizedBox(
+                          //       //             height: 10.0,
+                          //       //           ),
+                          //       //           Text(
+                          //       //             "Actas",
+                          //       //             style: TextStyle(
+                          //       //                 color: Colors.grey,
+                          //       //                 fontWeight: FontWeight.bold,
+                          //       //                 fontSize: 20.0),
+                          //       //           ),
+                          //       //           SizedBox(
+                          //       //             height: 5.0,
+                          //       //           ),
+                          //       //           Text(
+                          //       //             "2 Items",
+                          //       //             style: TextStyle(
+                          //       //                 color: Colors.white,
+                          //       //                 fontWeight: FontWeight.w100),
+                          //       //           )
+                          //       //         ],
+                          //       //       ),
+                          //       //     )),
+                          //       //   ),
+                          //       // ),
+                          //       // Container(
+                          //       //   child: InkWell(
+                          //       //     onTap: () {
+                          //       //       Navigator.push(
+                          //       //           context,
+                          //       //           MaterialPageRoute(
+                          //       //               builder: (context) =>
+                          //       //                   transactas()));
+                          //       //     },
+                          //       //     child: Container(
+                          //       //       height: 100,
+                          //       //       width: MediaQuery.of(context).size.width *
+                          //       //           0.43,
+                          //       //       decoration: BoxDecoration(
+                          //       //         color: Colors.white,
+                          //       //         image: DecorationImage(
+                          //       //           image: AssetImage('assets/actas.gif'),
+                          //       //         ),
+                          //       //         borderRadius: BorderRadius.all(
+                          //       //             Radius.circular(56)),
+                          //       //       ),
+                          //       //     ),
+                          //       //   ),
+                          //       // ),
 
-                                Container(
-                                  height: 200,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.43,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/actas.gif'),
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(56)),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 1,
-                                ),
+                          //       Container(
+                          //         height: 200,
+                          //         width:
+                          //             MediaQuery.of(context).size.width * 0.43,
+                          //         decoration: BoxDecoration(
+                          //           color: Colors.white,
+                          //           image: DecorationImage(
+                          //             image: AssetImage('assets/actas.gif'),
+                          //           ),
+                          //           borderRadius:
+                          //               BorderRadius.all(Radius.circular(56)),
+                          //         ),
+                          //       ),
+                          //       SizedBox(
+                          //         height: 1,
+                          //       ),
 
-                                Text(
-                                  "Actas",
-                                  style: GoogleFonts.lato(
-                                    textStyle:
-                                        Theme.of(context).textTheme.headline4,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                // Container(
-                                //   height: 40,
-                                //   width: 40,
-                                //   decoration: BoxDecoration(
-                                //     shape: BoxShape.circle,
-                                //     color: Color(0xffededed),
-                                //   ),
-                                //   child: (selectedType == "Actas")
-                                //       ? Icon(
-                                //           Icons.check_circle,
-                                //           color: Colors.redAccent,
-                                //           size: 40,
-                                //         )
-                                //       : Container(),
-                                // )
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              // changeCleaningType("RFC");
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, _) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: trans(),
-                                    );
-                                  },
-                                  transitionDuration: duration,
-                                  reverseTransitionDuration: duration,
-                                ),
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 200,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.43,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/rfc.gif'),
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(29)),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 1,
-                                ),
-                                Text(
-                                  "RFC",
-                                  style: GoogleFonts.lato(
-                                    textStyle:
-                                        Theme.of(context).textTheme.headline4,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                // SizedBox(
-                                //   height: 10,
-                                // ),
-                                // Container(
-                                //   height: 40,
-                                //   width: 40,
-                                //   decoration: BoxDecoration(
-                                //     shape: BoxShape.circle,
-                                //     color: Color(0xffededed),
-                                //   ),
-                                //   child: (selectedType == "RFC")
-                                //       ? Icon(
-                                //           Icons.check_circle,
-                                //           color: Colors.blueAccent,
-                                //           size: 40,
-                                //         )
-                                //       : Container(),
-                                // )
-                              ],
-                            ),
-                          )
+                          //       Text(
+                          //         "Actas",
+                          //         style: GoogleFonts.lato(
+                          //           textStyle:
+                          //               Theme.of(context).textTheme.headline4,
+                          //           fontSize: 16,
+                          //           fontWeight: FontWeight.w700,
+                          //           fontStyle: FontStyle.italic,
+                          //           color: Colors.black,
+                          //         ),
+                          //       ),
+                          //       SizedBox(
+                          //         height: 10,
+                          //       ),
+                          //       // Container(
+                          //       //   height: 40,
+                          //       //   width: 40,
+                          //       //   decoration: BoxDecoration(
+                          //       //     shape: BoxShape.circle,
+                          //       //     color: Color(0xffededed),
+                          //       //   ),
+                          //       //   child: (selectedType == "Actas")
+                          //       //       ? Icon(
+                          //       //           Icons.check_circle,
+                          //       //           color: Colors.redAccent,
+                          //       //           size: 40,
+                          //       //         )
+                          //       //       : Container(),
+                          //       // )
+                          //     ],
+                          //   ),
+                          // ),
+                          // InkWell(
+                          //   onTap: () {
+                          //     // changeCleaningType("RFC");
+                          //     Navigator.push(
+                          //       context,
+                          //       PageRouteBuilder(
+                          //         pageBuilder: (context, animation, _) {
+                          //           return FadeTransition(
+                          //             opacity: animation,
+                          //             child: trans(),
+                          //           );
+                          //         },
+                          //         transitionDuration: duration,
+                          //         reverseTransitionDuration: duration,
+                          //       ),
+                          //     );
+                          //   },
+                          //   child: Column(
+                          //     children: [
+                          //       Container(
+                          //         height: 200,
+                          //         width:
+                          //             MediaQuery.of(context).size.width * 0.43,
+                          //         decoration: BoxDecoration(
+                          //           color: Color.fromARGB(255, 255, 255, 255),
+                          //           image: DecorationImage(
+                          //             image: AssetImage('assets/rfc.gif'),
+                          //           ),
+                          //           borderRadius:
+                          //               BorderRadius.all(Radius.circular(29)),
+                          //         ),
+                          //       ),
+                          //       SizedBox(
+                          //         height: 1,
+                          //       ),
+                          //       Text(
+                          //         "RFC",
+                          //         style: GoogleFonts.lato(
+                          //           textStyle:
+                          //               Theme.of(context).textTheme.headline4,
+                          //           fontSize: 16,
+                          //           fontWeight: FontWeight.w700,
+                          //           fontStyle: FontStyle.italic,
+                          //           color: Colors.black,
+                          //         ),
+                          //       ),
+                          //       // SizedBox(
+                          //       //   height: 10,
+                          //       // ),
+                          //       // Container(
+                          //       //   height: 40,
+                          //       //   width: 40,
+                          //       //   decoration: BoxDecoration(
+                          //       //     shape: BoxShape.circle,
+                          //       //     color: Color(0xffededed),
+                          //       //   ),
+                          //       //   child: (selectedType == "RFC")
+                          //       //       ? Icon(
+                          //       //           Icons.check_circle,
+                          //       //           color: Colors.blueAccent,
+                          //       //           size: 40,
+                          //       //         )
+                          //       //       : Container(),
+                          //       // )
+                          //     ],
+                          //   ),
+                          // )
                         ],
                       ),
                       SizedBox(
