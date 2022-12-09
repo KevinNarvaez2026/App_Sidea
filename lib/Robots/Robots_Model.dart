@@ -6,17 +6,19 @@ class Robots_model {
   String username;
   String email;
   String comments;
+  String current;
 
   Robots_model({
     this.data,
     this.username,
     this.email,
     this.comments,
+    this.current
   });
 
   Robots_model.fromJson(Map<String, dynamic> json) {
     data = json['status'];
-
+    //current = json['current'];
     username = json['name'];
     email = json['source'];
     comments = json['system'];

@@ -90,6 +90,22 @@ class _BodyState extends State<Body> {
       print(response.reasonPhrase);
     }
   }
+ @override
+  void initState() {
+    super.initState();
+GetNames();
+    Lenguaje();
+  }
+
+   String user = "";
+  GetNames() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      user = prefs.getString('username');
+    });
+  
+  }
 
   Lenguaje() async {
     languages = List<String>.from(await flutterTts.getLanguages);
@@ -813,7 +829,7 @@ class _BodyState extends State<Body> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Actas Al Instante ',
+          ''+user.toString(),
           style: TextStyle(
             fontSize: 20,
             fontFamily: 'RobotoMono',

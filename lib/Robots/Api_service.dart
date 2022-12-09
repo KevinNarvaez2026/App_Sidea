@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:app_actasalinstante/RFCDescargas/SearchapiRFC/user_model.dart';
 import 'package:app_actasalinstante/RFCDescargas/services/Variables.dart';
@@ -23,7 +24,7 @@ class Robots_get {
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     Response response = await get(
-      Uri.parse('https://actasalinstante.com:3030/api/robots/getAll/'),
+      Uri.parse('https://actasalinstante.com:3030/api/robotsUsage/get/all/'),
       headers: mainheader,
     );
 
@@ -34,7 +35,7 @@ class Robots_get {
         for (var i = 0; i < data.length; i++) {
        //   print(data[i]['name']);
 
-        
+      
             results = data.map((e) => Robots_model.fromJson(e)).toList();
         
          

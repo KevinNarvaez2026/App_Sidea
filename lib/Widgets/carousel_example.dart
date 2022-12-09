@@ -140,12 +140,13 @@ class _CarouselExampleState extends State<CarouselExample> {
     json_version();
   }
 
+  var version;
 //CHECADOR DE VERSION DE LA APP POR MEDIO DE UNA ARCHIVO JSON
   bool isApiCallProcess = false;
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.10.0"});
+      var json_Ver = jsonEncode({"version": "0.11.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -165,9 +166,10 @@ class _CarouselExampleState extends State<CarouselExample> {
         setState(() {
           isApiCallProcess = false;
         });
+
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.10.0') {
+        if (datas['version'] != '0.11.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -184,11 +186,13 @@ class _CarouselExampleState extends State<CarouselExample> {
               _launchURL();
             },
           )..show();
+          version = datas['version'];
         } else {
           setState(() {
             isApiCallProcess = false;
           });
-
+          version = datas['version'];
+          print(version);
           GetImages();
           GetNames();
           getToken();
@@ -664,7 +668,7 @@ class _CarouselExampleState extends State<CarouselExample> {
             centerTitle: true,
             title: Text('Actas Al Instante',
                 style: GoogleFonts.lato(
-                  textStyle: Theme.of(context).textTheme.headline4,
+                  textStyle: Theme.of(context).textTheme.headlineMedium,
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   fontStyle: FontStyle.italic,
@@ -686,7 +690,7 @@ class _CarouselExampleState extends State<CarouselExample> {
               new Center(
                 child: Text("" + user.toString(),
                     style: GoogleFonts.lato(
-                      textStyle: Theme.of(context).textTheme.headline4,
+                      textStyle: Theme.of(context).textTheme.headlineMedium,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
@@ -1548,181 +1552,183 @@ class _CarouselExampleState extends State<CarouselExample> {
 //                                 }),
 //                           ),
 //                         ),
+                      if (version == '0.11.0')
+                        Container(
+                          color: Colors.transparent,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              //   subheading('Active Projects'),
+                              SizedBox(height: 5.0),
+                              Row(
+                                children: <Widget>[
+                                  ActiveProjectsCard(
+                                    cardColor: color_Card,
+                                    loadingPercent: limite,
+                                    title: 'Actas Limite',
+                                    subtitle: '',
+                                  ),
+                                  SizedBox(width: 20.0),
+                                  ActiveProjectsCard(
+                                    cardColor: color_Card,
+                                    loadingPercent: current,
+                                    title: 'Actas descargadas',
+                                    subtitle: '',
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
 
-                      Container(
-                        color: Colors.transparent,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            //   subheading('Active Projects'),
-                            SizedBox(height: 5.0),
-                            Row(
-                              children: <Widget>[
-                                ActiveProjectsCard(
-                                  cardColor: color_Card,
-                                  loadingPercent: limite,
-                                  title: 'Actas Limite',
-                                  subtitle: '',
-                                ),
-                                SizedBox(width: 20.0),
-                                ActiveProjectsCard(
-                                  cardColor: color_Card,
-                                  loadingPercent: current,
-                                  title: 'Actas descargadas',
-                                  subtitle: '',
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-
-                            Row(
-                              children: <Widget>[
-                                Container(
-                                    decoration: BoxDecoration(
-                                      color: color_Card,
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: SingleChildScrollView(
-                                        child: Padding(
-                                            padding: EdgeInsets.all(17.0),
-                                            child: Column(children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    PageRouteBuilder(
-                                                      pageBuilder: (context,
-                                                          animation, _) {
-                                                        return FadeTransition(
-                                                          opacity: animation,
-                                                          child: transactas(),
-                                                        );
-                                                      },
-                                                      transitionDuration:
-                                                          duration,
-                                                      reverseTransitionDuration:
-                                                          duration,
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        color: color_Card,
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                      ),
+                                      margin: EdgeInsets.only(top: 10),
+                                      child: SingleChildScrollView(
+                                          child: Padding(
+                                              padding: EdgeInsets.all(17.0),
+                                              child: Column(children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      PageRouteBuilder(
+                                                        pageBuilder: (context,
+                                                            animation, _) {
+                                                          return FadeTransition(
+                                                            opacity: animation,
+                                                            child: transactas(),
+                                                          );
+                                                        },
+                                                        transitionDuration:
+                                                            duration,
+                                                        reverseTransitionDuration:
+                                                            duration,
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 8),
+                                                    height: 100,
+                                                    child: Card(
+                                                      color: color_Card,
+                                                      semanticContainer: true,
+                                                      clipBehavior: Clip
+                                                          .antiAliasWithSaveLayer,
+                                                      child: Image.asset(
+                                                        'assets/NEW_Acta.png',
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      //shadowColor: Colors.white,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      elevation: 0,
+                                                      margin:
+                                                          EdgeInsets.all(10.0),
                                                     ),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  margin: EdgeInsets.only(
-                                                      bottom: 8),
-                                                  height: 100,
-                                                  child: Card(
-                                                    color: color_Card,
-                                                    semanticContainer: true,
-                                                    clipBehavior: Clip
-                                                        .antiAliasWithSaveLayer,
-                                                    child: Image.asset(
-                                                      'assets/NEW_Acta.png',
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                    //shadowColor: Colors.white,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                    ),
-                                                    elevation: 0,
-                                                    margin:
-                                                        EdgeInsets.all(10.0),
                                                   ),
                                                 ),
-                                              ),
-                                              Text(
-                                                "Actas",
-                                                style: GoogleFonts.lato(
-                                                  textStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .headline4,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontStyle: FontStyle.italic,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ])))),
-                                SizedBox(width: 25.0),
-                                Container(
-                                    decoration: BoxDecoration(
-                                      color: color_Card,
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: SingleChildScrollView(
-                                        child: Padding(
-                                            padding: EdgeInsets.all(17.0),
-                                            child: Column(children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    PageRouteBuilder(
-                                                      pageBuilder: (context,
-                                                          animation, _) {
-                                                        return FadeTransition(
-                                                          opacity: animation,
-                                                          child: trans(),
-                                                        );
-                                                      },
-                                                      transitionDuration:
-                                                          duration,
-                                                      reverseTransitionDuration:
-                                                          duration,
-                                                    ),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  margin: EdgeInsets.only(
-                                                      bottom: 8),
-                                                  height: 100,
-                                                  child: Card(
-                                                    color: color_Card,
-                                                    semanticContainer: true,
-                                                    clipBehavior: Clip
-                                                        .antiAliasWithSaveLayer,
-                                                    child: Image.asset(
-                                                      'assets/NEW_RFC.png',
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                    //shadowColor: Colors.white,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                    ),
-                                                    elevation: 0,
-                                                    margin:
-                                                        EdgeInsets.all(10.0),
+                                                Text(
+                                                  "Actas",
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: Theme.of(context)
+                                                        .textTheme
+                                                        .headlineMedium,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontStyle: FontStyle.italic,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
-                                              ),
-                                              Text(
-                                                "RFC",
-                                                style: GoogleFonts.lato(
-                                                  textStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .headline4,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontStyle: FontStyle.italic,
-                                                  color: Colors.white,
+                                              ])))),
+                                  SizedBox(width: 25.0),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        color: color_Card,
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                      ),
+                                      margin: EdgeInsets.only(top: 10),
+                                      child: SingleChildScrollView(
+                                          child: Padding(
+                                              padding: EdgeInsets.all(17.0),
+                                              child: Column(children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      PageRouteBuilder(
+                                                        pageBuilder: (context,
+                                                            animation, _) {
+                                                          return FadeTransition(
+                                                            opacity: animation,
+                                                            child: trans(),
+                                                          );
+                                                        },
+                                                        transitionDuration:
+                                                            duration,
+                                                        reverseTransitionDuration:
+                                                            duration,
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 8),
+                                                    height: 100,
+                                                    child: Card(
+                                                      color: color_Card,
+                                                      semanticContainer: true,
+                                                      clipBehavior: Clip
+                                                          .antiAliasWithSaveLayer,
+                                                      child: Image.asset(
+                                                        'assets/NEW_RFC.png',
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      //shadowColor: Colors.white,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      elevation: 0,
+                                                      margin:
+                                                          EdgeInsets.all(10.0),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ])))),
-                              ],
-                            ),
-                          ],
+                                                Text(
+                                                  "RFC",
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: Theme.of(context)
+                                                        .textTheme
+                                                        .headlineMedium,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontStyle: FontStyle.italic,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ])))),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
                       // PieChart(
                       //   dataMap: dataMap,
