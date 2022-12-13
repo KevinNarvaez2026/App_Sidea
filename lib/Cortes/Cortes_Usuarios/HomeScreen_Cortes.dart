@@ -4,7 +4,9 @@ import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnima
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/utils.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:open_filex/open_filex.dart';
@@ -41,6 +43,24 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
     super.initState();
     Lenguaje();
     GetNames();
+
+  }
+
+  var totalPrecio_mycut = 0;
+  var totalActas = 0;
+  Set_Corte(){
+ var addNumber= 0;
+    var addActas = 0;
+    for (var i = 0; i < corteDelUsuario.length; i++) {
+      addNumber += corteDelUsuario[i]['price0'];
+  
+        
+      addActas += 1;
+    }
+   totalPrecio_mycut = addNumber;
+  print(totalPrecio_mycut);
+ totalActas = addActas;
+
   }
 
   //VOICE
@@ -99,6 +119,8 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
     });
     _speak('Bienvenido,' + user + ', a tu apartado de corte');
     // print(user);
+    await Future.delayed(Duration(seconds: 4));
+    Set_Corte();
   }
 
   String _mySelection;
@@ -248,6 +270,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
               ),
             ),
           ),
+
           body: FutureBuilder(
             future: getProductDataSource(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -261,9 +284,15 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
                         strokeWidth: 4,
                       ),
                     );
+            
             },
+            
+        
           ),
-        )),
+        
+        )
+        
+        ),
         onWillPop: _onWillPopScope);
   }
 
@@ -412,6 +441,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
       // } else {
       //   print("fetch error");
       // }
+   
 
       // return results;
     } catch (e) {
@@ -498,10 +528,12 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
               child: Text(
                 'Precio',
                 style: TextStyle(fontSize: 19, color: Colors.black),
-              )))
+              ))),
+              
+            
     ];
   }
-
+var corteDelUsuario;
   int indexs;
   Future<List<Product>> generateProductList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -516,6 +548,9 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
             'https://actasalinstante.com:3030/api/actas/reg/myCorte/null'),
         headers: mainheader,
       );
+      corteDelUsuario = jsonDecode(response.body);
+    
+   
       var decodedProducts =
           json.decode(response.body).cast<Map<String, dynamic>>();
       List<Product> productList = await decodedProducts
@@ -531,6 +566,8 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
             'https://actasalinstante.com:3030/api/actas/reg/myCorte/' + Cortes),
         headers: mainheader,
       );
+        corteDelUsuario = jsonDecode(response.body);
+       
       var decodedProducts =
           json.decode(response.body).cast<Map<String, dynamic>>();
       List<Product> productList = await decodedProducts

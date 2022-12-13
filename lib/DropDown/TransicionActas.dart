@@ -15,6 +15,7 @@ import '../ColorScheme.dart';
 import '../DropDown/DropDown.dart';
 import '../Inicio/InicioActas.dart';
 import '../NavBar.dart';
+import '../New_Home/widgets/active_project_card.dart';
 import '../RFC/RfcBody.dart';
 import '../RFC/Transicion.dart';
 import '../RFCDescargas/services/Variables.dart';
@@ -80,6 +81,8 @@ class _transactasState extends State<transactas>
   String selectedType = "initial";
   String selectedFrequency = "monthly";
   final Color color = HexColor('#D61C4E');
+
+  final Color color_Card = HexColor('#01081f');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,139 +119,199 @@ class _transactasState extends State<transactas>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  new Center(
-                    child: Text(
-                      "Selecciona el servicio: " + user.toString(),
-                      style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.headline4,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
+                  Container(
+                    color: Colors.transparent,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(width: 9.0),
+                        Center(
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: color_Card,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              margin: EdgeInsets.only(top: 10),
+                              child: SingleChildScrollView(
+                                  child: Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Column(children: [
+                                        Text(
+                                          "ACTAS",
+                                          style: GoogleFonts.lato(
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        Text(
+                                          "\nPARA SOLICITAR UN ACTA DE NACIMIENTO, DEFUNCIÓN, DIVORCIO Y MATRIMONIO, TOCA EN EL BÓTON.",
+                                          style: GoogleFonts.lato(
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.justify,
+                                        ),
+                                      ])))),
+                        ),
+                        //   subheading('Active Projects'),
+                        SizedBox(height: 5.0),
+
+                        Row(
+                          children: <Widget>[
+                            Container(
+                                decoration: BoxDecoration(
+                                  color: color_Card,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                margin: EdgeInsets.only(top: 10),
+                                child: SingleChildScrollView(
+                                    child: Padding(
+                                        padding: EdgeInsets.all(17.0),
+                                        child: Column(children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  pageBuilder:
+                                                      (context, animation, _) {
+                                                    return FadeTransition(
+                                                      opacity: animation,
+                                                      child: Body(),
+                                                    );
+                                                  },
+                                                  transitionDuration: duration,
+                                                  reverseTransitionDuration:
+                                                      duration,
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              margin:
+                                                  EdgeInsets.only(bottom: 8),
+                                              height: 100,
+                                              child: Card(
+                                                color: color_Card,
+                                                semanticContainer: true,
+                                                clipBehavior:
+                                                    Clip.antiAliasWithSaveLayer,
+                                                child: Image.asset(
+                                                  'assets/NEW_Acta.png',
+                                                  fit: BoxFit.fill,
+                                                ),
+                                                //shadowColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                                elevation: 0,
+                                                margin: EdgeInsets.all(10.0),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            "SOLICITAR ACTAS",
+                                            style: GoogleFonts.lato(
+                                              textStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineMedium,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700,
+                                              fontStyle: FontStyle.italic,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ])))),
+                            SizedBox(width: 25.0),
+                            // Container(
+                            //     decoration: BoxDecoration(
+                            //       color: color_Card,
+                            //       borderRadius: BorderRadius.circular(30.0),
+                            //     ),
+                            //     margin: EdgeInsets.only(top: 10),
+                            //     child: SingleChildScrollView(
+                            //         child: Padding(
+                            //             padding: EdgeInsets.all(17.0),
+                            //             child: Column(children: [
+                            //               InkWell(
+                            //                 onTap: () {
+                            //                   Navigator.push(
+                            //                     context,
+                            //                     PageRouteBuilder(
+                            //                       pageBuilder:
+                            //                           (context, animation, _) {
+                            //                         return FadeTransition(
+                            //                           opacity: animation,
+                            //                           child: trans(),
+                            //                         );
+                            //                       },
+                            //                       transitionDuration: duration,
+                            //                       reverseTransitionDuration:
+                            //                           duration,
+                            //                     ),
+                            //                   );
+                            //                 },
+                            //                 child: Container(
+                            //                   margin:
+                            //                       EdgeInsets.only(bottom: 8),
+                            //                   height: 100,
+                            //                   child: Card(
+                            //                     color: color_Card,
+                            //                     semanticContainer: true,
+                            //                     clipBehavior:
+                            //                         Clip.antiAliasWithSaveLayer,
+                            //                     child: Image.asset(
+                            //                       'assets/NEW_RFC.png',
+                            //                       fit: BoxFit.fill,
+                            //                     ),
+                            //                     //shadowColor: Colors.white,
+                            //                     shape: RoundedRectangleBorder(
+                            //                       borderRadius:
+                            //                           BorderRadius.circular(
+                            //                               10.0),
+                            //                     ),
+                            //                     elevation: 0,
+                            //                     margin: EdgeInsets.all(10.0),
+                            //                   ),
+                            //                 ),
+                            //               ),
+                            //               Text(
+                            //                 "RFC",
+                            //                 style: GoogleFonts.lato(
+                            //                   textStyle: Theme.of(context)
+                            //                       .textTheme
+                            //                       .headlineMedium,
+                            //                   fontSize: 16,
+                            //                   fontWeight: FontWeight.w700,
+                            //                   fontStyle: FontStyle.italic,
+                            //                   color: Colors.white,
+                            //                 ),
+                            //               ),
+                            //             ])))),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
+
                   SizedBox(
                     height: 1,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          changeCleaningType("Actas");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 100,
-                              width: MediaQuery.of(context).size.width * 0.43,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/BusquedaCurp.gif'),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16)),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Busqueda por Curp",
-                              style: GoogleFonts.lato(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffededed),
-                              ),
-                              child: (selectedType == "Actas")
-                                  ? Icon(
-                                      Icons.check_circle,
-                                      color: pink,
-                                      size: 40,
-                                    )
-                                  : Container(),
-                            )
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          changeCleaningType("Cadena");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 100,
-                              width: MediaQuery.of(context).size.width * 0.43,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/Cadena.gif'),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(29)),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Cadena digital",
-                              style: GoogleFonts.lato(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffededed),
-                              ),
-                              child: (selectedType == "Cadena")
-                                  ? Icon(
-                                      Icons.check_circle,
-                                      color: pink,
-                                      size: 40,
-                                    )
-                                  : Container(),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+
                   //BUSQUEDA POR DATOS PERSONALES
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.center,
@@ -319,35 +382,6 @@ class _transactasState extends State<transactas>
                   //     // )
                   //   ],
                   // ),
-                  SizedBox(
-                    height: 90,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: OnchangeActas,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 60, vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              color: color,),
-                          child: Text(
-                            "Solicitar",
-                            style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.headline4,
-                              fontSize: 19,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
                 ],
               ),
             ),

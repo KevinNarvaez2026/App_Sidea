@@ -13,6 +13,7 @@ import '../ColorScheme.dart';
 import '../DropDown/DropDown.dart';
 import '../Inicio/InicioActas.dart';
 import '../NavBar.dart';
+import '../New_Home/widgets/active_project_card.dart';
 import '../RFC/RfcBody.dart';
 import '../RFC/Transicion.dart';
 import '../RFCDescargas/services/Variables.dart';
@@ -68,7 +69,9 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
     'assets/NACIMIENTO.jpg',
     'assets/RFC.jpg',
   ];
-   final Color color = HexColor('#D61C4E');
+  final Color color = HexColor('#D61C4E');
+
+  final Color color_Card = HexColor('#01081f');
   var _currentSelectedValue;
   String label = "Persona";
   var _currencies = ["Fisica", "Moral"];
@@ -110,72 +113,60 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Flexible(
-                  //   fit: FlexFit.loose,
-                  //   flex: 300,
-                  //   child: Container(
-                  //     height: 300,
-                  //     child: ListView.builder(
-                  //       itemCount: imgList.length,
-                  //       itemBuilder: (BuildContext context, int index) {
-                  //         return Column(
-                  //           children: <Widget>[
-                  //             CarouselSlider(
-                  //               options: CarouselOptions(
-                  //                 height: 290.0,
-                  //                 enlargeCenterPage: true,
-                  //                 autoPlay: true,
-                  //                 aspectRatio: 16 / 9,
-                  //                 autoPlayCurve: Curves.easeInBack,
-                  //                 enableInfiniteScroll: true,
-                  //                 autoPlayAnimationDuration:
-                  //                     Duration(milliseconds: 900),
-                  //                 viewportFraction: 0.8,
-                  //               ),
-                  //               items: imgList.map((item) {
-                  //                 return Padding(
-                  //                   padding: const EdgeInsets.only(left: 1.0),
-                  //                   child: Container(
-                  //                     height: 300,
-                  //                     margin:
-                  //                         EdgeInsets.symmetric(vertical: 20),
-                  //                     decoration: BoxDecoration(
-                  //                       color: Colors.white,
-                  //                       borderRadius: BorderRadius.circular(10),
-                  //                       boxShadow: [
-                  //                         BoxShadow(
-                  //                           color: Colors.black,
-                  //                           blurRadius: 4,
-                  //                           spreadRadius: 4,
-                  //                         ),
-                  //                       ],
-                  //                     ),
-                  //                     child: Image.asset(
-                  //                       '$item',
-                  //                       fit: BoxFit.fill,
-                  //                     ),
-                  //                   ),
-                  //                 );
-                  //               }).toList(),
-                  //             ),
-                  //           ],
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
+                  Container(
+                    color: Colors.transparent,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        //   subheading('Active Projects'),
+                        //  SizedBox(height: 5.0),
 
-                  Text(
-                    "Selecciona el servicio: " + user.toString(),
-                    style: GoogleFonts.lato(
-                      textStyle: Theme.of(context).textTheme.headline4,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.black,
+                        SizedBox(width: 9.0),
+                        Center(
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: color_Card,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              margin: EdgeInsets.only(top: 10),
+                              child: SingleChildScrollView(
+                                  child: Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Column(children: [
+                                        Text(
+                                          "RFC",
+                                          style: GoogleFonts.lato(
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        Text(
+                                          "\nPARA SOLICITAR UN RFC DE PERSONA MORAL O FÍSICA, TOCA EN EL BÓTON.",
+                                          style: GoogleFonts.lato(
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.justify,
+                                        ),
+                                      ])))),
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
                   ),
+
                   SizedBox(
                     height: 30,
                   ),
@@ -212,268 +203,341 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                       );
                     },
                   ),
-                  if (_currentSelectedValue == null)
-                    SizedBox(
-                      height: 100,
-                    ),
-                  if (_currentSelectedValue == null)
-                    new Center(
-                      child: Card(
-                        child: new Container(
-                          child: Text(
-                            "Actas al instante",
-                            style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.headline4,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          height: MediaQuery.of(context).size.width * 0.43,
-                          width: MediaQuery.of(context).size.width * 0.43,
-                          decoration: new BoxDecoration(
-                            color: Colors.white,
-                            image: new DecorationImage(
-                              fit: BoxFit.cover,
-                              colorFilter: new ColorFilter.mode(
-                                  Colors.black.withOpacity(0.2),
-                                  BlendMode.dstATop),
-                              image: AssetImage('assets/Principal.gif'),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
 
                   if (_currentSelectedValue == "Moral")
-                    new Center(
-                      child: InkWell(
-                        onTap: () {
-                          changeCleaningType("RFC_MORAL");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 190,
-                              width: MediaQuery.of(context).size.width * 0.43,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/rfc.gif'),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(26)),
+                    Container(
+                      color: Colors.transparent,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          //   subheading('Active Projects'),
+                          SizedBox(height: 5.0),
+
+                          Row(
+                            children: <Widget>[
+                              Center(
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: color_Card,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: SingleChildScrollView(
+                                        child: Padding(
+                                            padding: EdgeInsets.all(17.0),
+                                            child: Column(children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    PageRouteBuilder(
+                                                      pageBuilder: (context,
+                                                          animation, _) {
+                                                        return FadeTransition(
+                                                          opacity: animation,
+                                                          child: RFC_MORAL(),
+                                                        );
+                                                      },
+                                                      transitionDuration:
+                                                          duration,
+                                                      reverseTransitionDuration:
+                                                          duration,
+                                                    ),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 8),
+                                                  height: 100,
+                                                  child: Card(
+                                                    color: color_Card,
+                                                    semanticContainer: true,
+                                                    clipBehavior: Clip
+                                                        .antiAliasWithSaveLayer,
+                                                    child: Image.asset(
+                                                      'assets/NEW_RFC.png',
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                    //shadowColor: Colors.white,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                    elevation: 0,
+                                                    margin:
+                                                        EdgeInsets.all(10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                "RFC MORAL",
+                                                style: GoogleFonts.lato(
+                                                  textStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineMedium,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ])))),
                               ),
-                            ),
-                            Text(
-                              "RFC Moral",
-                              style: GoogleFonts.lato(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffededed),
-                              ),
-                              child: (selectedType == "RFC_MORAL")
-                                  ? Icon(
-                                      Icons.check_circle,
-                                      color: pink,
-                                      size: 40,
-                                    )
-                                  : Container(),
-                            )
-                          ],
-                        ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
 
                   if (_currentSelectedValue == "Fisica")
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            changeCleaningType("Actas");
-                          },
-                          child: Column(
-                            children: [
+                    Container(
+                      color: Colors.transparent,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          //   subheading('Active Projects'),
+                          SizedBox(height: 5.0),
+
+                          Row(
+                            children: <Widget>[
                               Container(
-                                height: 190,
-                                width: MediaQuery.of(context).size.width * 0.43,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/BusquedaCurp.gif'),
+                                  decoration: BoxDecoration(
+                                    color: color_Card,
+                                    borderRadius: BorderRadius.circular(30.0),
                                   ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(26)),
-                                ),
-                              ),
-                              Text(
-                                "Curp",
-                                style: GoogleFonts.lato(
-                                  textStyle:
-                                      Theme.of(context).textTheme.headline4,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
+                                  margin: EdgeInsets.only(top: 10),
+                                  child: SingleChildScrollView(
+                                      child: Padding(
+                                          padding: EdgeInsets.all(17.0),
+                                          child: Column(children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    pageBuilder: (context,
+                                                        animation, _) {
+                                                      return FadeTransition(
+                                                        opacity: animation,
+                                                        child: RfcBody(),
+                                                      );
+                                                    },
+                                                    transitionDuration:
+                                                        duration,
+                                                    reverseTransitionDuration:
+                                                        duration,
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    EdgeInsets.only(bottom: 8),
+                                                height: 100,
+                                                child: Card(
+                                                  color: color_Card,
+                                                  semanticContainer: true,
+                                                  clipBehavior: Clip
+                                                      .antiAliasWithSaveLayer,
+                                                  child: Image.asset(
+                                                    'assets/NEW_Acta.png',
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                  //shadowColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                  ),
+                                                  elevation: 0,
+                                                  margin: EdgeInsets.all(10.0),
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              "CURP",
+                                              style: GoogleFonts.lato(
+                                                textStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                fontStyle: FontStyle.italic,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ])))),
+                              SizedBox(width: 25.0),
                               Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xffededed),
-                                ),
-                                child: (selectedType == "Actas")
-                                    ? Icon(
-                                        Icons.check_circle,
-                                        color: pink,
-                                        size: 40,
-                                      )
-                                    : Container(),
-                              )
+                                  decoration: BoxDecoration(
+                                    color: color_Card,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  margin: EdgeInsets.only(top: 10),
+                                  child: SingleChildScrollView(
+                                      child: Padding(
+                                          padding: EdgeInsets.all(17.0),
+                                          child: Column(children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    pageBuilder: (context,
+                                                        animation, _) {
+                                                      return FadeTransition(
+                                                        opacity: animation,
+                                                        child: CurpRfcBody(),
+                                                      );
+                                                    },
+                                                    transitionDuration:
+                                                        duration,
+                                                    reverseTransitionDuration:
+                                                        duration,
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    EdgeInsets.only(bottom: 8),
+                                                height: 100,
+                                                child: Card(
+                                                  color: color_Card,
+                                                  semanticContainer: true,
+                                                  clipBehavior: Clip
+                                                      .antiAliasWithSaveLayer,
+                                                  child: Image.asset(
+                                                    'assets/NEW_RFC.png',
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                  //shadowColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                  ),
+                                                  elevation: 0,
+                                                  margin: EdgeInsets.all(10.0),
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              "RFC",
+                                              style: GoogleFonts.lato(
+                                                textStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                fontStyle: FontStyle.italic,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ])))),
                             ],
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            changeCleaningType("RFC");
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 190,
-                                width: MediaQuery.of(context).size.width * 0.43,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/rfc.gif'),
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(29)),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "RFC",
-                                style: GoogleFonts.lato(
-                                  textStyle:
-                                      Theme.of(context).textTheme.headline4,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xffededed),
-                                ),
-                                child: (selectedType == "RFC")
-                                    ? Icon(
-                                        Icons.check_circle,
-                                        color: pink,
-                                        size: 40,
-                                      )
-                                    : Container(),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  SizedBox(
-                    height: 80,
-                  ),
+
+                  //               Row(
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: [
+                  //                   InkWell(
+                  //                     onTap: () {
+
+                  //                     },
+                  //                     child: Column(
+                  //                       children: [
+                  //                         Container(
+                  //                           height: 190,
+                  //                           width: MediaQuery.of(context).size.width * 0.43,
+                  //                           decoration: BoxDecoration(
+                  //                             color: Color.fromARGB(255, 255, 255, 255),
+                  //                             image: DecorationImage(
+                  //                               image:
+                  //                                   AssetImage('assets/BusquedaCurp.gif'),
+                  //                             ),
+                  //                             borderRadius:
+                  //                                 BorderRadius.all(Radius.circular(26)),
+                  //                           ),
+                  //                         ),
+                  //                         Text(
+                  //                           "Curp",
+                  //                           style: GoogleFonts.lato(
+                  //                             textStyle:
+                  //                                 Theme.of(context).textTheme.headline4,
+                  //                             fontSize: 16,
+                  //                             fontWeight: FontWeight.w700,
+                  //                             fontStyle: FontStyle.italic,
+                  //                             color: Colors.black,
+                  //                           ),
+                  //                         ),
+
+                  //                       ],
+                  //                     ),
+                  //                   ),
+                  //                   InkWell(
+                  //                     onTap: () {
+                  //                  Navigator.push(
+                  //   context,
+                  //   PageRouteBuilder(
+                  //     pageBuilder: (context, animation, _) {
+                  //       return FadeTransition(
+                  //         opacity: animation,
+                  //         child: CurpRfcBody(),
+                  //       );
+                  //     },
+                  //     transitionDuration: duration,
+                  //     reverseTransitionDuration: duration,
+                  //   ),
+                  // );
+                  //                     },
+                  //                     child: Column(
+                  //                       children: [
+                  //                         Container(
+                  //                           height: 190,
+                  //                           width: MediaQuery.of(context).size.width * 0.43,
+                  //                           decoration: BoxDecoration(
+                  //                             color: Color.fromARGB(255, 255, 255, 255),
+                  //                             image: DecorationImage(
+                  //                               image: AssetImage('assets/rfc.gif'),
+                  //                             ),
+                  //                             borderRadius:
+                  //                                 BorderRadius.all(Radius.circular(29)),
+                  //                           ),
+                  //                         ),
+                  //                         SizedBox(
+                  //                           height: 10,
+                  //                         ),
+                  //                         Text(
+                  //                           "RFC",
+                  //                           style: GoogleFonts.lato(
+                  //                             textStyle:
+                  //                                 Theme.of(context).textTheme.headline4,
+                  //                             fontSize: 16,
+                  //                             fontWeight: FontWeight.w700,
+                  //                             fontStyle: FontStyle.italic,
+                  //                             color: Colors.black,
+                  //                           ),
+                  //                         ),
+
+                  //                       ],
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             SizedBox(
+                  //               height: 80,
+                  //             ),
                   // Expanded(
                   //   child: Container(),
                   // ),
-                  if (_currentSelectedValue == "Fisica")
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: OnchangeActas,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 60, vertical: 15),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                color: color,),
-                            child: Text(
-                              "Solicitar",
-                              style: GoogleFonts.lato(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: 19,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-
-                  if (_currentSelectedValue == "Moral")
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: OnchangeActas,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 60, vertical: 15),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                color: Color.fromARGB(255, 127,137,146),),
-                            child: Text(
-                              "Solicitar",
-                              style: GoogleFonts.lato(
-                                textStyle:
-                                    Theme.of(context).textTheme.headline4,
-                                fontSize: 19,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
                 ],
               ),
             ),

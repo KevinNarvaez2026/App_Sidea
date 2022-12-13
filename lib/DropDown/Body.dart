@@ -90,21 +90,21 @@ class _BodyState extends State<Body> {
       print(response.reasonPhrase);
     }
   }
- @override
+
+  @override
   void initState() {
     super.initState();
-GetNames();
+    GetNames();
     Lenguaje();
   }
 
-   String user = "";
+  String user = "";
   GetNames() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
       user = prefs.getString('username');
     });
-  
   }
 
   Lenguaje() async {
@@ -480,6 +480,11 @@ GetNames();
 
   CURP(String curps) {
     final _controller = Get.find<Controller>();
+    var re = new RegExp(
+      r"^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$",
+      caseSensitive: false,
+      multiLine: false,
+    );
     const String curpRegexPattern = "[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}" +
         "(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])" +
         "[HM]{1}" +
@@ -488,13 +493,9 @@ GetNames();
         "[0-9A-Z]{1}[0-9]{1}\$";
     // String curpARevisar = "estodaerror";
     // String curpARevisar2 = "SIHC400128HDFLLR01";
-    RegExp regExp = new RegExp(
-      curpRegexPattern,
-      caseSensitive: false,
-      multiLine: false,
-    );
+
     String resultado = "";
-    if (regExp.hasMatch(curps)) {
+    if (re.hasMatch(curps)) {
       resultado = "La curp es válido";
 
       /* SHOW HTML*/
@@ -819,7 +820,8 @@ GetNames();
       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
     );
   }
- final Color color = HexColor('#D61C4E');
+
+  final Color color = HexColor('#D61C4E');
   @override
   Widget _provinceContainers(BuildContext context) {
     var crupestado;
@@ -829,7 +831,7 @@ GetNames();
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          ''+user.toString(),
+          '' + user.toString(),
           style: TextStyle(
             fontSize: 20,
             fontFamily: 'RobotoMono',

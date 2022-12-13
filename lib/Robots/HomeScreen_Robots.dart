@@ -169,7 +169,7 @@ class _RobotsState extends State<Robots> {
         setState(() {
           instructionse = [instruction, robot.toString()];
           send(instructionse);
-          //print(instructionse);
+          print(instructionse);
         });
 
         break;
@@ -192,6 +192,7 @@ class _RobotsState extends State<Robots> {
 
   static const duration = Duration(milliseconds: 300);
   PostRobot(instruction, name) async {
+    print(name);
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -207,7 +208,7 @@ class _RobotsState extends State<Robots> {
       //  print(body);
       var req = await post(
         Uri.parse(
-            'https://actasalinstante.com:3030/api/robotsUsage/controller/instruction/new/'),
+            'https://actasalinstante.com:3030/api/robots/controller/instruction/new/'),
         body: body,
         headers: mainheader,
       );
@@ -238,15 +239,27 @@ class _RobotsState extends State<Robots> {
   send(robot_instruction) {
     switch (robot_instruction[0]) {
       case 'off':
-        PostRobot(robot_instruction[0], robot_instruction[1]);
-        _speak("Apagando el robot," + robot_instruction[1]);
-        print(robot_instruction[0] + robot_instruction[1]);
+        if (robot_instruction[1] == 'HospitalVillaFlores') {
+          print("SID2");
+          PostRobot(robot_instruction[0], 'SID2');
+          _speak("Apagando el robot," + robot_instruction[1]);
+        } else {
+          PostRobot(robot_instruction[0], robot_instruction[1]);
+          _speak("Apagando el robot," + robot_instruction[1]);
+          print(robot_instruction[0] + robot_instruction[1]);
+        }
 
         break;
       case 'on':
-        PostRobot(robot_instruction[0], robot_instruction[1]);
-        _speak("Encendiendo el robot," + robot_instruction[1]);
-        print(robot_instruction[0] + robot_instruction[1]);
+        if (robot_instruction[1] == 'HospitalVillaFlores') {
+          print("SID2");
+          PostRobot(robot_instruction[0], 'SID2');
+          _speak("Encendiendo el robot," + robot_instruction[1]);
+        } else {
+          PostRobot(robot_instruction[0], robot_instruction[1]);
+          _speak("Encendiendo el robot," + robot_instruction[1]);
+          print(robot_instruction[0] + robot_instruction[1]);
+        }
 
         break;
       case 'changeAccessToken':
@@ -264,20 +277,13 @@ class _RobotsState extends State<Robots> {
     try {
       Map<String, String> mainheader = new Map();
       mainheader["content-type"] = "application/json";
-      mainheader['PrivateKey'] =
-          'nsqRrI8hUkBkHXm9axWvC3kQh5sUZEuBEUf4CrbtvdLbY0jXFFBlLByoMcs3eTZ9PQbL57p1nYFY81fTRHAt9Ps7vYp4dTGwmRPu';
+      mainheader['x-access-token'] = Token;
 //  var bod = numero;
-    var Body = jsonEncode({
-
-        "name":name,
-        "limit": numero
-
-
-      });
+      var Body = jsonEncode({"name": name, "limit": numero});
       print(Body);
       var response = await put(
-        Uri.parse('https://actasalinstante.com:3030/api/robotsUsage/limit/'
-           ),
+        Uri.parse(
+            'https://actasalinstante.com:3030/api/robotsUsage/change/limit/'),
         headers: mainheader,
         body: Body,
       );
@@ -292,6 +298,40 @@ class _RobotsState extends State<Robots> {
             name +
             " a " +
             numero.toString());
+
+        //  print(GetRobots['[]'].toString());
+        // print(GetRobots['Robots']['1']);
+        // print(GetRobots['Robots']['2']);
+        // print(GetRobots['DescargasDisponibles']);
+        // print(GetRobots['Descargadas']);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Off_Robot(name) async {
+    try {
+      Map<String, String> mainheader = new Map();
+      mainheader["content-type"] = "application/json";
+      mainheader['x-access-token'] = Token;
+//  var bod = numero;
+
+      var response = await put(
+        Uri.parse(
+            'https://actasalinstante.com:3030/api/robotsUsage/remove/token/' +
+                name),
+        headers: mainheader,
+      );
+      var GetRobots = json.encode(response.body.toString());
+      print(GetRobots);
+      if (response.statusCode == 200) {
+        setState(() {
+          isApiCallProcess = false;
+        });
+        Set_limitChange();
+        print(
+            "Se cambio el limite del robot: " + name + " a " + name.toString());
 
         //  print(GetRobots['[]'].toString());
         // print(GetRobots['Robots']['1']);
@@ -364,6 +404,16 @@ class _RobotsState extends State<Robots> {
                       child: Center(
 // Image radius
                         child: Image.asset('assets/Villaflores.png',
+                            alignment: Alignment.center, fit: BoxFit.cover),
+                      ),
+                    ),
+
+                  if (username == 'Toluca-Santos')
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Center(
+// Image radius
+                        child: Image.asset('assets/Toluca.jpeg',
                             alignment: Alignment.center, fit: BoxFit.cover),
                       ),
                     ),
@@ -457,8 +507,7 @@ class _RobotsState extends State<Robots> {
                       keyboardType: TextInputType.number,
                       controller: Count,
                       decoration: InputDecoration(
-                          hintText:
-                              'Limite de Actas: ' + Bochil.toString()),
+                          hintText: 'Limite de Actas: ' + Bochil.toString()),
                       maxLength: 4,
 
                       //  obscureText: true,
@@ -834,33 +883,6 @@ class _RobotsState extends State<Robots> {
                                     //HospitalBochil
 
                                     //VILLAFLORES
-                                    if ('${data[index].data}' == 'Off')
-                                      Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: Center(
-// Image radius
-                                              child: Image.asset(
-                                                  'assets/ststus_close.gif',
-                                                  alignment: Alignment.center,
-                                                  width: 200,
-                                                  fit: BoxFit.cover),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 10,
-                                            width: double.infinity,
-                                            clipBehavior: Clip.antiAlias,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(54),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
 
                                     if ('${data[index].data}' == 'Off' &&
                                         '${data[index].username}' ==
@@ -943,6 +965,128 @@ class _RobotsState extends State<Robots> {
                                         ],
                                       ),
                                     //VILLAFLORES
+                                    if ('${data[index].data}' != 'Off' &&
+                                        '${data[index].username}' == 'RFCPOAM')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/rfc.png',
+                                                  width: 200,
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_ok.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                    if ('${data[index].data}' == 'Off' &&
+                                        '${data[index].username}' ==
+                                            'Toluca-Santos')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/Toluca.jpeg',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_close.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    if ('${data[index].data}' != 'Off' &&
+                                        '${data[index].username}' ==
+                                            'Toluca-Santos')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/Toluca.jpeg',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_ok.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    //TOLUCA
                                     Text(
                                       "Robots",
                                       maxLines: 2,
@@ -1271,6 +1415,8 @@ class _RobotsState extends State<Robots> {
                                                     btnOkOnPress: () {
                                                       instructions('off',
                                                           ('${data[index].username}'));
+                                                      Off_Robot(
+                                                          '${data[index].username}');
                                                     },
                                                   )..show();
                                                 },
