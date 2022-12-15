@@ -43,24 +43,21 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
     super.initState();
     Lenguaje();
     GetNames();
-
   }
 
   var totalPrecio_mycut = 0;
   var totalActas = 0;
-  Set_Corte(){
- var addNumber= 0;
+  Set_Corte() {
+    var addNumber = 0;
     var addActas = 0;
     for (var i = 0; i < corteDelUsuario.length; i++) {
       addNumber += corteDelUsuario[i]['price0'];
-  
-        
+
       addActas += 1;
     }
-   totalPrecio_mycut = addNumber;
-  print(totalPrecio_mycut);
- totalActas = addActas;
-
+    totalPrecio_mycut = addNumber;
+    print(totalPrecio_mycut);
+    totalActas = addActas;
   }
 
   //VOICE
@@ -270,7 +267,6 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
               ),
             ),
           ),
-
           body: FutureBuilder(
             future: getProductDataSource(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -284,15 +280,9 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
                         strokeWidth: 4,
                       ),
                     );
-            
             },
-            
-        
           ),
-        
-        )
-        
-        ),
+        )),
         onWillPop: _onWillPopScope);
   }
 
@@ -338,13 +328,6 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
 
       var bytes = jsonDecode(req.bodyBytes.toString());
 
-      // Map bytes = json.decode(req.bodyBytes.toString());
-      // print(bytes['token']);
-      // bytes['data'].forEach((key, value) {
-      //   print(key);
-      //   print(value);
-      // });
-    
       var snackBar = SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
@@ -368,14 +351,13 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
           //   isApiCallProcess = false;
         });
 
-       File file = new File('/storage/emulated/0/Download/$filename' + '.pdf');
-      var decoded = base64.decode(bytes['b64'].toString());
+        File file = new File('/storage/emulated/0/Download/$filename' + '.pdf');
+        var decoded = base64.decode(bytes['b64'].toString());
 
-      await file.writeAsBytes(decoded);
+        await file.writeAsBytes(decoded);
 
-      Open_pdf(filename);
+        Open_pdf(filename);
 
-        // _speak('Recuerde que debe tener un visor de pdf, para visualizar el acta');
         return file;
       }
     } catch (e) {
@@ -441,7 +423,6 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
       // } else {
       //   print("fetch error");
       // }
-   
 
       // return results;
     } catch (e) {
@@ -529,11 +510,10 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
                 'Precio',
                 style: TextStyle(fontSize: 19, color: Colors.black),
               ))),
-              
-            
     ];
   }
-var corteDelUsuario;
+
+  var corteDelUsuario;
   int indexs;
   Future<List<Product>> generateProductList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -549,8 +529,7 @@ var corteDelUsuario;
         headers: mainheader,
       );
       corteDelUsuario = jsonDecode(response.body);
-    
-   
+
       var decodedProducts =
           json.decode(response.body).cast<Map<String, dynamic>>();
       List<Product> productList = await decodedProducts
@@ -566,8 +545,8 @@ var corteDelUsuario;
             'https://actasalinstante.com:3030/api/actas/reg/myCorte/' + Cortes),
         headers: mainheader,
       );
-        corteDelUsuario = jsonDecode(response.body);
-       
+      corteDelUsuario = jsonDecode(response.body);
+
       var decodedProducts =
           json.decode(response.body).cast<Map<String, dynamic>>();
       List<Product> productList = await decodedProducts

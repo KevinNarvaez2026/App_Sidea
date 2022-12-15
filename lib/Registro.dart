@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
   json_version() async {
     //  print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.14.0"});
+      var json_Ver = jsonEncode({"version": "0.15.0"});
       print(json_Ver.toString());
 
       Map<String, String> mainheader = new Map();
@@ -78,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (response.statusCode == 200) {
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.14.0') {
+        if (datas['version'] != '0.15.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(

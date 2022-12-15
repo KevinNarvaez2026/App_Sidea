@@ -103,6 +103,8 @@ class _RobotsState extends State<Robots> {
   var bochild_name;
   var Toluca_Santos;
   var Toluca_Santos_Contador;
+  var RegistroCivil1;
+  var RegistroCivil1_contador;
   bool isApiCallProcess = false;
   get_robots() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -141,6 +143,12 @@ class _RobotsState extends State<Robots> {
           setState(() {
             Toluca_Santos = GetRobots[i]['limit'];
             Toluca_Santos_Contador = GetRobots[i]['current'];
+            print(Villaflores);
+          });
+        } else if (GetRobots[i]['name'] == 'Registro Civil 1') {
+          setState(() {
+            RegistroCivil1 = GetRobots[i]['limit'];
+            RegistroCivil1_contador = GetRobots[i]['current'];
             print(Villaflores);
           });
         }
@@ -208,12 +216,13 @@ class _RobotsState extends State<Robots> {
       //  print(body);
       var req = await post(
         Uri.parse(
-            'https://actasalinstante.com:3030/api/robots/controller/instruction/new/'),
+            'https://actasalinstante.com:3030/api/robotsUsage/controller/instruction/new/'),
         body: body,
         headers: mainheader,
       );
       var datas = json.decode(req.body);
       print(datas);
+
       if (req.statusCode == 200) {
         Navigator.push(
           context,
@@ -236,30 +245,19 @@ class _RobotsState extends State<Robots> {
     }
   }
 
+ 
+
   send(robot_instruction) {
     switch (robot_instruction[0]) {
       case 'off':
-        if (robot_instruction[1] == 'HospitalVillaFlores') {
-          print("SID2");
-          PostRobot(robot_instruction[0], 'SID2');
-          _speak("Apagando el robot," + robot_instruction[1]);
-        } else {
-          PostRobot(robot_instruction[0], robot_instruction[1]);
-          _speak("Apagando el robot," + robot_instruction[1]);
-          print(robot_instruction[0] + robot_instruction[1]);
-        }
+        PostRobot(robot_instruction[0], robot_instruction[1]);
+        _speak("Apagando el robot," + robot_instruction[1]);
+        print(robot_instruction[0] + robot_instruction[1]);
 
         break;
       case 'on':
-        if (robot_instruction[1] == 'HospitalVillaFlores') {
-          print("SID2");
-          PostRobot(robot_instruction[0], 'SID2');
-          _speak("Encendiendo el robot," + robot_instruction[1]);
-        } else {
-          PostRobot(robot_instruction[0], robot_instruction[1]);
-          _speak("Encendiendo el robot," + robot_instruction[1]);
-          print(robot_instruction[0] + robot_instruction[1]);
-        }
+        PostRobot(robot_instruction[0], robot_instruction[1]);
+        _speak("Encendiendo el robot," + robot_instruction[1]);
 
         break;
       case 'changeAccessToken':
@@ -319,7 +317,7 @@ class _RobotsState extends State<Robots> {
 
       var response = await put(
         Uri.parse(
-            'https://actasalinstante.com:3030/api/robotsUsage/remove/token/' +
+            'https://actasalinstante.com:3030/api/robotsUsage/change/status/off/' +
                 name),
         headers: mainheader,
       );
@@ -371,7 +369,7 @@ class _RobotsState extends State<Robots> {
 
   TextEditingController Count = TextEditingController();
 
-  showDialogFunc(context, image, data, curp, username, comments) {
+  showDialogFunc(context, data, curp, username, comments) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -414,6 +412,15 @@ class _RobotsState extends State<Robots> {
                       child: Center(
 // Image radius
                         child: Image.asset('assets/Toluca.jpeg',
+                            alignment: Alignment.center, fit: BoxFit.cover),
+                      ),
+                    ),
+                  if (username == 'Registro Civil 1')
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Center(
+// Image radius
+                        child: Image.asset('assets/Civil.jpeg',
                             alignment: Alignment.center, fit: BoxFit.cover),
                       ),
                     ),
@@ -596,6 +603,32 @@ class _RobotsState extends State<Robots> {
                       //  obscureText: true,
                     ),
 
+                  if (username == 'Registro Civil 1')
+                    Container(
+                      // width: 200,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Contador: " + RegistroCivil1.toString(),
+                          maxLines: 3,
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+
+                  if (username == 'Registro Civil 1')
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: Count,
+                      decoration: InputDecoration(
+                          hintText: 'Limite de Actas: ' +
+                              RegistroCivil1_contador.toString()),
+                      maxLength: 4,
+
+                      //  obscureText: true,
+                    ),
+
                   new Center(
                     child: Container(
                       decoration: BoxDecoration(
@@ -752,12 +785,12 @@ class _RobotsState extends State<Robots> {
 
                               showDialogFunc(
                                 context,
-                                imgList[index],
                                 data[index].data,
                                 data[index].email,
                                 data[index].username,
                                 data[index].comments,
                               );
+                              //_speak( data[index].username);
                             },
                             child: Card(
                               elevation: 10,
@@ -1007,6 +1040,47 @@ class _RobotsState extends State<Robots> {
                                       ),
 
                                     if ('${data[index].data}' == 'Off' &&
+                                        '${data[index].username}' == 'RFCPOAM')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/rfc.png',
+                                                  width: 200,
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_close.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                    if ('${data[index].data}' == 'Off' &&
                                         '${data[index].username}' ==
                                             'Toluca-Santos')
                                       Stack(
@@ -1087,6 +1161,89 @@ class _RobotsState extends State<Robots> {
                                         ],
                                       ),
                                     //TOLUCA
+
+                                    //CIVIL
+                                    if ('${data[index].data}' == 'Off' &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 1')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/Civil.jpeg',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_close.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    if ('${data[index].data}' != 'Off' &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 1')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/Civil.jpeg',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_ok.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    //CIVIL
                                     Text(
                                       "Robots",
                                       maxLines: 2,
@@ -1182,6 +1339,7 @@ class _RobotsState extends State<Robots> {
                                             fontWeight: FontWeight.w800),
                                         overflow: TextOverflow.ellipsis,
                                       ),
+
                                     if (Toluca_Santos != null &&
                                         '${data[index].username}' ==
                                             'Toluca-Santos')
@@ -1220,6 +1378,48 @@ class _RobotsState extends State<Robots> {
                                             fontWeight: FontWeight.w800),
                                         overflow: TextOverflow.ellipsis,
                                       ),
+
+//REGISTRO CIVIL
+
+                                    if (RegistroCivil1 != null &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 1')
+                                      Text(
+                                        "Limite: " + RegistroCivil1.toString(),
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if (RegistroCivil1 != null &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 1')
+                                      Text(
+                                        "Contador: " +
+                                            RegistroCivil1_contador.toString(),
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if (RegistroCivil1 == null &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 1')
+                                      Text(
+                                        "Current: " + 'Robot apagado',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+
                                     if ('${data[index].data}' != 'Ok')
                                       Text(
                                         "Estatus: " + '${data[index].data}',
@@ -1369,6 +1569,8 @@ class _RobotsState extends State<Robots> {
                                                     btnOkOnPress: () {
                                                       instructions('on',
                                                           '${data[index].username}');
+                                                      // EncenderRobot(
+                                                      //     '${data[index].username}');
                                                     },
                                                   )..show();
                                                 },
@@ -1415,8 +1617,8 @@ class _RobotsState extends State<Robots> {
                                                     btnOkOnPress: () {
                                                       instructions('off',
                                                           ('${data[index].username}'));
-                                                      Off_Robot(
-                                                          '${data[index].username}');
+                                                      // Off_Robot(
+                                                      //     '${data[index].username}');
                                                     },
                                                   )..show();
                                                 },

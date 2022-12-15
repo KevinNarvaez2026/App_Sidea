@@ -224,7 +224,7 @@ class _NavBarState extends State<NavBar> {
                 new Center(
                   child: Text(' Robots ',
                       style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.headline4,
+                        textStyle: Theme.of(context).textTheme.headlineMedium,
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.italic,
