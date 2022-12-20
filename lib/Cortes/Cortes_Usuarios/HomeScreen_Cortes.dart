@@ -326,8 +326,8 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
                   corte),
           headers: mainheader);
 
-      var bytes = jsonDecode(req.bodyBytes.toString());
-
+     var bytes = req.bodyBytes;
+      print(bytes);
       var snackBar = SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
@@ -351,11 +351,10 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
           //   isApiCallProcess = false;
         });
 
-        File file = new File('/storage/emulated/0/Download/$filename' + '.pdf');
-        var decoded = base64.decode(bytes['b64'].toString());
+        File file = new File('/storage/emulated/0/Download/$filename'+'.xlsx');
 
-        await file.writeAsBytes(decoded);
-
+        await file.writeAsBytes(bytes);
+        print(file);
         Open_pdf(filename);
 
         return file;
@@ -389,7 +388,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
   var _openResult = 'Unknown';
 
   Future<void> openFiles(String filename) async {
-    final filePath = "/storage/emulated/0/Download/" + filename;
+    final filePath = "/storage/emulated/0/Download/" + filename+'.xlsx';
     final result = await OpenFilex.open(filePath);
     _openResult = "${result.type}";
   }
