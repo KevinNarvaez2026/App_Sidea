@@ -6,16 +6,11 @@ import 'package:app_actasalinstante/DropDown/Body.dart';
 import 'package:app_actasalinstante/DropDown/TransicionActas.dart';
 import 'package:app_actasalinstante/RFCDescargas/views/homepage.dart';
 import 'package:app_actasalinstante/SplashScreen/Splashscreen1.dart';
-import 'package:app_actasalinstante/constants.dart';
-import 'package:app_actasalinstante/login.dart';
-import 'package:app_actasalinstante/main.dart';
-import 'package:app_actasalinstante/recent_files_json.dart';
-import 'package:blurrycontainer/blurrycontainer.dart';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:check_vpn_connection/check_vpn_connection.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -124,9 +119,8 @@ class _CarouselExampleState extends State<CarouselExample> {
         setState(() {
           ids_user = GetRobots[i]['id'];
           nombre = GetRobots[i]['username'];
-          limite = GetRobots[i]['actas_limit'] / 10000;
-          current = GetRobots[i]['actas_current'] / 10000;
-          print(limite + current);
+          limite = GetRobots[i]['actas_limit'] / 100000;
+          current = GetRobots[i]['actas_current'] / 100000;
         });
       }
     }
@@ -146,7 +140,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.16.0"});
+      var json_Ver = jsonEncode({"version": "0.17.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -169,7 +163,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.16.0') {
+        if (datas['version'] != '0.17.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -635,7 +629,6 @@ class _CarouselExampleState extends State<CarouselExample> {
     );
   }
 
-  LegendShape _legendShape = LegendShape.circle;
 //CUERPO DEL PROGRAMA
   static const duration = Duration(milliseconds: 300);
   String selectedType = "initial";
@@ -655,10 +648,9 @@ class _CarouselExampleState extends State<CarouselExample> {
     );
   }
 
-  bool _isRunning = true;
   final Color color = HexColor('#D61C4E');
   final Color color_Card = HexColor('#01081f');
-  FetchUserLists _userList = FetchUserLists();
+
   Widget Carr(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
@@ -1552,7 +1544,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 //                                 }),
 //                           ),
 //                         ),
-                      if (version == '0.16.0')
+                      if (version == '0.17.0')
                         Container(
                           color: Colors.transparent,
                           padding: EdgeInsets.symmetric(
@@ -2152,8 +2144,6 @@ class _CarouselExampleState extends State<CarouselExample> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
-
-  GlobalKey _NavKey = GlobalKey();
 
   var PagesAll = [CarouselExample(), RFCPAGE(), Body()];
 //FUNCION PARA IMAGEN DE PERFIL

@@ -41,7 +41,7 @@ class ActiveProjectsCard extends StatelessWidget {
                 backgroundColor: Colors.white10,
                 progressColor: Colors.white,
                 center: Text(
-                  '${(loadingPercent*10000).round()}%',
+                  '${(loadingPercent*100000).round()}%',
                   style: TextStyle(
                       fontWeight: FontWeight.w700, color: Colors.white),
                 ),
