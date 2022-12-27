@@ -8,6 +8,7 @@ import 'package:app_actasalinstante/Widgets/carousel_example.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:lottie/lottie.dart';
@@ -197,8 +198,9 @@ class _LoginPageState extends State<LoginPage> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.black,
         content: Text(
-          "Bienvenido " + userController.text.toString(),
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          "Bienvenido ".toUpperCase() + userController.text.toString(),
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
       );
@@ -385,6 +387,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  final Color color = HexColor('#D61C4E');
+  final Color color_Card = HexColor('#01081f');
+
   Widget _uiSetup(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
@@ -399,7 +404,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           children: <Widget>[
             FadeAnimation(
-              1.1,
+              1.3,
               Stack(
                 children: <Widget>[
                   Container(
@@ -435,12 +440,12 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            height: 190,
+                            height: 195,
                             width: MediaQuery.of(context).size.width * 0.43,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               image: DecorationImage(
-                                image: AssetImage('assets/splash.png'),
+                                image: AssetImage('assets/Spash2023.png'),
                               ),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(26)),
@@ -448,13 +453,12 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            "Ingresar",
+                            "Ingresar".toUpperCase(),
                             style: GoogleFonts.lato(
                               textStyle: Theme.of(context).textTheme.headline4,
                               fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              color: color,
                             ),
                           ),
                           SizedBox(height: 20),
@@ -462,8 +466,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: GoogleFonts.lato(
                               textStyle: Theme.of(context).textTheme.headline4,
                               fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                             keyboardType: TextInputType.emailAddress,
@@ -557,8 +560,7 @@ class _LoginPageState extends State<LoginPage> {
                                               .textTheme
                                               .headline4,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          fontStyle: FontStyle.italic,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         )),
                                   ),
@@ -596,8 +598,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 .textTheme
                                                 .headline4,
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            fontStyle: FontStyle.italic,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           )),
                                     ),

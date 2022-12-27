@@ -77,7 +77,7 @@ class _SplashLoginState extends State<SplashLogin>
                 Visibility(
                   visible: copAnimated,
                   child: Image.asset(
-                    'assets/splash.png',
+                    'assets/Spash2023.png',
                     height: 190.0,
                     width: 190.0,
                   ),

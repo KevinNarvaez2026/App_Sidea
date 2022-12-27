@@ -109,7 +109,7 @@ class _NavBarState extends State<NavBar> {
   ];
 
   var myindex = 0;
- final Color color = HexColor('#D61C4E');
+  final Color color = HexColor('#D61C4E');
   @override
   Widget build(BuildContext context) {
     final args =
@@ -124,21 +124,18 @@ class _NavBarState extends State<NavBar> {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               new Center(
-                child: Icon(
-                  (myindex == 0) ? Icons.home_outlined : Icons.home,
-                  color: Colors.white
-                ),
+                child: Icon((myindex == 0) ? Icons.home_outlined : Icons.home,
+                    color: Colors.white),
               ),
               new Center(
                 child: Text(
                   ' Inicio',
                   style: GoogleFonts.lato(
-                    textStyle: Theme.of(context).textTheme.headline4,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white
-                  ),
+                      textStyle: Theme.of(context).textTheme.headline4,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               // Text(' to add'),
@@ -149,21 +146,19 @@ class _NavBarState extends State<NavBar> {
             children: [
               new Center(
                 child: Icon(
-                  (myindex == 1)
-                      ? Ionicons.documents_outline
-                      : Ionicons.documents,
-                  color: Colors.white
-                ),
+                    (myindex == 1)
+                        ? Ionicons.documents_outline
+                        : Ionicons.documents,
+                    color: Colors.white),
               ),
               new Center(
                 child: Text('Actas',
                     style: GoogleFonts.lato(
-                      textStyle: Theme.of(context).textTheme.headline4,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white
-                    )),
+                        textStyle: Theme.of(context).textTheme.headline4,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white)),
               ),
             ],
           ),
@@ -172,21 +167,19 @@ class _NavBarState extends State<NavBar> {
             children: [
               new Center(
                 child: Icon(
-                  (myindex == 2)
-                      ? Ionicons.document_outline
-                      : Ionicons.document,
-                  color: Colors.white
-                ),
+                    (myindex == 2)
+                        ? Ionicons.document_outline
+                        : Ionicons.document,
+                    color: Colors.white),
               ),
               new Center(
                 child: Text('RFC',
                     style: GoogleFonts.lato(
-                      textStyle: Theme.of(context).textTheme.headline4,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white
-                    )),
+                        textStyle: Theme.of(context).textTheme.headline4,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white)),
               ),
             ],
           ),
@@ -195,19 +188,17 @@ class _NavBarState extends State<NavBar> {
             children: [
               new Center(
                 child: Icon(
-                  (myindex == 3) ? Icons.settings_outlined : Icons.settings,
-                  color: Colors.white
-                ),
+                    (myindex == 3) ? Icons.settings_outlined : Icons.settings,
+                    color: Colors.white),
               ),
               new Center(
                 child: Text(' Corte ',
                     style: GoogleFonts.lato(
-                      textStyle: Theme.of(context).textTheme.headline4,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white
-                    )),
+                        textStyle: Theme.of(context).textTheme.headline4,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white)),
               ),
             ],
           ),

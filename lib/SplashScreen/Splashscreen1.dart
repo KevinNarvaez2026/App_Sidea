@@ -2,6 +2,7 @@ import 'package:app_actasalinstante/constants.dart';
 import 'package:app_actasalinstante/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animations/animations.dart';
 import '../LoginView/api/pages/login_page.dart';
@@ -41,12 +42,13 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
     _coffeeController.dispose();
   }
-
+    final Color color = HexColor('#D61C4E');
+  final Color color_Card = HexColor('#01081f');
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: color_Card,
       body: Stack(
         children: [
           // White Container top half
@@ -65,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen>
                 Visibility(
                   visible: !copAnimated,
                   child: Lottie.asset(
-                    'assets/ACTAS.json',
+                    'assets/ACTAS2023.json',
                     controller: _coffeeController,
                     onLoaded: (composition) {
                       _coffeeController
@@ -77,22 +79,24 @@ class _SplashScreenState extends State<SplashScreen>
                 Visibility(
                   visible: copAnimated,
                   child: Image.asset(
-                    'assets/splash.png',
-                    height: 190.0,
-                    width: 190.0,
+                    'assets/Spash2023.png',
+                    height: 150.0,
+                    width: 150.0,
                   ),
                 ),
                 Center(
                   child: AnimatedOpacity(
                     opacity: animateCafeText ? 1 : 0,
                     duration: const Duration(seconds: 1),
-                    child: Text('Actas al instante',
+                    child: Text('Actas al instante'.toUpperCase(),
                         style: GoogleFonts.lato(
                           textStyle: Theme.of(context).textTheme.headline4,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w700,
-                          fontStyle: FontStyle.italic,
+                          fontSize: 29,
+                          fontWeight: FontWeight.bold,
+                        
+                       
                           color: Colors.black,
+                          
                         )),
                   ),
                 ),
@@ -110,12 +114,15 @@ class _SplashScreenState extends State<SplashScreen>
 //
 
 class _BottomPart extends StatelessWidget {
+  
   const _BottomPart({key}) : super(key: key);
 
   get onPressed => null;
 
+  
   @override
   Widget build(BuildContext context) {
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -123,38 +130,39 @@ class _BottomPart extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-                'Descarga tus actas de Nacimiento, Matrimonio, Defunción y Divorcio',
-                style: GoogleFonts.lato(
-                  textStyle: Theme.of(context).textTheme.headline4,
-                  fontSize: 27,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white,
-                )),
+            // Text(
+            //     'Descarga tus actas de Nacimiento, Matrimonio, Defunción y Divorcio',
+            //     style: GoogleFonts.lato(
+            //       textStyle: Theme.of(context).textTheme.headline4,
+            //       fontSize: 27,
+            //       fontWeight: FontWeight.w700,
+            //       fontStyle: FontStyle.italic,
+            //       color: Colors.white,
+            //     )),
             const SizedBox(height: 20.0),
             Text(
-              '',
+              'Bienvenido'.toUpperCase(),
               style: TextStyle(
-                fontSize: 15.0,
+                fontSize: 20.0,
                 color: Colors.white.withOpacity(0.8),
                 height: 1.5,
+                fontWeight: FontWeight.bold,
               ),
             ),
 
-            const SizedBox(height: 40.0),
+            // const SizedBox(height: 40.0),
             // Align(
 
-            //   alignment: Alignment.centerRight,
+            //   alignment: Alignment.center,
 
             //   child: Container(
-            //     height: 85.0,
-            //     width: 85.0,
+            //     height: 100.0,
+            //     width: 100.0,
 
             //     decoration: BoxDecoration(
 
             //       shape: BoxShape.circle,
-            //       border: Border.all(color: Colors.white, width: 2.0),
+            //       border: Border.all(color: Colors.white, width: 22.0),
 
             //     ),
 

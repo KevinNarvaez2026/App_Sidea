@@ -140,7 +140,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   json_version() async {
     print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.17.0"});
+      var json_Ver = jsonEncode({"version": "0.18.0"});
       print(json_Ver.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -163,7 +163,7 @@ class _CarouselExampleState extends State<CarouselExample> {
 
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.17.0') {
+        if (datas['version'] != '0.18.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -1544,7 +1544,35 @@ class _CarouselExampleState extends State<CarouselExample> {
 //                                 }),
 //                           ),
 //                         ),
-                      if (version == '0.17.0')
+                      if (version != '0.18.0')
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 40, vertical: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  color: Colors.redAccent,
+                                ),
+                                child: Text(
+                                  "debe de actualizar la app".toUpperCase(),
+                                  style: GoogleFonts.lato(
+                                    textStyle:
+                                        Theme.of(context).textTheme.headline4,
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      if (version == '0.18.0')
                         Container(
                           color: Colors.transparent,
                           padding: EdgeInsets.symmetric(
@@ -1571,6 +1599,7 @@ class _CarouselExampleState extends State<CarouselExample> {
                                   ),
                                 ],
                               ),
+
                               SizedBox(
                                 height: 30,
                               ),

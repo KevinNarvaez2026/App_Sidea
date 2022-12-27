@@ -122,8 +122,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     var response = await get(
-      Uri.parse(
-          'https://actasalinstante.com:3030/api/requests/dates'),
+      Uri.parse('https://actasalinstante.com:3030/api/requests/dates'),
       headers: mainheader,
     );
     var resBody = json.decode(response.body);
@@ -209,7 +208,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
       await file.writeAsBytes(decoded);
 
       Open_pdf(filename);
-      // _speak('Recuerde que debe tener un visor de pdf, para visualizar el acta');
+
       return file;
     }
   }
@@ -249,8 +248,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
     "assets/DEFUNCION.jpg",
     "assets/matrimonio.png",
   ];
-  // final f = new DateFormat('yyyy-MM-dd hh:mm');
-// type=${result.type}
+
   var isFavorite = false.obs;
   int selectedIndex;
   int count;
@@ -282,15 +280,6 @@ class _SERACHACTASState extends State<SERACHACTAS>
                       height: 200,
                     ),
                   ),
-
-                  // Text(
-                  //   title,
-                  //   style: TextStyle(
-                  //     fontSize: 25,
-                  //     color: Colors.grey,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
 
                   Container(
                     // width: 200,
@@ -396,8 +385,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
 
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
-                                     _speak(
-                                                      'Si tu pdf, no se abre, descargalo otra vez, no genera nungun costo');
+                                _speak(
+                                    'Si tu pdf, no se abre, descargalo otra vez, no genera nungun costo');
                                 openFiles(curp);
                                 _speak('abriendo pdf');
                               },
@@ -432,7 +421,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
     );
   }
- final Color color = HexColor('#D61C4E');
+
+  final Color color = HexColor('#D61C4E');
   Widget Actas_De(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
