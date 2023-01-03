@@ -23,6 +23,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../RFC/Modal_RFC.dart';
+import '../../RFC/Transicion.dart';
 import '../../SplashScreen/Splashscreen1.dart';
 import '../../views/controller/controller.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -123,7 +125,7 @@ class _HomePageState extends State<SERACHRFC> {
     }
     print(status);
   }
-
+ static const duration = Duration(milliseconds: 300);
   var _openResult = 'Unknown';
 
   Future<void> openFiles(String filename) async {
@@ -140,11 +142,59 @@ class _HomePageState extends State<SERACHRFC> {
   var isFavorite = false.obs;
   int index;
    final Color color = HexColor('#D61C4E');
+     final Color color_Modal = HexColor("#424242");
+  showdialog_Aler() {
+
+    showDialog(
+  context: context,
+  builder: (_) => new AlertDialog(
+    title:Center(
+            child: Text('Solicitar rfc'.toUpperCase(),style: TextStyle(color: Colors.white),),
+       ), 
+       backgroundColor: color_Modal,
+  shape: RoundedRectangleBorder(
+    borderRadius:
+      BorderRadius.all(
+        Radius.circular(10.0))),
+    content: Builder(
+      builder: (context) {
+      
+        // Get available height and width of the build area of this widget. Make a choice depending on the size.                              
+        var height = MediaQuery.of(context).size.height;
+        var width = MediaQuery.of(context).size.width;
+
+        return Container(
+          height: height -20,
+          width: width - 20,
+          child: ModalRfc(),
+          
+        );
+        
+      },
+    ),
+  
+  )
+);
+    
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
           backgroundColor: color,
+          floatingActionButton: FloatingActionButton(
+        onPressed: () {
+  showdialog_Aler();
+
+        },
+        child: Icon(Icons.add, color: Colors.white, size: 29,),
+        backgroundColor: Colors.black,
+        tooltip: 'Nueva Peticion',
+        elevation: 5,
+        splashColor: Colors.grey,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      
           appBar: AppBar(
             actions: [
               new Center(

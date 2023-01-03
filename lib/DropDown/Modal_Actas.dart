@@ -26,15 +26,15 @@ import 'Descargar_actas/Descargar_acta.dart';
 
 enum ViewDialogsAction { yes, no }
 
-class Body extends StatefulWidget {
-  const Body({key}) : super(key: key);
+class Modal_Actas extends StatefulWidget {
+  const Modal_Actas({key}) : super(key: key);
   @override
-  _BodyState createState() => _BodyState();
+  _Modal_ActasState createState() => _Modal_ActasState();
 }
 // Puedes pasar cualquier objeto al parámetro `arguments`. En este ejemplo, crea una
 // clase que contiene ambos, un título y un mensaje personalizable.
 
-class _BodyState extends State<Body> {
+class _Modal_ActasState extends State<Modal_Actas> {
   String title;
   TextEditingController ActoController = TextEditingController();
   TextEditingController curpController = TextEditingController();
@@ -268,12 +268,16 @@ class _BodyState extends State<Body> {
       title: 'Actas al instante',
       desc: 'Acta no encontrada',
       btnCancelOnPress: () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => Body()));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => Modal_Actas()));
       },
       btnOkOnPress: () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => Body()));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => Modal_Actas()));
       },
     )..show();
   }
@@ -502,7 +506,7 @@ class _BodyState extends State<Body> {
 
       showAlert();
     } else {
-    //  _controller.error();
+      //  _controller.error();
       showcurp();
 
       // var snackBar = SnackBar(
@@ -768,8 +772,8 @@ class _BodyState extends State<Body> {
     );
   }
 
-  String label = "Seleciona el Acto Registral";
-  String curp = "Ingresa tu Curp";
+  String label = "tipo de documento";
+  String curp = "curp a buscar";
   String estado = "Seleciona el Estado\n";
   var _currentSelectedValue;
   var _estadoselect;
@@ -822,37 +826,38 @@ class _BodyState extends State<Body> {
   }
 
   final Color color = HexColor('#D61C4E');
+  final Color color_Modal = HexColor("#30475E");
   @override
   Widget _provinceContainers(BuildContext context) {
     var crupestado;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: color,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          '' + user.toString(),
-          style: TextStyle(
-            fontSize: 20,
-            fontFamily: 'RobotoMono',
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
-        ),
-        elevation: 0,
-        brightness: Brightness.light,
-        backgroundColor: color,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Colors.white,
-          ),
-        ),
-      ),
+      backgroundColor: Colors.white,
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: Text(
+      //     '' + user.toString(),
+      //     style: TextStyle(
+      //       fontSize: 20,
+      //       fontFamily: 'RobotoMono',
+      //       fontWeight: FontWeight.w800,
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      //   elevation: 0,
+      //   brightness: Brightness.light,
+      //   backgroundColor: color,
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //     icon: Icon(
+      //       Icons.arrow_back_ios,
+      //       size: 20,
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
@@ -864,7 +869,6 @@ class _BodyState extends State<Body> {
             Expanded(
               child: Container(
                   width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(40),
@@ -873,141 +877,95 @@ class _BodyState extends State<Body> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "Actas",
-                            style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Solicitar acta",
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.grey[700]),
-                          )
-                        ],
-                      ),
+                      // Column(
+                      //   children: <Widget>[
+                      //     Text(
+                      //       "Actas",
+                      //       style: TextStyle(
+                      //           fontSize: 30, fontWeight: FontWeight.bold),
+                      //     ),
+                      //     SizedBox(
+                      //       height: 20,
+                      //     ),
+                      //     Text(
+                      //       "Solicitar acta",
+                      //       style: TextStyle(
+                      //           fontSize: 15, color: Colors.grey[700]),
+                      //     )
+                      //   ],
+                      // ),
 
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: 5),
                         child: Column(
                           children: <Widget>[
-                            FormField<String>(
-                              builder: (FormFieldState<String> state) {
-                                return InputDecorator(
-                                  decoration: InputDecoration(
-                                      label: Text(label.toString()),
-                                      errorStyle: TextStyle(
-                                          color: Colors.redAccent,
-                                          fontSize: 16.0),
-                                      hintText: 'Please select expense',
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0))),
-                                  isEmpty: _currentSelectedValue == '',
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      value: _currentSelectedValue,
-                                      isDense: true,
-                                      onChanged: (String newValue) {
-                                        setState(() {
-                                          _currentSelectedValue = newValue;
-                                          state.didChange(newValue);
-                                        });
-                                      },
-                                      items: _currencies.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
+                            Theme(
+                              data: new ThemeData(
+                                primaryColor: Colors.grey,
+                                focusColor: Colors.grey,
+                                hintColor: Colors.grey,
+                              ),
+                              child: FormField<String>(
+                                builder: (FormFieldState<String> state) {
+                                  return InputDecorator(
+                                    decoration: InputDecoration(
+                                        label: Text(label.toString().toUpperCase()),
+                                        errorStyle: TextStyle(
+                                            color: Colors.redAccent,
+                                            fontSize: 16.0),
+                                        hintText: 'Please select expense',
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0))),
+                                    isEmpty: _currentSelectedValue == '',
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                        value: _currentSelectedValue,
+                                        isDense: true,
+                                        onChanged: (String newValue) {
+                                          setState(() {
+                                            _currentSelectedValue = newValue;
+                                            state.didChange(newValue);
+                                          });
+                                        },
+                                        items: _currencies.map((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
-                            // TextFormField(
-
-                            //   controller: ActoController,
-
-                            //   pohjhjhhdecoration: InputDecoration(hintText: 'Acto registral'.toUpperCase() ),
-                            // ),
-                            SizedBox(
-                              //Use of SizedBox
-                              height: 5,
-                            ),
-
+  
                             TextFormField(
+                              cursorColor: Colors.black,
+                              style: TextStyle(color: Colors.black),
                               controller: curpController,
                               validator: (input) =>
                                   input == '' ? "Ingresa un usuario" : null,
                               decoration: InputDecoration(
-                                  label: Text(curp.toString()),
+                                  label: Text(curp.toString().toUpperCase()),
                                   hintText: 'curp'.toUpperCase()),
                               maxLength: 18,
-                              onChanged:(newValue) {
-                               print(newValue);
-                        setState(() {
-                            onChangeCurp(
-                                  curpController.text.toString().toUpperCase());
-                        });
-                                  
-                           
-                                
-
-                              }, 
-
-
-                            
-                              
-                            
+                              onChanged: (newValue) {
+                                print(newValue);
+                                setState(() {
+                                  onChangeCurp(curpController.text
+                                      .toString()
+                                      .toUpperCase());
+                                });
+                              },
 
                               //  obscureText: true,
                             ),
-                            // ),
-                            SizedBox(
-                              //Use of SizedBox
-                              height: 10,
-                            ),
 
-                            // FormField<String>(
-                            //   builder: (FormFieldState<String> state) {
-                            //     return InputDecorator(
-                            //       decoration: InputDecoration(
-                            //           label: Text(
-                            //               estado.toString() + entidad.toString()),
-                            //           errorStyle: TextStyle(
-                            //               color: Colors.redAccent, fontSize: 16.0),
-                            //           hintText: 'Please select expense',
-                            //           border: OutlineInputBorder(
-                            //               borderRadius: BorderRadius.circular(5.0))),
-                            //       isEmpty: _estadoselect == '',
-                            //       child: DropdownButtonHideUnderline(
-                            //         child: DropdownButton<String>(
-                            //           value: _estadoselect,
-                            //           isDense: true,
-                            //           onChanged: (String newValue) {
-                            //             setState(() {
-                            //               entidad = newValue;
-                            //               state.didChange(newValue);
-                            //             });
-                            //           },
-                            //           items: estados.map((String value) {
-                            //             return DropdownMenuItem<String>(
-                            //               value: value,
-                            //               child: Text(value),
-                            //             );
-                            //           }).toList(),
-                            //         ),
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
-                            // T
-                            if (entidad.toString() != "Entidad de registro" && entidad.toString() != "null" )
+                            if (entidad.toString() != "Entidad de registro" &&
+                                entidad.toString() != "null")
                               TextFormField(
                                 controller: etadoController,
                                 decoration: InputDecoration(
@@ -1020,7 +978,8 @@ class _BodyState extends State<Body> {
 
                                 // obscureText: true,
                               ),
-                            if (entidad.toString() == "Entidad de registro" && entidad.toString() == "null")
+                            if (entidad.toString() == "Entidad de registro" &&
+                                entidad.toString() == "null")
                               TextFormField(
                                 controller: etadoController,
                                 decoration: InputDecoration(
@@ -1040,7 +999,8 @@ class _BodyState extends State<Body> {
                           ],
                         ),
                       ),
-                      if (entidad.toString() == "Entidad de registro" || entidad.toString() == "null" )
+                      if (entidad.toString() == "Entidad de registro" ||
+                          entidad.toString() == "null")
                         new Center(
                           child: Container(
                             decoration: BoxDecoration(
@@ -1068,146 +1028,150 @@ class _BodyState extends State<Body> {
                           ),
                         ),
 
-                          if (entidad.toString() != "Entidad de registro" && entidad.toString() != "null" )
-                          new Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(52),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        if (curpController.text.toString() == null ||
-                                    curpController.text.toString() == "") {
-                                  var snackBar = SnackBar(
-                                    elevation: 0,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'No escribiste la Curp! ',
-                                      message: '',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
+                      if (entidad.toString() != "Entidad de registro" &&
+                          entidad.toString() != "null")
+                        new Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(52),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 8),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                MaterialButton(
+                                  onPressed: () {
+                                    if (curpController.text.toString() ==
+                                            null ||
+                                        curpController.text.toString() == "") {
+                                      var snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        content: AwesomeSnackbarContent(
+                                          title: 'No escribiste la Curp! ',
+                                          message: '',
+                                          contentType: ContentType.failure,
+                                        ),
+                                      );
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
 
-                                  print('Text is empty');
-                                } else if (curpController.text
-                                        .toString()
-                                        .length <
-                                    18) {
-                                  var digit =
-                                      curpController.text.toString().length;
+                                      print('Text is empty');
+                                    } else if (curpController.text
+                                            .toString()
+                                            .length <
+                                        18) {
+                                      var digit =
+                                          curpController.text.toString().length;
 
-                                  var snackBar = SnackBar(
-                                    elevation: 10,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    width: 500,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'Error en la curp',
-                                      message: 'Te faltan ${(18 - (digit))}' +
-                                          ' digitos en la curp ',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
+                                      var snackBar = SnackBar(
+                                        elevation: 10,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        width: 500,
+                                        content: AwesomeSnackbarContent(
+                                          title: 'Error en la curp',
+                                          message:
+                                              'Te faltan ${(18 - (digit))}' +
+                                                  ' digitos en la curp ',
+                                          contentType: ContentType.failure,
+                                        ),
+                                      );
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                } else if (_currentSelectedValue == null) {
-                                  var snackBar = SnackBar(
-                                    elevation: 10,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    width: 500,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'Te Falta El Acto Registral',
-                                      message: '' + 'Error ',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else if (_currentSelectedValue == null) {
+                                      var snackBar = SnackBar(
+                                        elevation: 10,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        width: 500,
+                                        content: AwesomeSnackbarContent(
+                                          title: 'Te Falta El Acto Registral',
+                                          message: '' + 'Error ',
+                                          contentType: ContentType.failure,
+                                        ),
+                                      );
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                } else {
-                                  //   CURP(curpController.text.toString().toUpperCase());
-                                  //print(curpController.text.toString().toUpperCase());
-                                  CURP(curpController.text
-                                      .toString()
-                                      .toUpperCase());
-                                  print(_currentSelectedValue
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      //   CURP(curpController.text.toString().toUpperCase());
+                                      //print(curpController.text.toString().toUpperCase());
+                                      CURP(curpController.text
                                           .toString()
-                                          .toUpperCase() +
-                                      curpController.text
-                                          .toString()
-                                          .toUpperCase() +
-                                      entidad.toString());
-                                  print(entidad.toString());
-                                }
-                                // String ex1 = "No value selected";
-                                //print(_estadoselect.toString());
+                                          .toUpperCase());
+                                      print(_currentSelectedValue
+                                              .toString()
+                                              .toUpperCase() +
+                                          curpController.text
+                                              .toString()
+                                              .toUpperCase() +
+                                          entidad.toString());
+                                      print(entidad.toString());
+                                    }
+                                    // String ex1 = "No value selected";
+                                    //print(_estadoselect.toString());
 
-                                // actas(
-                                //     _currentSelectedValue.toString().toUpperCase(),
-                                //     curpController.text.toString().toUpperCase(),
-                                //     _estadoselect.toString().toUpperCase());
+                                    // actas(
+                                    //     _currentSelectedValue.toString().toUpperCase(),
+                                    //     curpController.text.toString().toUpperCase(),
+                                    //     _estadoselect.toString().toUpperCase());
 
 //                           print(_currentSelectedValue.toString().toUpperCase() +
 //                               curpController.text.toString().toUpperCase() +
 //                               _estadoselect.toString().toUpperCase());
-                      },
-                      child: Text("Enviar"),
-                      textColor: Colors.white,
-                    ),
-                    Icon(
-                      Icons.send,
-                      size: 19,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-                            new Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(52),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        print(_currentSelectedValue);
-                        // Send_RFC_CURP(
-                        //     _currentSelectedValue.toString().toUpperCase(),
-                        //     curpController.text.toString().toUpperCase(),
-                        //     entidad.toString(),
-                        //     ConReverso.toString());
-                      },
-                      child: Text("Cancelar"),
-                      textColor: Colors.white,
-                    ),
-                    Icon(
-                      Icons.warning_amber,
-                      size: 19,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-                    
-                        
+                                  },
+                                  child: Text("Enviar"),
+                                  textColor: Colors.white,
+                                ),
+                                Icon(
+                                  Icons.send,
+                                  size: 19,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      new Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(52),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  print(_currentSelectedValue);
+                                  // Send_RFC_CURP(
+                                  //     _currentSelectedValue.toString().toUpperCase(),
+                                  //     curpController.text.toString().toUpperCase(),
+                                  //     entidad.toString(),
+                                  //     ConReverso.toString());
+                                },
+                                child: Text("Cancelar"),
+                                textColor: Colors.white,
+                              ),
+                              Icon(
+                                Icons.warning_amber,
+                                size: 19,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
                       // Container(
                       //   padding: EdgeInsets.only(top: 100),
                       //   height: 200,
@@ -1509,8 +1473,7 @@ class _BodyState extends State<Body> {
       }
     } else {
       setState(() {
-          entidad = 'Entidad de registro';
-    
+        entidad = 'Entidad de registro';
       });
     }
   }

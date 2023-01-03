@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:android_intent/android_intent.dart';
 import 'package:android_intent/flag.dart';
+import 'package:app_actasalinstante/DropDown/Body.dart';
 import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
 
 import 'package:app_actasalinstante/services/SearchapiACTAS/Api_service.dart';
@@ -26,6 +27,7 @@ import 'dart:io';
 import 'package:path/path.dart' as Path;
 import 'package:open_filex/open_filex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../DropDown/Modal_Actas.dart';
 import '../../LoginView/api/ProgressHUD.dart';
 import '../../NavBar.dart';
 import '../../SplashScreen/Splashscreen1.dart';
@@ -95,8 +97,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    _speak(user +
-        ',Toque la parte blanca, Para ver mas información de su acta solicitada');
+    // _speak(user +
+    //     ',Toque la parte blanca, Para ver mas información de su acta solicitada');
   }
 
   String user = "";
@@ -227,7 +229,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
       },
       btnOkOnPress: () {
         openFiles(folio.toString());
-        _speak('abriendo pdf');
+      //  _speak('abriendo pdf');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => NavBar()));
       },
@@ -248,7 +250,8 @@ class _SERACHACTASState extends State<SERACHACTAS>
     "assets/DEFUNCION.jpg",
     "assets/matrimonio.png",
   ];
-
+  static const duration = Duration(milliseconds: 800);
+  static const fastDuration = Duration(milliseconds: 500);
   var isFavorite = false.obs;
   int selectedIndex;
   int count;
@@ -280,7 +283,6 @@ class _SERACHACTASState extends State<SERACHACTAS>
                       height: 200,
                     ),
                   ),
-
                   Container(
                     // width: 200,
                     child: Align(
@@ -308,7 +310,6 @@ class _SERACHACTASState extends State<SERACHACTAS>
                       ),
                     ),
                   ),
-
                   SizedBox(
                     height: 10,
                   ),
@@ -388,7 +389,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                                 _speak(
                                     'Si tu pdf, no se abre, descargalo otra vez, no genera nungun costo');
                                 openFiles(curp);
-                                _speak('abriendo pdf');
+                               // _speak('abriendo pdf');
                               },
                               child: Text("Abrir"),
                               textColor: Colors.white,
@@ -410,6 +411,41 @@ class _SERACHACTASState extends State<SERACHACTAS>
       },
     );
   }
+  final Color color_Modal = HexColor("#424242");
+  showdialog_Aler() {
+
+    showDialog(
+  context: context,
+  builder: (_) => new AlertDialog(
+    title:Center(
+            child: Text('Solicitar acta'.toUpperCase(),style: TextStyle(color: Colors.white),),
+       ), 
+       backgroundColor: color_Modal,
+  shape: RoundedRectangleBorder(
+    borderRadius:
+      BorderRadius.all(
+        Radius.circular(10.0))),
+    content: Builder(
+      builder: (context) {
+      
+        // Get available height and width of the build area of this widget. Make a choice depending on the size.                              
+        var height = MediaQuery.of(context).size.height;
+        var width = MediaQuery.of(context).size.width;
+
+        return Container(
+          height: height -50,
+          width: width - 20,
+          child: Modal_Actas(),
+          
+        );
+        
+      },
+    ),
+  
+  )
+);
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -427,6 +463,36 @@ class _SERACHACTASState extends State<SERACHACTAS>
     return WillPopScope(
         child: Scaffold(
           backgroundColor: color,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showdialog_Aler();
+              // Navigator.push(
+              //                                             context,
+              //                                             PageRouteBuilder(
+              //                                               pageBuilder:
+              //                                                   (context, animation, _) {
+              //                                                 return FadeTransition(
+              //                                                   opacity: animation,
+              //                                                   child: Body(),
+              //                                                 );
+              //                                               },
+              //                                               transitionDuration: duration,
+              //                                               reverseTransitionDuration:
+              //                                                   duration,
+              //                                             ),
+              //                                           );
+            },
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 29,
+            ),
+            backgroundColor: Colors.black,
+            tooltip: 'Nueva Peticion',
+            elevation: 5,
+            splashColor: Colors.grey,
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           appBar: AppBar(
             actions: [
               new Center(
@@ -511,14 +577,16 @@ class _SERACHACTASState extends State<SERACHACTAS>
                       itemCount: data?.length,
                       itemBuilder: (context, index) {
                         if (!snapshot.hasData) {
+                        
                           return Center(
                             child: CircularProgressIndicator(
                               backgroundColor: Colors.black,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.greenAccent),
+                                  Colors.redAccent),
                             ),
                           );
                         }
+
                         return FadeAnimation(
                           1.3,
                           GestureDetector(

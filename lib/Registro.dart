@@ -1,30 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:app_actasalinstante/DropDown/Descargar_actas/animation/FadeAnimation.dart';
+
 import 'package:app_actasalinstante/NavBar.dart';
 import 'package:app_actasalinstante/login.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:check_vpn_connection/check_vpn_connection.dart';
 import 'package:flutter/material.dart';
-import 'package:app_actasalinstante/Widgets/carousel_example.dart';
+
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:lottie/lottie.dart';
-import 'package:responsive_framework/responsive_wrapper.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'FlatMessage/Message.dart';
+
 import 'LoginView/api/ProgressHUD.dart';
 import 'RFCDescargas/services/Variables.dart';
-import 'SplashScreen/Splashscreen1.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:geocoding/geocoding.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -66,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
   json_version() async {
     //  print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.18.0"});
+      var json_Ver = jsonEncode({"version": "0.20.0"});
       print(json_Ver.toString());
 
       Map<String, String> mainheader = new Map();
@@ -80,7 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (response.statusCode == 200) {
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.18.0') {
+        if (datas['version'] != '0.20.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -344,7 +343,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  AnimationController _coffeeController;
   bool copAnimated = false;
   bool animateCafeText = false;
 
@@ -429,7 +427,7 @@ class _RegisterPageState extends State<RegisterPage> {
       // ),
 
       key: scaffoldKey,
-      backgroundColor: Theme.of(context).accentColor,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -469,7 +467,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           style: GoogleFonts.lato(
                                             textStyle: Theme.of(context)
                                                 .textTheme
-                                                .headline4,
+                                                .headlineMedium,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
                                             fontStyle: FontStyle.italic,
@@ -477,19 +475,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                           ),
                                           textAlign: TextAlign.start,
                                         ),
-                                        Text(
-                                          "\nPARA PODER REGISTRARSE, ES NECESARIO ACEPTAR TODOS LOS PERMISOS QUE LE SOLICITE LA APP.",
-                                          style: GoogleFonts.lato(
-                                            textStyle: Theme.of(context)
-                                                .textTheme
-                                                .headline4,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                            fontStyle: FontStyle.italic,
-                                            color: Colors.white,
-                                          ),
-                                          textAlign: TextAlign.justify,
-                                        ),
+                                        // Text(
+                                        //   "\nPARA PODER REGISTRARSE, ES NECESARIO ACEPTAR TODOS LOS PERMISOS QUE LE SOLICITE LA APP.",
+                                        //   style: GoogleFonts.lato(
+                                        //     textStyle: Theme.of(context)
+                                        //         .textTheme
+                                        //         .headlineMedium,
+                                        //     fontSize: 14,
+                                        //     fontWeight: FontWeight.w700,
+                                        //     fontStyle: FontStyle.italic,
+                                        //     color: Colors.white,
+                                        //   ),
+                                        //   textAlign: TextAlign.justify,
+                                        // ),
                                       ])))),
                         ),
                         Form(
@@ -630,7 +628,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 },
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
-                                  hintText: "Comproante de Domicilio",
+                                  hintText: "Comprobante de Domicilio",
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Theme.of(context)
@@ -970,10 +968,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                                         "Registro"
                                                             .toUpperCase(),
                                                         style: GoogleFonts.lato(
-                                                          textStyle:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline4,
+                                                          textStyle: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headlineMedium,
                                                           fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.w700,
@@ -1014,504 +1012,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
           ),
-
-          // FadeAnimation(1.1,
-
-          //  Stack(
-
-          //   children: <Widget>[
-
-          //     // Container(
-          //     //   height: 757,
-          //     //   width: double.infinity,
-          //     //   decoration: const BoxDecoration(
-          //     //     image: DecorationImage(
-          //     //         image: AssetImage('assets/fondoalterno.jpg'),
-          //     //         fit: BoxFit.fill),
-          //     //   ),
-          //     //   // Foreground widget here
-          //     // ),
-          //     Container(
-          //       width: double.infinity,
-          //       padding: EdgeInsets.symmetric(vertical: 10, horizontal:5),
-          //       margin: EdgeInsets.symmetric(vertical: 120, horizontal: 5),
-          //       decoration: BoxDecoration(
-
-          //         color: Colors.white,
-          //         boxShadow: [
-          //           BoxShadow(
-          //             color: Theme.of(context).hintColor.withOpacity(0.1),
-          //             offset: Offset(0, 20),
-          //             blurRadius: 80,
-          //           ),
-          //         ],
-          //       ),
-
-          //       child: Form(
-          //         key: globalFormKey,
-          //         child: Column(
-          //           children: <Widget>[
-
-          //             SizedBox(height: 30),
-          //             TextFormField(
-          //               keyboardType: TextInputType.emailAddress,
-          //               textInputAction: TextInputAction.next,
-          //               controller: Nnegocio,
-          //               onSaved: (input) => Nnegocio.text = input,
-          //               decoration: const InputDecoration(
-          //                 hintText: "Nombre completo",
-          //                 prefixIcon: Padding(
-          //                   padding: EdgeInsets.all(16.2),
-          //                   child: Icon(Icons.person),
-          //                 ),
-          //               ),
-          //             ),
-          //             SizedBox(height: 20),
-          //             Container(
-          //               padding: const EdgeInsets.all(8),
-          //               height: 80,
-          //               child: IntlPhoneField(
-          //                 decoration: const InputDecoration(
-          //                   counter: Offstage(),
-          //                   labelText: 'Telefono',
-          //                   border: OutlineInputBorder(
-          //                     borderSide: BorderSide(),
-          //                   ),
-          //                 ),
-          //                 initialCountryCode: 'MX',
-          //                 showDropdownIcon: true,
-          //                 dropdownIconPosition: IconPosition.trailing,
-          //                 onChanged: (phone) {
-          //                   number = phone.completeNumber;
-          //                   print(number);
-          //                 },
-          //               ),
-          //             ),
-
-          //             // TextFormField(
-          //             //   keyboardType: TextInputType.phone,
-          //             //   textInputAction: TextInputAction.next,
-          //             //   controller: Telefono,
-          //             //   onSaved: (input) => Nnegocio.text = input,
-          //             //   decoration: const InputDecoration(
-          //             //     hintText: "Telefono",
-          //             //     prefixIcon: Padding(
-          //             //       padding: EdgeInsets.all(16.0),
-          //             //       child: Icon(Icons.phone),
-          //             //     ),
-          //             //   ),
-          //             // ),
-          //             SizedBox(height: 20),
-          //             INES(),
-          //             TextFormField(
-          //               style: TextStyle(color: Colors.green),
-          //               keyboardType: TextInputType.emailAddress,
-          //               textInputAction: TextInputAction.next,
-          //               readOnly: true,
-          //               onTap: () {
-          //                 showModalBottomSheet(
-          //                     context: context,
-          //                     builder: (context) {
-          //                       return Column(
-          //                         mainAxisSize: MainAxisSize.min,
-          //                         children: <Widget>[
-          //                           // ListTile(
-          //                           //   leading: const Icon(Icons.camera_alt),
-          //                           //   title: const Text('Tomar Foto'),
-          //                           //   onTap: () {
-          //                           //     UploadINEfoto();
-          //                           //   },
-          //                           // ),
-          //                           ListTile(
-          //                             leading: const Icon(Icons.photo),
-          //                             title: const Text('Galeria'),
-          //                             onTap: () {
-          //                               UploadINE();
-          //                             },
-          //                           ),
-          //                         ],
-          //                       );
-          //                     });
-
-          //                 //UploadGallery();
-          //               },
-          //               decoration: InputDecoration(
-          //                 labelStyle: TextStyle(color: Colors.green),
-          //                 hintText: "INE",
-          //                 enabledBorder: UnderlineInputBorder(
-          //                     borderSide: BorderSide(
-          //                         color: Theme.of(context)
-          //                             .accentColor
-          //                             .withOpacity(0.2))),
-          //                 focusedBorder: UnderlineInputBorder(
-          //                     borderSide: BorderSide(
-          //                         color: Theme.of(context).accentColor)),
-          //                 prefixIcon: const Icon(
-          //                   Icons.sd_card_rounded,
-          //                   color: Colors.black,
-          //                 ),
-          //               ),
-          //             ),
-          //             SizedBox(height: 20),
-          //             DOMIC(),
-          //             TextFormField(
-          //               readOnly: true,
-          //               onTap: () {
-          //                 showModalBottomSheet(
-          //                     context: context,
-          //                     builder: (context) {
-          //                       return Column(
-          //                         mainAxisSize: MainAxisSize.min,
-          //                         children: <Widget>[
-          //                           // ListTile(
-          //                           //   leading: const Icon(Icons.camera_alt),
-          //                           //   title: const Text('Tomar Foto'),
-          //                           //   onTap: () {
-          //                           //     UploadDOMIfoto();
-          //                           //   },
-          //                           // ),
-          //                           ListTile(
-          //                             leading: new Icon(Icons.photo),
-          //                             title: new Text('Galeria'),
-          //                             onTap: () {
-          //                               UploadDOMI();
-          //                             },
-          //                           ),
-          //                         ],
-          //                       );
-          //                     });
-
-          //                 //UploadGallery();
-          //               },
-          //               keyboardType: TextInputType.emailAddress,
-          //               decoration: InputDecoration(
-          //                 hintText: "Comproante de Domicilio",
-          //                 enabledBorder: UnderlineInputBorder(
-          //                     borderSide: BorderSide(
-          //                         color: Theme.of(context)
-          //                             .accentColor
-          //                             .withOpacity(0.2))),
-          //                 focusedBorder: UnderlineInputBorder(
-          //                     borderSide: BorderSide(
-          //                         color: Theme.of(context).accentColor)),
-          //                 prefixIcon: const Icon(
-          //                   Icons.maps_home_work,
-          //                   color: Colors.black,
-          //                 ),
-          //               ),
-          //             ),
-          //             SizedBox(height: 20),
-          //             FOTOGRAFIA(),
-          //             new TextFormField(
-          //               readOnly: true,
-          //               onTap: () {
-          //                 showModalBottomSheet(
-          //                     context: context,
-          //                     builder: (context) {
-          //                       return Column(
-          //                         mainAxisSize: MainAxisSize.min,
-          //                         children: <Widget>[
-          //                           // ListTile(
-          //                           //   leading: new Icon(Icons.camera_alt),
-          //                           //   title: new Text('Tomar Foto'),
-          //                           //   onTap: () {
-          //                           //     UploadINEfoto();
-          //                           //     // takePhoto(ImageSource.camera);
-          //                           //     // print(ImageSource.camera);
-          //                           //   },
-          //                           // ),
-          //                           ListTile(
-          //                             leading: new Icon(Icons.photo),
-          //                             title: new Text('Galeria'),
-          //                             onTap: () {
-          //                               UploadFOTO();
-          //                               //takePhoto(ImageSource.gallery);
-          //                               //print(ImageSource.gallery);
-          //                             },
-          //                           ),
-
-          //                           // if (user == "Edwin Poot")
-          //                           //If(user == "Edwin Poot");
-          //                           //if
-
-          //                           //   ListTile(
-          //                           //     leading: new Icon(Icons.info),
-          //                           //     title: new Text('Detalles'),
-          //                           //     onTap: () {},
-          //                           //   ),
-          //                           // ListTile(
-          //                           //   leading: new Icon(Icons.share),
-          //                           //   title: new Text('Otro'),
-          //                           //   onTap: () {
-          //                           //     Navigator.pop(context);
-          //                           //   },
-          //                           // ),
-          //                         ],
-          //                       );
-          //                     });
-
-          //                 //  UploadGallery();
-          //               },
-          //               style: GoogleFonts.lato(
-          //                 textStyle: Theme.of(context).textTheme.headline4,
-          //                 fontSize: 16,
-          //                 fontWeight: FontWeight.w700,
-          //                 fontStyle: FontStyle.italic,
-          //                 color: Colors.black,
-          //               ),
-          //               keyboardType: TextInputType.emailAddress,
-          //               decoration: new InputDecoration(
-          //                 hintText: "Selfie",
-          //                 enabledBorder: UnderlineInputBorder(
-          //                     borderSide: BorderSide(
-          //                         color: Theme.of(context)
-          //                             .accentColor
-          //                             .withOpacity(0.2))),
-          //                 focusedBorder: UnderlineInputBorder(
-          //                     borderSide: BorderSide(
-          //                         color: Theme.of(context).accentColor)),
-          //                 prefixIcon: Icon(
-          //                   Icons.photo_camera_front_rounded,
-          //                   color: Theme.of(context).accentColor,
-          //                 ),
-          //               ),
-          //             ),
-          //             SizedBox(height: 15),
-          //             if (id == null && fileName == "heic")
-          //               new Center(
-          //                 child: MaterialButton(
-          //                   child: Container(
-          //                     decoration: BoxDecoration(
-          //                       color: Colors.red,
-          //                       borderRadius: BorderRadius.circular(15),
-          //                     ),
-          //                     padding: const EdgeInsets.symmetric(
-          //                         horizontal: 29, vertical: 5),
-          //                     child: Row(
-          //                       mainAxisSize: MainAxisSize.min,
-          //                       children: [
-          //                         new Center(
-          //                           child: Container(
-          //                             decoration: BoxDecoration(
-          //                               color: Colors.red,
-          //                               borderRadius:
-          //                                   BorderRadius.circular(15),
-          //                             ),
-          //                             padding: const EdgeInsets.symmetric(
-          //                                 horizontal: 29, vertical: 5),
-          //                             child: Row(
-          //                               mainAxisSize: MainAxisSize.min,
-          //                               children: [
-          //                                 MaterialButton(
-          //                                   child: Text("Error de formato",
-          //                                       style: GoogleFonts.lato(
-          //                                         textStyle: Theme.of(context)
-          //                                             .textTheme
-          //                                             .headline4,
-          //                                         fontSize: 16,
-          //                                         fontWeight: FontWeight.w700,
-          //                                         fontStyle: FontStyle.italic,
-          //                                         color: Colors.white,
-          //                                       )),
-          //                                 ),
-          //                                 // Icon(
-          //                                 //   Icons.download_done,
-          //                                 //   size: 20,
-          //                                 //   color: Colors.white,
-          //                                 // ),
-          //                               ],
-          //                             ),
-          //                           ),
-          //                         ),
-          //                         // Icon(
-          //                         //   Icons.download_done,
-          //                         //   size: 20,
-          //                         //   color: Colors.white,
-          //                         // ),
-          //                       ],
-          //                     ),
-          //                   ),
-          //                 ),
-          //               ),
-          //             if (id == null && fileName != "heic")
-          //               new Center(
-          //                 child: MaterialButton(
-          //                   child: Container(
-          //                     decoration: BoxDecoration(
-          //                       color: Colors.black,
-          //                       borderRadius: BorderRadius.circular(15),
-          //                     ),
-          //                     padding: const EdgeInsets.symmetric(
-          //                         horizontal: 15, vertical: 5),
-          //                     child: Row(
-          //                       mainAxisSize: MainAxisSize.min,
-          //                       children: [
-          //                         new Center(
-          //                           child: Container(
-          //                             decoration: BoxDecoration(
-          //                               color: Colors.black,
-          //                               borderRadius:
-          //                                   BorderRadius.circular(15),
-          //                             ),
-          //                             padding: const EdgeInsets.symmetric(
-          //                                 horizontal: 29, vertical: 5),
-          //                             child: Row(
-          //                               mainAxisSize: MainAxisSize.min,
-          //                               children: [
-          //                                 MaterialButton(
-          //                                   onPressed: () {
-          //                                     if (Nnegocio.text.toString() ==
-          //                                         "") {
-          //                                       print(
-          //                                           "LLena todos los campos");
-          //                                       final snackBar = SnackBar(
-          //                                         elevation: 0,
-          //                                         behavior: SnackBarBehavior
-          //                                             .floating,
-          //                                         backgroundColor: Colors.red,
-          //                                         content: Text(
-          //                                           "LLena todos los campos ",
-          //                                           style: TextStyle(
-          //                                               color: Colors.white,
-          //                                               fontSize: 18),
-          //                                           textAlign:
-          //                                               TextAlign.center,
-          //                                         ),
-          //                                       );
-
-          //                                       ScaffoldMessenger.of(context)
-          //                                           .showSnackBar(snackBar);
-          //                                     } else if (INE == null) {
-          //                                       final snackBar = SnackBar(
-          //                                         elevation: 0,
-          //                                         behavior: SnackBarBehavior
-          //                                             .floating,
-          //                                         backgroundColor: Colors.red,
-          //                                         content: Text(
-          //                                           "Te Falto La Fotografia del INE",
-          //                                           style: TextStyle(
-          //                                               color: Colors.white,
-          //                                               fontSize: 18),
-          //                                           textAlign:
-          //                                               TextAlign.center,
-          //                                         ),
-          //                                       );
-
-          //                                       ScaffoldMessenger.of(context)
-          //                                           .showSnackBar(snackBar);
-          //                                     } else if (DOMI == null) {
-          //                                       final snackBar = SnackBar(
-          //                                         elevation: 0,
-          //                                         behavior: SnackBarBehavior
-          //                                             .floating,
-          //                                         backgroundColor: Colors.red,
-          //                                         content: Text(
-          //                                           "Te Falto el Comporbante de Domicilio",
-          //                                           style: TextStyle(
-          //                                               color: Colors.white,
-          //                                               fontSize: 18),
-          //                                           textAlign:
-          //                                               TextAlign.center,
-          //                                         ),
-          //                                       );
-
-          //                                       ScaffoldMessenger.of(context)
-          //                                           .showSnackBar(snackBar);
-          //                                     } else if (FOTO == null) {
-          //                                       final snackBar = SnackBar(
-          //                                         elevation: 0,
-          //                                         behavior: SnackBarBehavior
-          //                                             .floating,
-          //                                         backgroundColor: Colors.red,
-          //                                         content: Text(
-          //                                           "Te Falto Una Fotografia",
-          //                                           style: TextStyle(
-          //                                               color: Colors.white,
-          //                                               fontSize: 18),
-          //                                           textAlign:
-          //                                               TextAlign.center,
-          //                                         ),
-          //                                       );
-
-          //                                       ScaffoldMessenger.of(context)
-          //                                           .showSnackBar(snackBar);
-          //                                     } else {
-          //                                       //ENVIAR DATOS
-          //                                       print("INE: " +
-          //                                           INE.path.toString() +
-          //                                           "\n" +
-          //                                           "Domicilio: " +
-          //                                           DOMI.path.toString() +
-          //                                           "\n" +
-          //                                           "Fotografia: " +
-          //                                           FOTO.path.toString() +
-          //                                           "\n" +
-          //                                           Nnegocio.text.toString() +
-          //                                           "\n" +
-          //                                           number.toString() +
-          //                                           "\n" +
-          //                                           _latitude.toString() +
-          //                                           "\n" +
-          //                                           _longitud.toString());
-
-          //                                       final snackBar = SnackBar(
-          //                                         elevation: 0,
-          //                                         behavior: SnackBarBehavior
-          //                                             .floating,
-          //                                         backgroundColor:
-          //                                             Colors.yellow,
-          //                                         content: Text(
-          //                                           "Espere un momento",
-          //                                           style: TextStyle(
-          //                                               color: Colors.white,
-          //                                               fontSize: 18),
-          //                                           textAlign:
-          //                                               TextAlign.center,
-          //                                         ),
-          //                                       );
-          //                                       ScaffoldMessenger.of(context)
-          //                                           .showSnackBar(snackBar);
-          //                                       hasNetwork();
-          //                                     }
-          //                                   },
-          //                                   child: Text("Registro",
-          //                                       style: GoogleFonts.lato(
-          //                                         textStyle: Theme.of(context)
-          //                                             .textTheme
-          //                                             .headline4,
-          //                                         fontSize: 16,
-          //                                         fontWeight: FontWeight.w700,
-          //                                         fontStyle: FontStyle.italic,
-          //                                         color: Colors.white,
-          //                                       )),
-          //                                 ),
-          //                                 // Icon(
-          //                                 //   Icons.download_done,
-          //                                 //   size: 20,
-          //                                 //   color: Colors.white,
-          //                                 // ),
-          //                               ],
-          //                             ),
-          //                           ),
-          //                         ),
-          //                         // Icon(
-          //                         //   Icons.download_done,
-          //                         //   size: 20,
-          //                         //   color: Colors.white,
-          //                         // ),
-          //                       ],
-          //                     ),
-          //                   ),
-          //                 ),
-          //               ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-
-          // )
         ],
       ),
     );

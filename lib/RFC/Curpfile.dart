@@ -70,7 +70,8 @@ class _CurpRfcBodyState extends State<CurpRfcBody> {
       dialogType: DialogType.ERROR,
       animType: AnimType.BOTTOMSLIDE,
       title: 'Actas al instante',
-      desc: 'No tienes habilitado el servicio de RFC \n Contacta al Administrador',
+      desc:
+          'No tienes habilitado el servicio de RFC \n Contacta al Administrador',
       btnCancelOnPress: () {
         //  Navigator.of(context).pop(true);
       },
@@ -249,7 +250,8 @@ class _CurpRfcBodyState extends State<CurpRfcBody> {
     print(resultado);
     print(rfcs);
   }
- final Color color = HexColor('#D61C4E');
+
+  final Color color = HexColor('#D61C4E');
   final dropvalue = ValueNotifier('');
   final dropOpcoes = ['Nacimiento', 'Defuncion', 'Matrimonio', 'Divorcio'];
   @override
@@ -315,7 +317,9 @@ class _CurpRfcBodyState extends State<CurpRfcBody> {
                           Text(
                             "Solicitar RFC",
                             style: TextStyle(
-                                fontSize: 15, color: Color.fromARGB(255, 127,137,146),),
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 127, 137, 146),
+                            ),
                           )
                         ],
                       ),
@@ -356,92 +360,109 @@ class _CurpRfcBodyState extends State<CurpRfcBody> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 50),
+
+                      new Center(
                         child: Container(
-                          padding: EdgeInsets.only(top: 1, left: 1),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border(
-                                bottom: BorderSide(color: Colors.black),
-                                top: BorderSide(color: Colors.black),
-                                left: BorderSide(color: Colors.black),
-                                right: BorderSide(color: Colors.black),
-                              )),
-                          child: MaterialButton(
-                            minWidth: double.infinity,
-                            height: 60,
-                            onPressed: () {
-                              if (curpController.text.toString() == null ||
-                                  curpController.text.toString() == "") {
-                                var snackBar = SnackBar(
-                                  elevation: 0,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  content: AwesomeSnackbarContent(
-                                    title: 'No escribiste el RFC! ',
-                                    message: '',
-                                    contentType: ContentType.failure,
-                                  ),
-                                );
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(52),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MaterialButton(
+                                onPressed: () {
+                                  if (curpController.text.toString() == null ||
+                                      curpController.text.toString() == "") {
+                                    var snackBar = SnackBar(
+                                      elevation: 0,
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.transparent,
+                                      content: AwesomeSnackbarContent(
+                                        title: 'No escribiste el RFC! ',
+                                        message: '',
+                                        contentType: ContentType.failure,
+                                      ),
+                                    );
 
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
 
-                                print('Text is empty');
-                              } else if (curpController.text.toString().length <
-                                  13) {
-                                var digit =
-                                    curpController.text.toString().length;
+                                    print('Text is empty');
+                                  } else if (curpController.text
+                                          .toString()
+                                          .length <
+                                      13) {
+                                    var digit =
+                                        curpController.text.toString().length;
 
-                                var snackBar = SnackBar(
-                                  elevation: 10,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  width: 500,
-                                  content: AwesomeSnackbarContent(
-                                    title: 'Error en el RFC',
-                                    message: 'Te faltan ${(13 - (digit))}' +
-                                        ' digitos en el RFC ',
-                                    contentType: ContentType.failure,
-                                  ),
-                                );
+                                    var snackBar = SnackBar(
+                                      elevation: 10,
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.transparent,
+                                      width: 500,
+                                      content: AwesomeSnackbarContent(
+                                        title: 'Error en el RFC',
+                                        message: 'Te faltan ${(13 - (digit))}' +
+                                            ' digitos en el RFC ',
+                                        contentType: ContentType.failure,
+                                      ),
+                                    );
 
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else {
-                                RFC(curpController.text
-                                    .toString()
-                                    .toUpperCase());
-                                //  actas(curpController.text.toString().toUpperCase());
-
-                                print(curpController.text
-                                        .toString()
-                                        .toUpperCase() +
-                                    etadoController.text
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    RFC(curpController.text
                                         .toString()
                                         .toUpperCase());
-                              }
+                                    //  actas(curpController.text.toString().toUpperCase());
 
-                              //                     Navigator.pushReplacement(
-                              // context,
-                              // MaterialPageRoute(
-                              //     builder: (BuildContext context) => super.widget));
-                              // Navigator.push(context, MaterialPageRoute(builder: (context)=> CarouselExample()));
-                            },
-                            color: Colors.black,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Text(
-                              "Enviar",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
+                                    print(curpController.text
+                                            .toString()
+                                            .toUpperCase() +
+                                        etadoController.text
+                                            .toString()
+                                            .toUpperCase());
+                                  }
+                                },
+                                child: Text("Enviar"),
+                                textColor: Colors.white,
+                              ),
+                              Icon(
+                                Icons.send,
+                                size: 19,
                                 color: Colors.white,
                               ),
-                            ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      new Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(52),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Cancelar"),
+                                textColor: Colors.white,
+                              ),
+                              Icon(
+                                Icons.warning_amber,
+                                size: 19,
+                                color: Colors.white,
+                              ),
+                            ],
                           ),
                         ),
                       ),

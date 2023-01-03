@@ -71,7 +71,8 @@ class _RfcBodyState extends State<RfcBody> {
       dialogType: DialogType.ERROR,
       animType: AnimType.BOTTOMSLIDE,
       title: 'Actas al instante',
-      desc: 'No tienes habilitado el servicio de RFC \n Contacta al Administrador',
+      desc:
+          'No tienes habilitado el servicio de RFC \n Contacta al Administrador',
       btnCancelOnPress: () {
         //  Navigator.of(context).pop(true);
       },
@@ -172,7 +173,8 @@ class _RfcBodyState extends State<RfcBody> {
     print(resultado);
     print(curps);
   }
- final Color color = HexColor('#D61C4E');
+
+  final Color color = HexColor('#D61C4E');
   String curp = "Ingresa tu Curp";
   final dropvalue = ValueNotifier('');
   final dropOpcoes = ['Nacimiento', 'Defuncion', 'Matrimonio', 'Divorcio'];
@@ -239,7 +241,9 @@ class _RfcBodyState extends State<RfcBody> {
                           Text(
                             "Solicitar RFC por Curp",
                             style: TextStyle(
-                                fontSize: 15, color: Color.fromARGB(255, 127,137,146),),
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 127, 137, 146),
+                            ),
                           )
                         ],
                       ),
@@ -261,23 +265,19 @@ class _RfcBodyState extends State<RfcBody> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 50),
-                        child: Container(
-                          padding: EdgeInsets.only(top: 1, left: 1),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border(
-                                bottom: BorderSide(color: Colors.black),
-                                top: BorderSide(color: Colors.black),
-                                left: BorderSide(color: Colors.black),
-                                right: BorderSide(color: Colors.black),
-                              )),
-                          child: MaterialButton(
-                            minWidth: double.infinity,
-                            height: 60,
-                            onPressed: () {
-                              if (curpController.text.toString() == null ||
+                       new Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(52),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                       if (curpController.text.toString() == null ||
                                   curpController.text.toString() == "") {
                                 var snackBar = SnackBar(
                                   elevation: 0,
@@ -326,24 +326,51 @@ class _RfcBodyState extends State<RfcBody> {
                                         .toString()
                                         .toUpperCase());
                               }
-                            },
-                            color: Colors.black,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Text(
-                              "Enviar",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
+                      },
+                      child: Text("Enviar"),
+                      textColor: Colors.white,
+                    ),
+                    Icon(
+                      Icons.send,
+                      size: 19,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+                       new Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(52),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                       
+                        // Send_RFC_CURP(
+                        //     _currentSelectedValue.toString().toUpperCase(),
+                        //     curpController.text.toString().toUpperCase(),
+                        //     entidad.toString(),
+                        //     ConReverso.toString());
+                      },
+                      child: Text("Cancelar"),
+                      textColor: Colors.white,
+                    ),
+                    Icon(
+                      Icons.warning_amber,
+                      size: 19,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
                       // Container(
                       //   padding: EdgeInsets.only(top: 100),
                       //   height: 200,

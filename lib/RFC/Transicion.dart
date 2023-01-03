@@ -69,12 +69,222 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
     'assets/NACIMIENTO.jpg',
     'assets/RFC.jpg',
   ];
+  showAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(64),
+          ),
+          insetPadding: EdgeInsets.zero,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          backgroundColor: Colors.white,
+          contentPadding: EdgeInsets.all(120.0),
+          alignment: Alignment.center,
+
+          title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Container(
+              width: 250,
+              height: 200,
+              child: FormField<String>(
+                builder: (FormFieldState<String> state) {
+                  return InputDecorator(
+                    decoration: InputDecoration(
+                        label: Text(label.toString()),
+                        errorStyle:
+                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        hintText: 'Please select expense',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0))),
+                    isEmpty: _currentSelectedValue == '',
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _currentSelectedValue,
+                        isDense: true,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            _currentSelectedValue = newValue;
+                            state.didChange(newValue);
+                            print(_currentSelectedValue);
+                          });
+                        },
+                        items: _currencies.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+              
+            Expanded(child: SizedBox.shrink()),
+    
+            Container(
+              width: 200,
+              height: 200,
+              child: FormField<String>(
+                builder: (FormFieldState<String> state) {
+                  return InputDecorator(
+                    decoration: InputDecoration(
+                        label: Text(label.toString()),
+                        errorStyle:
+                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        hintText: 'Please select expense',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0))),
+                    isEmpty: _currentSelectedValueRFC == '',
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _currentSelectedValueRFC,
+                        isDense: true,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            _currentSelectedValue = newValue;
+                            state.didChange(newValue);
+                            print(_currentSelectedValueRFC);
+                          });
+                        },
+                        items: _currencies2.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            if (_currentSelectedValue == "Moral")
+                Expanded(child: SizedBox.shrink()),
+                  if (_currentSelectedValue == "Moral")
+              Container(
+                width: 200,
+                height: 200,
+                child: FormField<String>(
+                  builder: (FormFieldState<String> state) {
+                    return InputDecorator(
+                      decoration: InputDecoration(
+                          label: Text(label.toString()),
+                          errorStyle: TextStyle(
+                              color: Colors.redAccent, fontSize: 16.0),
+                          hintText: 'Please select expense',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0))),
+                      isEmpty: _currentSelectedValueRFC == '',
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: _currentSelectedValueRFC,
+                          isDense: true,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _currentSelectedValueRFC = newValue;
+                              state.didChange(newValue);
+                              print(_currentSelectedValueRFC);
+                            });
+                          },
+                          items: Moral.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ]),
+          //content: Text("Are You Sure Want To Proceed?"),
+
+          actions: <Widget>[
+            SizedBox(height: 8),
+            new Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(82),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        // Send_RFC_CURP(
+                        //     _currentSelectedValue.toString().toUpperCase(),
+                        //     curpController.text.toString().toUpperCase(),
+                        //     entidad.toString(),
+                        //     simple.toString());
+                      },
+                      child: Text("Simple"),
+                      textColor: Colors.white,
+                    ),
+                    Icon(
+                      Icons.amp_stories_outlined,
+                      size: 19,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 8),
+            new Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(82),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        print(_currentSelectedValue);
+                        // Send_RFC_CURP(
+                        //     _currentSelectedValue.toString().toUpperCase(),
+                        //     curpController.text.toString().toUpperCase(),
+                        //     entidad.toString(),
+                        //     ConReverso.toString());
+                      },
+                      child: Text("Con Reverso"),
+                      textColor: Colors.white,
+                    ),
+                    Icon(
+                      Icons.amp_stories,
+                      size: 19,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   final Color color = HexColor('#D61C4E');
 
   final Color color_Card = HexColor('#01081f');
   var _currentSelectedValue;
+  var _currentSelectedValueRFC;
   String label = "Persona";
   var _currencies = ["Fisica", "Moral"];
+  var _currencies2 = ["CURP", "RFC"];
+  var Moral = ["RFC"];
+var cambio ;
   String selectedType = "initial";
   String selectedFrequency = "monthly";
   @override
@@ -84,7 +294,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '' + user.toString(),
+          'RFC ' + user.toString(),
           style: GoogleFonts.lato(
             textStyle: Theme.of(context).textTheme.headline4,
             fontSize: 22,
@@ -123,7 +333,90 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                         //   subheading('Active Projects'),
                         //  SizedBox(height: 5.0),
 
-                        SizedBox(width: 9.0),
+                       
+                        // Center(
+                        //   child: Container(
+                        //       decoration: BoxDecoration(
+                        //         color: color_Card,
+                        //         borderRadius: BorderRadius.circular(10.0),
+                        //       ),
+                        //       margin: EdgeInsets.only(top: 10),
+                        //       child: SingleChildScrollView(
+                        //           child: Padding(
+                        //               padding: EdgeInsets.all(15.0),
+                        //               child: Column(children: [
+                        //                 Text(
+                        //                   "Solicitudes".toUpperCase(),
+                        //                   style: GoogleFonts.lato(
+                        //                     textStyle: Theme.of(context)
+                        //                         .textTheme
+                        //                         .headline4,
+                        //                     fontSize: 18,
+                        //                     fontWeight: FontWeight.w700,
+                        //                     fontStyle: FontStyle.italic,
+                        //                     color: Colors.white,
+                        //                   ),
+                        //                   textAlign: TextAlign.start,
+                        //                 ),
+                        //                 Text(
+                        //                   "\nPARA REVISAR O DESCARGAR TUS SOLICITUDES ENVIADAS, DA CLICK EN EL BÓTON",
+                        //                   style: GoogleFonts.lato(
+                        //                     textStyle: Theme.of(context)
+                        //                         .textTheme
+                        //                         .headline4,
+                        //                     fontSize: 14,
+                        //                     fontWeight: FontWeight.w700,
+                        //                     fontStyle: FontStyle.italic,
+                        //                     color: Colors.white,
+                        //                   ),
+                        //                   textAlign: TextAlign.justify,
+                        //                 ),
+                        //                 Padding(
+                        //                   padding: EdgeInsets.symmetric(
+                        //                       horizontal: 160),
+                        //                   child: Container(
+                        //                     padding: EdgeInsets.only(
+                        //                         top: 1, left: 1),
+                        //                     decoration: BoxDecoration(
+                        //                         borderRadius:
+                        //                             BorderRadius.circular(50),
+                        //                         border: Border(
+                        //                           bottom: BorderSide(
+                        //                               color: Colors.black),
+                        //                           top: BorderSide(
+                        //                               color: Colors.black),
+                        //                           left: BorderSide(
+                        //                               color: Colors.black),
+                        //                           right: BorderSide(
+                        //                               color: Colors.black),
+                        //                         )),
+                        //                     child: MaterialButton(
+                        //                       minWidth: double.infinity,
+                        //                       height: 60,
+                        //                       onPressed: () {
+                                              
+                        //                       },
+                        //                       color: Colors.white,
+                        //                       elevation: 0,
+                        //                       shape: RoundedRectangleBorder(
+                        //                         borderRadius:
+                        //                             BorderRadius.circular(50),
+                        //                       ),
+                        //                       child: Text(
+                        //                         "Ver".toUpperCase(),
+                        //                         style: TextStyle(
+                        //                           fontWeight: FontWeight.w600,
+                        //                           fontSize: 18,
+                        //                           color: Colors.black,
+                        //                         ),
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ])))),
+                        // ),
+
+                        SizedBox(width: 15.0),
                         Center(
                           child: Container(
                               decoration: BoxDecoration(
@@ -136,7 +429,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                                       padding: EdgeInsets.all(15.0),
                                       child: Column(children: [
                                         Text(
-                                          "RFC",
+                                          "Nuevo".toUpperCase(),
                                           style: GoogleFonts.lato(
                                             textStyle: Theme.of(context)
                                                 .textTheme
@@ -161,48 +454,52 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                                           ),
                                           textAlign: TextAlign.justify,
                                         ),
+                                           SizedBox(height: 10.0),
+                                        Container(
+                                          color: Colors.white,
+                                          height: 65,
+child:     FormField<String>(
+                builder: (FormFieldState<String> state) {
+                  return InputDecorator(
+                    decoration: InputDecoration(
+                      
+                        errorStyle:
+                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        hintText: 'Please select expense',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0))),
+                    isEmpty: _currentSelectedValue == '',
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _currentSelectedValue,
+                        isDense: true,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            _currentSelectedValue = newValue;
+                            state.didChange(newValue);
+                            print(_currentSelectedValue);
+                          });
+                        },
+                        items: _currencies.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+                                        ),
+                                   
                                       ])))),
                         ),
                       ],
                     ),
                   ),
-
-                  SizedBox(
-                    height: 30,
-                  ),
-                  FormField<String>(
-                    builder: (FormFieldState<String> state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                            label: Text(label.toString()),
-                            errorStyle: TextStyle(
-                                color: Colors.redAccent, fontSize: 16.0),
-                            hintText: 'Please select expense',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        isEmpty: _currentSelectedValue == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: _currentSelectedValue,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() {
-                                _currentSelectedValue = newValue;
-                                state.didChange(newValue);
-                                print(_currentSelectedValue);
-                              });
-                            },
-                            items: _currencies.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  
 
                   if (_currentSelectedValue == "Moral")
                     Container(
