@@ -172,6 +172,7 @@ flutter:
     - assets/Civil.jpeg
     - assets/ACTAS2023.json
     - assets/Spash2023.png
+    - assets/ERROR_404.gif
     
   # To add assets to your application, add an assets section, like this:
   # assets:

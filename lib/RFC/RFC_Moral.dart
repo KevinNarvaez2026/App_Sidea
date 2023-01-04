@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../NavBar.dart';
 import '../RFCDescargas/services/Variables.dart';
+import '../SplashScreen/Splashscreen1.dart';
 import '../views/controller/controller.dart';
 
 enum ViewDialogsAction { yes, no }
@@ -63,9 +64,87 @@ class _RFC_MORALState extends State<RFC_MORAL> {
           MaterialPageRoute(builder: (BuildContext context) => NavBar()));
     } else if (response.statusCode == 403) {
       ShowServiceActaOrRFC();
+    } else if (response.statusCode == 401) {
+      prefs.remove('token');
+      prefs.remove('username');
+      Error_401();
+      await Future.delayed(Duration(seconds: 5));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
     } else {
       print(response.reasonPhrase);
     }
+  }
+
+  Error_401() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Center(
+                child: Text(
+              'Caduco tu Sesion',
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            )),
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                child: Column(
+                  children: <Widget>[
+                    Material(
+                      child: InkWell(
+                        onTap: () {},
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.asset('assets/ERROR_404.gif',
+                              width: 300.0, height: 300.0),
+                        ),
+                      ),
+                    )
+
+                    // TextFormField(
+                    //   decoration: InputDecoration(
+                    //     labelText: 'Sube una foto de perfil'.toString(),
+                    //     icon: Icon(Icons.photo_camera),
+                    //     enabled: false
+                    //   ),
+                    // ),
+                    // TextFormField(
+                    //   decoration: InputDecoration(
+                    //     labelText: 'Descarga tus Actas',
+                    //     icon: Icon(Ionicons.documents),
+                    //         enabled: false
+                    //   ),
+                    // ),
+                    // TextFormField(
+                    //   decoration: InputDecoration(
+                    //     labelText: 'Descarga tus RFC',
+                    //     icon: Icon(Ionicons.document),
+                    //         enabled: false
+                    //   ),
+                    // ),
+                    //  TextFormField(
+                    //   decoration: InputDecoration(
+                    //     labelText: 'Descarga tu Corte',
+                    //     icon: Icon(Icons.monetization_on),
+                    //         enabled: false
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              // RaisedButton(
+              //     child: Text("Submit"),
+              //     onPressed: () {
+              //       // your code
+              //     })
+            ],
+          );
+        });
   }
 
   ShowServiceActaOrRFC() {
@@ -250,8 +329,9 @@ class _RFC_MORALState extends State<RFC_MORAL> {
     print(resultado);
     print(rfcs);
   }
+
   final Color color = HexColor('#D61C4E');
-    final Color color_Card = HexColor('#01081f');
+  final Color color_Card = HexColor('#01081f');
   final dropvalue = ValueNotifier('');
   final dropOpcoes = ['Nacimiento', 'Defuncion', 'Matrimonio', 'Divorcio'];
   @override
@@ -304,8 +384,6 @@ class _RFC_MORALState extends State<RFC_MORAL> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-
-                      
                       Column(
                         children: <Widget>[
                           Text(
@@ -319,7 +397,9 @@ class _RFC_MORALState extends State<RFC_MORAL> {
                           Text(
                             "Solicitar RFC MORAL",
                             style: TextStyle(
-                                fontSize: 15, color: Color.fromARGB(255, 127,137,146),),
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 127, 137, 146),
+                            ),
                           )
                         ],
                       ),

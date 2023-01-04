@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_actasalinstante/DropDown/Body.dart';
+import 'package:app_actasalinstante/DropDown/DatosPersonalesMatrimonio.dart';
 import 'package:app_actasalinstante/RFC/RFC_Moral.dart';
 import 'package:app_actasalinstante/RFCDescargas/views/homepage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -277,6 +278,20 @@ class _ModalRfcState extends State<ModalRfc>
     );
   }
 
+  Clear_texfield(SELECT) {
+    if (SELECT == "RFC") {
+      setState(() {
+        curpController.text = "";
+        entidad = null;
+        Resultado_RFC = null;
+      });
+    } else {
+      setState(() {
+        curpController.text = "";
+      });
+    }
+  }
+
   final Color color = HexColor('#D61C4E');
 
   final Color color_Card = HexColor('#01081f');
@@ -329,7 +344,7 @@ class _ModalRfcState extends State<ModalRfc>
                               setState(() {
                                 _currentSelectedValue = newValue;
                                 state.didChange(newValue);
-                                print(_currentSelectedValue);
+                                //print(_currentSelectedValue);
                               });
                             },
                             items: _currencies.map((String value) {
@@ -398,7 +413,8 @@ class _ModalRfcState extends State<ModalRfc>
                                 setState(() {
                                   _currentSelectedValueCURP = newValue;
                                   state.didChange(newValue);
-                                  print(_currentSelectedValueCURP);
+
+                                  Clear_texfield(_currentSelectedValueCURP);
                                 });
                               },
                               items: _currencies2.map((String value) {
@@ -414,7 +430,8 @@ class _ModalRfcState extends State<ModalRfc>
                     ),
                   SizedBox(height: 25.0),
                   if (_currentSelectedValue == "Fisica" &&
-                      _currentSelectedValueCURP != "RFC" && _currentSelectedValueCURP == "CURP")
+                      _currentSelectedValueCURP != "RFC" &&
+                      _currentSelectedValueCURP == "CURP")
                     TextFormField(
                       cursorColor: Colors.black,
                       style: TextStyle(color: Colors.black),
@@ -449,22 +466,91 @@ class _ModalRfcState extends State<ModalRfc>
                       maxLength: 13,
                       onChanged: (newValue) {
                         print(newValue);
+
                         setState(() {
-                          onChangeCurp(
+                          RFC(curpController.text.toString().toUpperCase());
+                        });
+                      },
+
+                      //  obscureText: true,
+                    ),
+                  if (Resultado_RFC == "El RFC es válido" &&
+                      _currentSelectedValueCURP == "RFC")
+                    TextFormField(
+                      decoration: InputDecoration(
+                          hintText: '' + Resultado_RFC.toString().toUpperCase(),
+                          contentPadding: const EdgeInsets.all(10),
+                          fillColor: Colors.green,
+                          filled: true, // dont forget this line
+                          hintStyle: TextStyle(color: Colors.white)),
+                      readOnly: true,
+
+                      // obscureText: true,
+                    ),
+                  if (Resultado_RFC == "RFC inválido" &&
+                      _currentSelectedValueCURP == "RFC")
+                    TextFormField(
+                      decoration: InputDecoration(
+                          hintText: 'RFC INVALIDO'.toUpperCase(),
+                          contentPadding: const EdgeInsets.all(10),
+                          fillColor: Colors.red,
+                          filled: true, // dont forget this line
+                          hintStyle: TextStyle(color: Colors.white)),
+                      readOnly: true,
+
+                      // obscureText: true,
+                    ),
+                  if (_currentSelectedValue == "Moral" &&
+                      _currentSelectedValueRFC == 'RFC')
+                    TextFormField(
+                      cursorColor: Colors.black,
+                      style: TextStyle(color: Colors.black),
+                      controller: curpController,
+                      validator: (input) =>
+                          input == '' ? "Ingresa un usuario" : null,
+                      decoration: InputDecoration(
+                          label: Text(
+                              "RFC Moral a buscar".toString().toUpperCase()),
+                          hintText: 'curp'.toUpperCase()),
+                      maxLength: 12,
+                      onChanged: (newValue) {
+                        print(newValue);
+
+                        setState(() {
+                          RFC_Moral(
                               curpController.text.toString().toUpperCase());
                         });
                       },
 
                       //  obscureText: true,
                     ),
-                  if (_currentSelectedValue == "Moral")
+                  if (Resultado_RFC_Moral == "El RFC Moral es válido" &&
+                      _currentSelectedValue == "Moral")
                     TextFormField(
-                      controller: curpController,
-                      decoration:
-                          InputDecoration(hintText: 'RFC MORAL'.toUpperCase()),
-                      maxLength: 12,
+                      decoration: InputDecoration(
+                          hintText:
+                              '' + Resultado_RFC_Moral.toString().toUpperCase(),
+                          contentPadding: const EdgeInsets.all(10),
+                          fillColor: Colors.green,
+                          filled: true, // dont forget this line
+                          hintStyle: TextStyle(color: Colors.white)),
+                      readOnly: true,
 
-                      //  obscureText: true,
+                      // obscureText: true,
+                    ),
+                  if (Resultado_RFC_Moral != "El RFC Moral es válido" &&
+                      _currentSelectedValue == "Moral" &&
+                      curpController.text != "")
+                    TextFormField(
+                      decoration: InputDecoration(
+                          hintText: 'RFC morral INVALIDO'.toUpperCase(),
+                          contentPadding: const EdgeInsets.all(10),
+                          fillColor: Colors.red,
+                          filled: true, // dont forget this line
+                          hintStyle: TextStyle(color: Colors.white)),
+                      readOnly: true,
+
+                      // obscureText: true,
                     ),
                   if (entidad.toString() != "Entidad de registro" &&
                       entidad.toString() != "null")
@@ -481,7 +567,7 @@ class _ModalRfcState extends State<ModalRfc>
                       // obscureText: true,
                     ),
                   if (entidad.toString() == "Entidad de registro" &&
-                      entidad.toString() == "null" )
+                      entidad.toString() == "null")
                     TextFormField(
                       controller: etadoController,
                       decoration: InputDecoration(
@@ -495,36 +581,38 @@ class _ModalRfcState extends State<ModalRfc>
 
                       // obscureText: true,
                     ),
-                      if (entidad.toString() == "Entidad de registro" ||
-                          entidad.toString() == "null" && _currentSelectedValueCURP == "CURP" )
-                        new Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(82),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 8),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                MaterialButton(
-                                  onPressed: null,
-                                  onLongPress: null,
-                                  child: Text("LLena Los Campos"),
-                                  textColor: Colors.white,
-                                ),
-                                Icon(
-                                  Icons.close,
-                                  size: 17,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
+                  if (entidad.toString() == "Entidad de registro" ||
+                      entidad.toString() == "null" &&
+                          _currentSelectedValueCURP == "CURP")
+                    new Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(82),
                         ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MaterialButton(
+                              onPressed: null,
+                              onLongPress: null,
+                              child: Text("LLena Los Campos"),
+                              textColor: Colors.white,
+                            ),
+                            Icon(
+                              Icons.close,
+                              size: 17,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   SizedBox(height: 25.0),
-                  if (_currentSelectedValue == "Moral")
+                  if (_currentSelectedValue == "Moral" &&
+                      curpController.text != "")
                     new Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -578,17 +666,26 @@ class _ModalRfcState extends State<ModalRfc>
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 } else {
-                                  RFC_Moral(curpController.text
-                                      .toString()
-                                      .toUpperCase());
-                                  //  actas(curpController.text.toString().toUpperCase());
-
                                   print(curpController.text
                                           .toString()
                                           .toUpperCase() +
-                                      etadoController.text
+                                      _currentSelectedValueCURP
+                                          .toString()
+                                          .toUpperCase() +
+                                      _currentSelectedValue
                                           .toString()
                                           .toUpperCase());
+                                  Send_RFC_CURP(
+                                      curpController.text
+                                          .toString()
+                                          .toUpperCase(),
+                                      _currentSelectedValueRFC
+                                          .toString()
+                                          .toUpperCase(),
+                                      _currentSelectedValue
+                                          .toString()
+                                          .toUpperCase());
+                                  //  actas(curpController.text.toString().toUpperCase());
                                 }
                               },
                               child: Text("Enviar"),
@@ -604,7 +701,8 @@ class _ModalRfcState extends State<ModalRfc>
                       ),
                     ),
                   if (_currentSelectedValue == "Fisica" &&
-                      _currentSelectedValueCURP == "RFC"  && curpController.text.toString() != "" )
+                      _currentSelectedValueCURP == "RFC" &&
+                      curpController.text.toString() != "")
                     new Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -658,17 +756,17 @@ class _ModalRfcState extends State<ModalRfc>
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 } else {
-                                  RFC(curpController.text
-                                      .toString()
-                                      .toUpperCase());
-                                  //  actas(curpController.text.toString().toUpperCase());
-
-                                  print(curpController.text
+                                  Send_RFC_CURP(
+                                      curpController.text
                                           .toString()
-                                          .toUpperCase() +
-                                      etadoController.text
+                                          .toUpperCase(),
+                                      _currentSelectedValueCURP
+                                          .toString()
+                                          .toUpperCase(),
+                                      _currentSelectedValue
                                           .toString()
                                           .toUpperCase());
+                                  //  actas(curpController.text.toString().toUpperCase());
                                 }
                               },
                               child: Text("Enviar"),
@@ -684,8 +782,10 @@ class _ModalRfcState extends State<ModalRfc>
                       ),
                     ),
                   if (_currentSelectedValue == "Fisica" &&
-                      _currentSelectedValueCURP != "RFC" && curpController.text.toString() != "" && entidad.toString() != "Entidad de registro" &&
-                          entidad.toString() != "null")
+                      _currentSelectedValueCURP != "RFC" &&
+                      curpController.text.toString() != "" &&
+                      entidad.toString() != "Entidad de registro" &&
+                      entidad.toString() != "null")
                     new Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -907,6 +1007,7 @@ class _ModalRfcState extends State<ModalRfc>
     print(curps);
   }
 
+  var Resultado_RFC;
   RFC(String rfcs) {
     // " ^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z|\d]{3})\$"
     const String rfcRegexPattern =
@@ -924,19 +1025,25 @@ class _ModalRfcState extends State<ModalRfc>
     String resultado = "";
     if (regExp.hasMatch(rfcs)) {
       resultado = "El RFC es válido";
+      Resultado_RFC = resultado;
+      print(resultado);
       print(curpController.text.toString().toUpperCase() +
           _currentSelectedValueCURP.toString().toUpperCase() +
           _currentSelectedValue.toString().toUpperCase());
-      //  Send_RFC_CURP(curpController.text.toString().toUpperCase());
+      //  Send_RFC_CURP(curpController.text.toString().toUpperCase() ,
+      //       _currentSelectedValueCURP.toString().toUpperCase() ,
+      //      _currentSelectedValue.toString().toUpperCase());
     } else {
-      showcurp();
+      // showcurp();
 
       resultado = "RFC inválido";
+      Resultado_RFC = resultado;
     }
     print(resultado);
     print(rfcs);
   }
 
+  var Resultado_RFC_Moral;
   RFC_Moral(String rfcs) {
     // " ^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z|\d]{3})\$"
     const String rfcRegexPattern =
@@ -954,15 +1061,17 @@ class _ModalRfcState extends State<ModalRfc>
     );
     String resultado = "";
     if (regExp.hasMatch(rfcs)) {
-      resultado = "El RFC es válido";
+      resultado = "El RFC Moral es válido";
+      Resultado_RFC_Moral = resultado;
       print(curpController.text.toString().toUpperCase() +
           _currentSelectedValueCURP.toString().toUpperCase() +
           _currentSelectedValue.toString().toUpperCase());
       //  Send_RFC_CURP(curpController.text.toString().toUpperCase());
     } else {
-      showcurp();
+      //  showcurp();
 
-      resultado = "RFC inválido";
+      resultado = "RFC Moral inválido";
+      Resultado_RFC_Moral = resultado;
     }
     print(resultado);
     print(rfcs);

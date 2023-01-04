@@ -286,7 +286,7 @@ class _Modal_ActasState extends State<Modal_Actas> {
     setState(() {
       isApiCallProcess = true;
     });
-    // _speak('Solicitando acta, espere un momento');
+     _speak('Solicitando acta, espere un momento');
     var snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
@@ -503,8 +503,8 @@ class _Modal_ActasState extends State<Modal_Actas> {
       resultado = "La curp es válido";
 
       /* SHOW HTML*/
-
-      showAlert();
+  showAlert();
+   // showdialog_Aler_FormaActa();
     } else {
       //  _controller.error();
       showcurp();
@@ -553,6 +553,246 @@ class _Modal_ActasState extends State<Modal_Actas> {
 
   //   return true; //Validado
   // }
+final Color Color_prefies = HexColor("#424242");
+  showdialog_Aler_FormaActa() {
+
+    showDialog(
+  context: context,
+  builder: (_) => new AlertDialog(
+    title:Center(
+            child: Text('SELECCIONA LA FORMA DEL ACTA'.toUpperCase(),style: TextStyle(color: Colors.white),),
+       ), 
+       backgroundColor: Color_prefies,
+  shape: RoundedRectangleBorder(
+    borderRadius:
+      BorderRadius.all(
+        Radius.circular(10.0))),
+    content: Builder(
+      builder: (context) {
+      
+        // Get available height and width of the build area of this widget. Make a choice depending on the size.                              
+        var height = MediaQuery.of(context).size.height;
+     
+
+        return Container(
+          height: height -500,
+     
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          
+            Material(
+              child: InkWell(
+                onTap: () {
+                  Send_FOLIO(
+                      _currentSelectedValue.toString().toUpperCase(),
+                      curpController.text.toString(),
+                      entidad.toString(),
+                      simple);
+                  Show_cargando();
+
+                  // Send_RFC_CURP(
+                  //     _currentSelectedValue.toString().toUpperCase(),
+                  //     curpController.text.toString().toUpperCase(),
+                  //     entidad.toString(),
+                  //     simple.toString());
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image.asset('assets/background.png',
+                      width: 100.0, height: 150.0),
+             
+                ),
+              ),
+  
+            ),
+         
+            Expanded(child: SizedBox.shrink()),
+            Material(
+              child: InkWell(
+                onTap: () {
+                  Send_FOLIO(
+                      _currentSelectedValue.toString().toUpperCase(),
+                      curpController.text.toString(),
+                      entidad.toString(),
+                      ConReverso);
+                  Show_cargando();
+
+                  // Send_RFC_CURP(
+                  //     _currentSelectedValue.toString().toUpperCase(),
+                  //     curpController.text.toString().toUpperCase(),
+                  //     entidad.toString(),
+                  //     ConReverso.toString());
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image.asset('assets/welcome.png',
+                      width: 100.0, height: 150.0),
+                ),
+              ),
+            ),
+            Expanded(child: SizedBox.shrink()),
+            Material(
+
+              child: InkWell(
+                
+                onTap: () {
+                  Send_FOLIO(
+                      _currentSelectedValue.toString().toUpperCase(),
+                      curpController.text.toString(),
+                      entidad.toString(),
+                      ConReversoyFolio);
+                  Show_cargando();
+                  // Send_RFC_CURP(
+                  //     _currentSelectedValue.toString().toUpperCase(),
+                  //     curpController.text.toString().toUpperCase(),
+                  //     entidad.toString(),
+                  //     ConReversoyFolio.toString());
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image.asset('assets/logo.png',
+                      width: 100.0, height: 150.0),
+                      
+                ),
+              
+              ),
+
+            ),
+      
+           //         SizedBox(height: 508),
+      //        Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   children: [
+      //     new Center(
+      //         child: Container(
+      //           decoration: BoxDecoration(
+      //             color: Colors.black,
+      //             borderRadius: BorderRadius.circular(82),
+      //           ),
+      //           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      //           child: Row(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               MaterialButton(
+      //                 onPressed: () {
+      //                   Send_FOLIO(
+      //                       _currentSelectedValue.toString().toUpperCase(),
+      //                       curpController.text.toString(),
+      //                       entidad.toString(),
+      //                       simple);
+      //                   Show_cargando();
+
+      //                   // Send_RFC_CURP(
+      //                   //     _currentSelectedValue.toString().toUpperCase(),
+      //                   //     curpController.text.toString().toUpperCase(),
+      //                   //     entidad.toString(),
+      //                   //     simple.toString());
+      //                 },
+      //                 child: Text("Simple"),
+      //                 textColor: Colors.white,
+      //               ),
+      //               Icon(
+      //                 Icons.amp_stories_outlined,
+      //                 size: 19,
+      //                 color: Colors.white,
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //         SizedBox(height: 8),
+      //    new Center(
+      //         child: Container(
+      //           decoration: BoxDecoration(
+      //             color: Colors.black,
+      //             borderRadius: BorderRadius.circular(82),
+      //           ),
+      //           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      //           child: Row(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               MaterialButton(
+      //                 onPressed: () {
+      //                   Send_FOLIO(
+      //                       _currentSelectedValue.toString().toUpperCase(),
+      //                       curpController.text.toString(),
+      //                       entidad.toString(),
+      //                       ConReverso);
+      //                   Show_cargando();
+
+      //                   print(_currentSelectedValue);
+      //                   // Send_RFC_CURP(
+      //                   //     _currentSelectedValue.toString().toUpperCase(),
+      //                   //     curpController.text.toString().toUpperCase(),
+      //                   //     entidad.toString(),
+      //                   //     ConReverso.toString());
+      //                 },
+      //                 child: Text("Con Reverso"),
+      //                 textColor: Colors.white,
+      //               ),
+      //               Icon(
+      //                 Icons.amp_stories,
+      //                 size: 19,
+      //                 color: Colors.white,
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //       SizedBox(height: 8),
+      //       new Center(
+      //         child: Container(
+      //           decoration: BoxDecoration(
+      //             color: Colors.black,
+      //             borderRadius: BorderRadius.circular(82),
+      //           ),
+      //           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      //           child: Row(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               MaterialButton(
+      //                 onPressed: () {
+      //                   Send_FOLIO(
+      //                       _currentSelectedValue.toString().toUpperCase(),
+      //                       curpController.text.toString(),
+      //                       entidad.toString(),
+      //                       ConReversoyFolio);
+      //                   Show_cargando();
+      //                 },
+      //                 child: Text("Con Reverso y Folio"),
+      //                 textColor: Colors.white,
+      //               ),
+      //               Icon(
+      //                 Icons.amp_stories_sharp,
+      //                 size: 19,
+      //                 color: Colors.white,
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //   ],
+      // ),
+          
+            
+    
+            
+       
+          ],
+          
+          
+          ),
+          
+
+          
+        );
+        
+      },
+    ),
+  
+  )
+);
+    
+  }
 
   int simple = 1;
   int ConReverso = 2;
@@ -562,17 +802,21 @@ class _Modal_ActasState extends State<Modal_Actas> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          
           elevation: 20,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(64),
+            borderRadius: BorderRadius.circular(10),
           ),
           insetPadding: EdgeInsets.zero,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          backgroundColor: Colors.white,
+          backgroundColor: Color_prefies,
           contentPadding: EdgeInsets.all(90.0),
+          
           alignment: Alignment.center,
 
           title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      
+          
             Material(
               child: InkWell(
                 onTap: () {
@@ -654,7 +898,7 @@ class _Modal_ActasState extends State<Modal_Actas> {
                   fontSize: 18,
                   fontFamily: 'avenir',
                   fontWeight: FontWeight.w800,
-                  color: Colors.black),
+                  color: Colors.white),
               overflow: TextOverflow.ellipsis,
             )),
             SizedBox(height: 8),

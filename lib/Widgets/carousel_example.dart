@@ -19,6 +19,7 @@ import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -187,6 +188,7 @@ class _CarouselExampleState extends State<CarouselExample> {
           });
           version = datas['version'];
           print(version);
+
           GetImages();
           GetNames();
           getToken();
@@ -415,7 +417,7 @@ class _CarouselExampleState extends State<CarouselExample> {
       headers: mainheader,
     );
     final bytes = response.bodyBytes;
-
+    print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {
         imagen = bytes;
@@ -425,11 +427,54 @@ class _CarouselExampleState extends State<CarouselExample> {
     if (response.statusCode == 401) {
       prefs.remove('token');
       prefs.remove('username');
-      await Future.delayed(Duration(seconds: 2));
+      Error_401();
+      await Future.delayed(Duration(seconds: 4));
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
     }
     return (bytes != null ? base64Encode(bytes) : null);
+  }
+
+  Error_401() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Center(
+                child: Text(
+              'Caduco tu Sesion ' + user.toString(),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            )),
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                child: Column(
+                  children: <Widget>[
+                    Material(
+                      child: InkWell(
+                        onTap: () {},
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.asset('assets/ERROR_404.gif',
+                              width: 300.0, height: 300.0),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              // RaisedButton(
+              //     child: Text("Submit"),
+              //     onPressed: () {
+              //       // your code
+              //     })
+            ],
+          );
+        });
   }
 
 //Voice
@@ -461,13 +506,7 @@ class _CarouselExampleState extends State<CarouselExample> {
     await flutterTts.speak(voice);
   }
 
-  final colorList = <Color>[
-    const Color(0xfffdcb6e),
-    const Color(0xff0984e3),
-    const Color(0xfffd79a8),
-    const Color(0xffe17055),
-    const Color(0xff6c5ce7),
-  ];
+  
 
   // Image Name List Here
   var imgList = [
@@ -651,6 +690,62 @@ class _CarouselExampleState extends State<CarouselExample> {
   final Color color = HexColor('#D61C4E');
   final Color color_Card = HexColor('#01081f');
 
+  ShowDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Center(
+                child: Text(
+              'Bienvenido ' + user.toString(),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            )),
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: 'Sube una foto de perfil'.toString(),
+                          icon: Icon(Icons.photo_camera),
+                          enabled: false),
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: 'Descarga tus Actas',
+                          icon: Icon(Ionicons.documents),
+                          enabled: false),
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: 'Descarga tus RFC',
+                          icon: Icon(Ionicons.document),
+                          enabled: false),
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: 'Descarga tu Corte',
+                          icon: Icon(Icons.monetization_on),
+                          enabled: false),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              // RaisedButton(
+              //     child: Text("Submit"),
+              //     onPressed: () {
+              //       // your code
+              //     })
+            ],
+          );
+        });
+  }
+
   Widget Carr(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
@@ -669,6 +764,21 @@ class _CarouselExampleState extends State<CarouselExample> {
             elevation: 0,
             backgroundColor: color,
           ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              ShowDialog();
+            },
+            child: Icon(
+              Icons.notifications_active_rounded,
+              color: Colors.white,
+              size: 29,
+            ),
+            backgroundColor: Colors.black,
+            tooltip: 'Más Informacion',
+            elevation: 5,
+            splashColor: Colors.grey,
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -772,7 +882,6 @@ class _CarouselExampleState extends State<CarouselExample> {
                               Row(
                                 children: <Widget>[
                                   Container(
-                                    
                                       decoration: BoxDecoration(
                                         color: color_Card,
                                         borderRadius:

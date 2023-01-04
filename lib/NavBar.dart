@@ -188,7 +188,7 @@ class _NavBarState extends State<NavBar> {
             children: [
               new Center(
                 child: Icon(
-                    (myindex == 3) ? Icons.settings_outlined : Icons.settings,
+                    (myindex == 3) ? Icons.monetization_on_outlined : Icons.monetization_on,
                     color: Colors.white),
               ),
               new Center(
@@ -208,7 +208,7 @@ class _NavBarState extends State<NavBar> {
               children: [
                 new Center(
                   child: Icon(
-                    (myindex == 4) ? Icons.wysiwyg_outlined : Icons.wysiwyg,
+                    (myindex == 4) ? Icons.android_outlined : Icons.android,
                     color: Colors.amber,
                   ),
                 ),

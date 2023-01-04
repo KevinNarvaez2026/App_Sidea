@@ -400,7 +400,7 @@ class _LoginPageState extends State<LoginPage> {
 
       key: scaffoldKey,
       backgroundColor: Theme.of(context).accentColor,
-      body: SingleChildScrollView(
+      body: AutofillGroup(
         child: Column(
           children: <Widget>[
             FadeAnimation(
@@ -408,7 +408,7 @@ class _LoginPageState extends State<LoginPage> {
               Stack(
                 children: <Widget>[
                   Container(
-                    height: 757,
+                    height: 710,
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -420,7 +420,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-                    margin: EdgeInsets.symmetric(vertical: 140, horizontal: 20),
+                    margin: EdgeInsets.symmetric(vertical: 80, horizontal: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(40),
@@ -461,8 +461,10 @@ class _LoginPageState extends State<LoginPage> {
                               color: color,
                             ),
                           ),
+                          //USER
                           SizedBox(height: 20),
                           new TextFormField(
+                            autofillHints: [AutofillHints.email],
                             style: GoogleFonts.lato(
                               textStyle: Theme.of(context).textTheme.headline4,
                               fontSize: 16,
@@ -488,8 +490,10 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                          //PASSWORD
                           SizedBox(height: 20),
                           new TextFormField(
+                            autofillHints: [AutofillHints.password],
                             style: GoogleFonts.lato(
                               textStyle: Theme.of(context).textTheme.headline4,
                               fontSize: 16,

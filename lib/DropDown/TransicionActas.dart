@@ -20,6 +20,7 @@ import '../RFC/RfcBody.dart';
 import '../RFC/Transicion.dart';
 import '../RFCDescargas/services/Variables.dart';
 import '../views/homepage.dart';
+import 'Modal_Actas.dart';
 
 class transactas extends StatefulWidget {
   const transactas({key}) : super(key: key);
@@ -70,7 +71,6 @@ class _transactasState extends State<transactas>
     }
   }
 
-
   static const duration = Duration(milliseconds: 800);
   static const fastDuration = Duration(milliseconds: 500);
   List imgList = [
@@ -84,6 +84,36 @@ class _transactasState extends State<transactas>
   final Color color = HexColor('#D61C4E');
 
   final Color color_Card = HexColor('#01081f');
+  final Color color_Modal = HexColor("#424242");
+  showdialog_Aler() {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: Center(
+                child: Text(
+                  'Solicitar acta'.toUpperCase(),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              backgroundColor: color_Modal,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                  var height = MediaQuery.of(context).size.height;
+                  var width = MediaQuery.of(context).size.width;
+
+                  return Container(
+                    height: height - 50,
+                    width: width - 20,
+                    child: Modal_Actas(),
+                  );
+                },
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,7 +195,7 @@ class _transactasState extends State<transactas>
                         //                   ),
                         //                   textAlign: TextAlign.justify,
                         //                 ),
-                                         
+
                         //                    Padding(
                         //                   padding: EdgeInsets.symmetric(
                         //                       horizontal: 160),
@@ -210,7 +240,7 @@ class _transactasState extends State<transactas>
                         //                 ),
                         //               ])))),
                         // ),
-                       
+
                         Center(
                           child: Container(
                               decoration: BoxDecoration(
@@ -248,68 +278,52 @@ class _transactasState extends State<transactas>
                                           ),
                                           textAlign: TextAlign.justify,
                                         ),
-                                         SizedBox(height: 10.0),
-                                           Padding(
-                                            
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15),
+                                        SizedBox(height: 10.0),
+                                        new Center(
                                           child: Container(
-                                            padding: EdgeInsets.only(
-                                                top: 1, left: 1),
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                border: Border(
-                                                  bottom: BorderSide(
-                                                      color: Colors.black),
-                                                  top: BorderSide(
-                                                      color: Colors.black),
-                                                  left: BorderSide(
-                                                      color: Colors.black),
-                                                  right: BorderSide(
-                                                      color: Colors.black),
-                                                )),
-                                            child: MaterialButton(
-                                              minWidth: double.infinity,
-                                              height: 60,
-                                              onPressed: () {
-                                                 Navigator.push(
-                                                context,
-                                                PageRouteBuilder(
-                                                  pageBuilder:
-                                                      (context, animation, _) {
-                                                    return FadeTransition(
-                                                      opacity: animation,
-                                                      child: Body(),
-                                                    );
-                                                  },
-                                                  transitionDuration: duration,
-                                                  reverseTransitionDuration:
-                                                      duration,
-                                                ),
-                                              );
-                                              },
                                               color: Colors.white,
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                              ),
-                                              child: Text(
-                                                "Nuevo".toUpperCase(),
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18,
+                                              borderRadius:
+                                                  BorderRadius.circular(52),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 40, vertical: 8),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                MaterialButton(
+                                                  onPressed: () {
+                                                    showdialog_Aler();
+
+                                                    // Send_RFC_CURP(
+                                                    //     _currentSelectedValue.toString().toUpperCase(),
+                                                    //     curpController.text.toString().toUpperCase(),
+                                                    //     entidad.toString(),
+                                                    //     ConReverso.toString());
+                                                  },
+                                                  child: Text(
+                                                    "Nuevo".toUpperCase(),
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  textColor: Colors.black,
+                                                ),
+                                                Icon(
+                                                  Icons.send,
+                                                  size: 19,
                                                   color: Colors.black,
                                                 ),
-                                              ),
+                                              ],
                                             ),
                                           ),
                                         ),
                                       ])))),
                         ),
                         //   subheading('Active Projects'),
-                      
 
                         // Row(
                         //   children: <Widget>[

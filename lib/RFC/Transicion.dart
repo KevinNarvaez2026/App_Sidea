@@ -19,6 +19,7 @@ import '../RFC/Transicion.dart';
 import '../RFCDescargas/services/Variables.dart';
 import '../views/homepage.dart';
 import 'Curpfile.dart';
+import 'Modal_RFC.dart';
 
 class trans extends StatefulWidget {
   const trans({key}) : super(key: key);
@@ -122,9 +123,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
                 },
               ),
             ),
-              
             Expanded(child: SizedBox.shrink()),
-    
             Container(
               width: 200,
               height: 200,
@@ -163,8 +162,8 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
               ),
             ),
             if (_currentSelectedValue == "Moral")
-                Expanded(child: SizedBox.shrink()),
-                  if (_currentSelectedValue == "Moral")
+              Expanded(child: SizedBox.shrink()),
+            if (_currentSelectedValue == "Moral")
               Container(
                 width: 200,
                 height: 200,
@@ -275,6 +274,36 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
     );
   }
 
+  final Color color_Modal = HexColor("#424242");
+  showdialog_Aler() {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: Center(
+                child: Text(
+                  'Solicitar rfc'.toUpperCase(),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              backgroundColor: color_Modal,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                  var height = MediaQuery.of(context).size.height;
+                  var width = MediaQuery.of(context).size.width;
+
+                  return Container(
+                    height: height - 20,
+                    width: width - 20,
+                    child: ModalRfc(),
+                  );
+                },
+              ),
+            ));
+  }
+
   final Color color = HexColor('#D61C4E');
 
   final Color color_Card = HexColor('#01081f');
@@ -284,7 +313,7 @@ class _transState extends State<trans> with SingleTickerProviderStateMixin {
   var _currencies = ["Fisica", "Moral"];
   var _currencies2 = ["CURP", "RFC"];
   var Moral = ["RFC"];
-var cambio ;
+  var cambio;
   String selectedType = "initial";
   String selectedFrequency = "monthly";
   @override
@@ -333,7 +362,6 @@ var cambio ;
                         //   subheading('Active Projects'),
                         //  SizedBox(height: 5.0),
 
-                       
                         // Center(
                         //   child: Container(
                         //       decoration: BoxDecoration(
@@ -394,7 +422,7 @@ var cambio ;
                         //                       minWidth: double.infinity,
                         //                       height: 60,
                         //                       onPressed: () {
-                                              
+
                         //                       },
                         //                       color: Colors.white,
                         //                       elevation: 0,
@@ -454,52 +482,54 @@ var cambio ;
                                           ),
                                           textAlign: TextAlign.justify,
                                         ),
-                                           SizedBox(height: 10.0),
-                                        Container(
-                                          color: Colors.white,
-                                          height: 65,
-child:     FormField<String>(
-                builder: (FormFieldState<String> state) {
-                  return InputDecorator(
-                    decoration: InputDecoration(
-                      
-                        errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                        hintText: 'Please select expense',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0))),
-                    isEmpty: _currentSelectedValue == '',
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _currentSelectedValue,
-                        isDense: true,
-                        onChanged: (String newValue) {
-                          setState(() {
-                            _currentSelectedValue = newValue;
-                            state.didChange(newValue);
-                            print(_currentSelectedValue);
-                          });
-                        },
-                        items: _currencies.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                                        SizedBox(height: 10.0),
+                                        new Center(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(52),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 40, vertical: 8),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                MaterialButton(
+                                                  onPressed: () {
+                                                    showdialog_Aler();
 
+                                                    // Send_RFC_CURP(
+                                                    //     _currentSelectedValue.toString().toUpperCase(),
+                                                    //     curpController.text.toString().toUpperCase(),
+                                                    //     entidad.toString(),
+                                                    //     ConReverso.toString());
+                                                  },
+                                                  child: Text(
+                                                    "Nuevo".toUpperCase(),
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  textColor: Colors.black,
+                                                ),
+                                                Icon(
+                                                  Icons.send,
+                                                  size: 19,
+                                                  color: Colors.black,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                   
                                       ])))),
                         ),
                       ],
                     ),
                   ),
-                  
 
                   if (_currentSelectedValue == "Moral")
                     Container(

@@ -412,10 +412,493 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
-      child: _uiSetup(context),
+      child: _registro(context),
       inAsyncCall: isApiCallProcess,
       opacity: 0.3,
     );
+  }
+
+  final formKey = GlobalKey<FormState>(); //key for form
+  String name = "";
+  Widget _registro(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+    return Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Color(0xFFffffff),
+        body: Container(
+          padding: const EdgeInsets.only(left: 25, right: 25, top: 0),
+          child: Form(
+            key: formKey, //key for form
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: height * 0.06),
+                // Text("Here to Get", style: TextStyle(fontSize: 30, color:Color(0xFF363f93)),),
+                // Text("Welcomed !", style: TextStyle(fontSize: 30, color:Color(0xFF363f93)),),
+                Center(
+                  child: Container(
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: color_Card,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: SingleChildScrollView(
+                          child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Column(children: [
+                                Text(
+                                  "Registro".toUpperCase(),
+                                  style: GoogleFonts.lato(
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                ),
+                                // Text(
+                                //   "\nPARA PODER REGISTRARSE, ES NECESARIO ACEPTAR TODOS LOS PERMISOS QUE LE SOLICITE LA APP.",
+                                //   style: GoogleFonts.lato(
+                                //     textStyle: Theme.of(context)
+                                //         .textTheme
+                                //         .headlineMedium,
+                                //     fontSize: 14,
+                                //     fontWeight: FontWeight.w700,
+                                //     fontStyle: FontStyle.italic,
+                                //     color: Colors.white,
+                                //   ),
+                                //   textAlign: TextAlign.justify,
+                                // ),
+                              ])))),
+                ),
+                Form(
+                  key: globalFormKey,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        controller: Nnegocio,
+                        onSaved: (input) => Nnegocio.text = input,
+                        decoration: const InputDecoration(
+                          hintText: "Nombre completo",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.all(16.2),
+                            child: Icon(Icons.person),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        height: 80,
+                        child: IntlPhoneField(
+                          decoration: const InputDecoration(
+                            counter: Offstage(),
+                            labelText: 'Telefono',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                            ),
+                          ),
+                          initialCountryCode: 'MX',
+                          showDropdownIcon: true,
+                          dropdownIconPosition: IconPosition.trailing,
+                          onChanged: (phone) {
+                            number = phone.completeNumber;
+                            print(number);
+                          },
+                        ),
+                      ),
+
+                      // TextFormField(
+                      //   keyboardType: TextInputType.phone,
+                      //   textInputAction: TextInputAction.next,
+                      //   controller: Telefono,
+                      //   onSaved: (input) => Nnegocio.text = input,
+                      //   decoration: const InputDecoration(
+                      //     hintText: "Telefono",
+                      //     prefixIcon: Padding(
+                      //       padding: EdgeInsets.all(16.0),
+                      //       child: Icon(Icons.phone),
+                      //     ),
+                      //   ),
+                      // ),
+                      SizedBox(height: 10),
+                      INES(),
+                      TextFormField(
+                        style: TextStyle(color: Colors.green),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        readOnly: true,
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    // ListTile(
+                                    //   leading: const Icon(Icons.camera_alt),
+                                    //   title: const Text('Tomar Foto'),
+                                    //   onTap: () {
+                                    //     UploadINEfoto();
+                                    //   },
+                                    // ),
+                                    ListTile(
+                                      leading: const Icon(Icons.photo),
+                                      title: const Text('Galeria'),
+                                      onTap: () {
+                                        UploadINE();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+
+                          //UploadGallery();
+                        },
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.green),
+                          hintText: "INE",
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .accentColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor)),
+                          prefixIcon: const Icon(
+                            Icons.sd_card_rounded,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      DOMIC(),
+                      TextFormField(
+                        readOnly: true,
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    // ListTile(
+                                    //   leading: const Icon(Icons.camera_alt),
+                                    //   title: const Text('Tomar Foto'),
+                                    //   onTap: () {
+                                    //     UploadDOMIfoto();
+                                    //   },
+                                    // ),
+                                    ListTile(
+                                      leading: new Icon(Icons.photo),
+                                      title: new Text('Galeria'),
+                                      onTap: () {
+                                        UploadDOMI();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+
+                          //UploadGallery();
+                        },
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: "Comprobante de Domicilio",
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .accentColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor)),
+                          prefixIcon: const Icon(
+                            Icons.maps_home_work,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      FOTOGRAFIA(),
+                      new TextFormField(
+                        readOnly: true,
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    // ListTile(
+                                    //   leading: new Icon(Icons.camera_alt),
+                                    //   title: new Text('Tomar Foto'),
+                                    //   onTap: () {
+                                    //     UploadINEfoto();
+                                    //     // takePhoto(ImageSource.camera);
+                                    //     // print(ImageSource.camera);
+                                    //   },
+                                    // ),
+                                    ListTile(
+                                      leading: new Icon(Icons.photo),
+                                      title: new Text('Galeria'),
+                                      onTap: () {
+                                        UploadFOTO();
+                                        //takePhoto(ImageSource.gallery);
+                                        //print(ImageSource.gallery);
+                                      },
+                                    ),
+
+                                    // if (user == "Edwin Poot")
+                                    //If(user == "Edwin Poot");
+                                    //if
+
+                                    //   ListTile(
+                                    //     leading: new Icon(Icons.info),
+                                    //     title: new Text('Detalles'),
+                                    //     onTap: () {},
+                                    //   ),
+                                    // ListTile(
+                                    //   leading: new Icon(Icons.share),
+                                    //   title: new Text('Otro'),
+                                    //   onTap: () {
+                                    //     Navigator.pop(context);
+                                    //   },
+                                    // ),
+                                  ],
+                                );
+                              });
+
+                          //  UploadGallery();
+                        },
+                        style: GoogleFonts.lato(
+                          textStyle: Theme.of(context).textTheme.headline4,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.black,
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: new InputDecoration(
+                          hintText: "Selfie",
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .accentColor
+                                      .withOpacity(0.2))),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor)),
+                          prefixIcon: Icon(
+                            Icons.photo_camera_front_rounded,
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      if (id == null && fileName == "heic")
+                        new Center(
+                          child: MaterialButton(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 29, vertical: 5),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  new Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 29, vertical: 5),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          MaterialButton(
+                                            child: Text("Error de formato",
+                                                style: GoogleFonts.lato(
+                                                  textStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .headline4,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.white,
+                                                )),
+                                          ),
+                                          // Icon(
+                                          //   Icons.download_done,
+                                          //   size: 20,
+                                          //   color: Colors.white,
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // Icon(
+                                  //   Icons.download_done,
+                                  //   size: 20,
+                                  //   color: Colors.white,
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (id == null && fileName != "heic")
+                        new Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(52),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 8),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                MaterialButton(
+                                  onPressed: () {
+                                    if (Nnegocio.text.toString() == "") {
+                                      print("LLena todos los campos");
+                                      final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                          "LLena todos los campos ",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else if (INE == null) {
+                                      final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                          "Te Falto La Fotografia del INE",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else if (DOMI == null) {
+                                      final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                          "Te Falto el Comporbante de Domicilio",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else if (FOTO == null) {
+                                      final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                          "Te Falto Una Fotografia",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      //ENVIAR DATOS
+                                      print("INE: " +
+                                          INE.path.toString() +
+                                          "\n" +
+                                          "Domicilio: " +
+                                          DOMI.path.toString() +
+                                          "\n" +
+                                          "Fotografia: " +
+                                          FOTO.path.toString() +
+                                          "\n" +
+                                          Nnegocio.text.toString() +
+                                          "\n" +
+                                          number.toString() +
+                                          "\n" +
+                                          _latitude.toString() +
+                                          "\n" +
+                                          _longitud.toString());
+
+                                      final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.yellow,
+                                        content: Text(
+                                          "Espere un momento",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                      hasNetwork();
+                                    }
+                                  },
+                                  child: Text(
+                                    "Registrarse".toUpperCase(),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  textColor: Colors.white,
+                                ),
+                                Icon(
+                                  Icons.send,
+                                  size: 19,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _uiSetup(BuildContext context) {
