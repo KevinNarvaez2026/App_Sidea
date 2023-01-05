@@ -34,13 +34,14 @@ class SERACHRFC extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<SERACHRFC> {
+class _HomePageState extends State<SERACHRFC> with TickerProviderStateMixin {
   FetchUserList _userList = FetchUserList();
   @override
   void initState() {
     this.getdatesrffc();
     GetNames();
-
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     // TODO: implement initState
     super.initState();
   }
@@ -52,6 +53,7 @@ class _HomePageState extends State<SERACHRFC> {
     setState(() {
       user = prefs.getString('username');
     });
+    _runAnimation();
     print(user);
   }
 
@@ -67,7 +69,8 @@ class _HomePageState extends State<SERACHRFC> {
     mainheader["content-type"] = "application/json";
     mainheader['x-access-token'] = Token;
     var response = await get(
-      Uri.parse('https://actasalinstante.com:3030/api/actas/reg/corte/MyDates/'),
+      Uri.parse(
+          'https://actasalinstante.com:3030/api/actas/reg/corte/MyDates/'),
       headers: mainheader,
     );
     var resBody = json.decode(response.body);
@@ -125,7 +128,8 @@ class _HomePageState extends State<SERACHRFC> {
     }
     print(status);
   }
- static const duration = Duration(milliseconds: 300);
+
+  static const duration = Duration(milliseconds: 300);
   var _openResult = 'Unknown';
 
   Future<void> openFiles(String filename) async {
@@ -141,60 +145,71 @@ class _HomePageState extends State<SERACHRFC> {
   var now = new DateTime.now();
   var isFavorite = false.obs;
   int index;
-   final Color color = HexColor('#D61C4E');
-     final Color color_Modal = HexColor("#424242");
+  final Color color = HexColor('#D61C4E');
+  final Color color_Modal = HexColor("#424242");
   showdialog_Aler() {
-
     showDialog(
-  context: context,
-  builder: (_) => new AlertDialog(
-    title:Center(
-            child: Text('Solicitar rfc'.toUpperCase(),style: TextStyle(color: Colors.white),),
-       ), 
-       backgroundColor: color_Modal,
-  shape: RoundedRectangleBorder(
-    borderRadius:
-      BorderRadius.all(
-        Radius.circular(10.0))),
-    content: Builder(
-      builder: (context) {
-      
-        // Get available height and width of the build area of this widget. Make a choice depending on the size.                              
-        var height = MediaQuery.of(context).size.height;
-        var width = MediaQuery.of(context).size.width;
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: Center(
+                child: Text(
+                  'Solicitar rfc'.toUpperCase(),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              backgroundColor: color_Modal,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                  var height = MediaQuery.of(context).size.height;
+                  var width = MediaQuery.of(context).size.width;
 
-        return Container(
-          height: height -20,
-          width: width - 20,
-          child: ModalRfc(),
-          
-        );
-        
-      },
-    ),
-  
-  )
-);
-    
+                  return Container(
+                    height: height - 20,
+                    width: width - 20,
+                    child: ModalRfc(),
+                  );
+                },
+              ),
+            ));
   }
+
+  AnimationController _animationController;
+  void _runAnimation() async {
+    for (int i = 0; i < 3; i++) {
+      await _animationController.forward();
+      await _animationController.reverse();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
           backgroundColor: color,
-          floatingActionButton: FloatingActionButton(
-        onPressed: () {
-  showdialog_Aler();
-
-        },
-        child: Icon(Icons.add, color: Colors.white, size: 29,),
-        backgroundColor: Colors.black,
-        tooltip: 'Nueva Peticion',
-        elevation: 5,
-        splashColor: Colors.grey,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      
+          floatingActionButton: RotationTransition(
+            turns: Tween(begin: 0.0, end: -.1)
+                .chain(CurveTween(curve: Curves.elasticIn))
+                .animate(_animationController),
+            child: FloatingActionButton(
+              onPressed: () {
+                showdialog_Aler();
+                _runAnimation();
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 29,
+              ),
+              backgroundColor: Colors.black,
+              tooltip: 'Más Informacion',
+              elevation: 5,
+              splashColor: Colors.grey,
+            ),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           appBar: AppBar(
             actions: [
               new Center(

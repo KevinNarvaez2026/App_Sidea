@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:app_actasalinstante/Detalles/profile_page.dart';
@@ -12,6 +13,8 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:check_vpn_connection/check_vpn_connection.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -69,7 +72,8 @@ LoginRequestModel loginRequestModel;
 
 enum LegendShape { circle, rectangle }
 
-class _CarouselExampleState extends State<CarouselExample> {
+class _CarouselExampleState extends State<CarouselExample>
+    with SingleTickerProviderStateMixin {
   List<Contact> _contacts;
 
   IO.Socket socket;
@@ -79,6 +83,12 @@ class _CarouselExampleState extends State<CarouselExample> {
     Inicial_pORCENTAJE();
     Check_uPDATE();
     Lenguaje();
+AlertController.onTabListener(
+        (Map<String, dynamic> payload, TypeAlert type) {
+      print("$payload - $type");
+    });
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
   }
 
   Map<String, double> dataMap = {
@@ -99,6 +109,7 @@ class _CarouselExampleState extends State<CarouselExample> {
   var current;
 
   Find_User(user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     Map<String, String> mainheader = new Map();
     mainheader["content-type"] = "application/json";
     mainheader['private-key'] =
@@ -109,6 +120,8 @@ class _CarouselExampleState extends State<CarouselExample> {
       headers: mainheader,
     );
     var GetRobots = json.decode(response.body.toString());
+    print("hola");
+
     //vista = true;
     if (response.statusCode == 200) {
       setState(() {
@@ -124,6 +137,14 @@ class _CarouselExampleState extends State<CarouselExample> {
           current = GetRobots[i]['actas_current'] / 100000;
         });
       }
+    } else if (response.statusCode == 401) {
+      Error_401();
+      prefs.remove('token');
+      prefs.remove('username');
+      print("401");
+      await Future.delayed(Duration(seconds: 4));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
     }
   }
 
@@ -156,7 +177,7 @@ class _CarouselExampleState extends State<CarouselExample> {
           Uri.parse('https://actasalinstante.com:3030/api/app/version/'),
           headers: mainheader);
       var datas = json.decode(response.body);
-      print(datas);
+  
       if (response.statusCode == 200) {
         setState(() {
           isApiCallProcess = false;
@@ -188,7 +209,8 @@ class _CarouselExampleState extends State<CarouselExample> {
           });
           version = datas['version'];
           print(version);
-
+             
+          _runAnimation();
           GetImages();
           GetNames();
           getToken();
@@ -417,6 +439,7 @@ class _CarouselExampleState extends State<CarouselExample> {
       headers: mainheader,
     );
     final bytes = response.bodyBytes;
+
     print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {
@@ -425,9 +448,10 @@ class _CarouselExampleState extends State<CarouselExample> {
     }
 
     if (response.statusCode == 401) {
+      Error_401();
       prefs.remove('token');
       prefs.remove('username');
-      Error_401();
+
       await Future.delayed(Duration(seconds: 4));
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
@@ -505,8 +529,6 @@ class _CarouselExampleState extends State<CarouselExample> {
     initSetting();
     await flutterTts.speak(voice);
   }
-
-  
 
   // Image Name List Here
   var imgList = [
@@ -746,6 +768,15 @@ class _CarouselExampleState extends State<CarouselExample> {
         });
   }
 
+  AnimationController _animationController;
+
+  void _runAnimation() async {
+    for (int i = 0; i < 3; i++) {
+      await _animationController.forward();
+      await _animationController.reverse();
+    }
+  }
+
   Widget Carr(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
@@ -764,19 +795,26 @@ class _CarouselExampleState extends State<CarouselExample> {
             elevation: 0,
             backgroundColor: color,
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              ShowDialog();
-            },
-            child: Icon(
-              Icons.notifications_active_rounded,
-              color: Colors.white,
-              size: 29,
+          floatingActionButton: RotationTransition(
+            turns: Tween(begin: 0.0, end: -.1)
+                .chain(CurveTween(curve: Curves.elasticIn))
+                .animate(_animationController),
+            child: FloatingActionButton(
+              onPressed: () {
+                ShowDialog();
+                _runAnimation();
+                
+              },
+              child: Icon(
+                Icons.notifications_active_rounded,
+                color: Colors.white,
+                size: 29,
+              ),
+              backgroundColor: Colors.black,
+              tooltip: 'Más Informacion',
+              elevation: 5,
+              splashColor: Colors.grey,
             ),
-            backgroundColor: Colors.black,
-            tooltip: 'Más Informacion',
-            elevation: 5,
-            splashColor: Colors.grey,
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           body: Column(
@@ -1025,7 +1063,28 @@ class _CarouselExampleState extends State<CarouselExample> {
                             ],
                           ),
                         ),
+                      //                 RotationTransition(
+                      //         turns: Tween(begin: 0.0, end: -.1)
+                      //             .chain(CurveTween(curve: Curves.elasticIn))
+                      //             .animate(_animationController),
+                      //         child: FloatingActionButton(
+                      //     onPressed: () {
+                      //       _runAnimation();
+                      //       ShowDialog();
+                      //     },
 
+                      //     child: Icon(
+                      //       Icons.notifications_active_rounded,
+                      //       color: Colors.white,
+                      //       size: 29,
+                      //     ),
+                      //     backgroundColor: Colors.black,
+                      //     tooltip: 'Más Informacion',
+                      //     elevation: 5,
+                      //     splashColor: Colors.grey,
+                      //   ),
+
+                      // ),
                       //ESPACIO ENTRE FUNCIONES DE FRONT
                     ],
                   ),

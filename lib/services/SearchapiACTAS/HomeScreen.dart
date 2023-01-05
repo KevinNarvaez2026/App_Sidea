@@ -11,6 +11,8 @@ import 'package:app_actasalinstante/services/SearchapiACTAS/search.dart';
 import 'package:app_actasalinstante/services/SearchapiACTAS/user_model.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -51,6 +53,11 @@ class _SERACHACTASState extends State<SERACHACTAS>
     super.initState();
     Lenguaje();
     GetNames();
+
+    AlertController.onTabListener(
+        (Map<String, dynamic> payload, TypeAlert type) {
+      print("$payload - $type");
+    });
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
   }
@@ -84,19 +91,15 @@ class _SERACHACTASState extends State<SERACHACTAS>
   }
 
   ShowDialog() {
-    var snackBar = SnackBar(
-      elevation: 0,
-      duration: const Duration(seconds: 10),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.transparent,
-      content: AwesomeSnackbarContent(
-        title: 'Toque la parte blanca',
-        message: 'Para ver más información del acta\n Solicitada',
-        contentType: ContentType.help,
-      ),
-    );
+    Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(
+        child: AlertController.show(
+            "Toque la parte blanca",
+            "Para ver más información del acta\n Solicitada",
+            TypeAlert.warning,
+            payload));
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
     // _speak(user +
     //     ',Toque la parte blanca, Para ver mas información de su acta solicitada');
   }
@@ -108,6 +111,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
     setState(() {
       user = prefs.getString('username');
     });
+    _runAnimation();
     // print(user);
   }
 
@@ -180,18 +184,24 @@ class _SERACHACTASState extends State<SERACHACTAS>
                 folio),
         headers: mainheader);
     var bytes = jsonDecode(req.body.toString());
-    var snackBar = SnackBar(
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.transparent,
-      content: AwesomeSnackbarContent(
-        title: 'Descargando Acta',
-        message: 'Espere un momento',
-        contentType: ContentType.success,
-      ),
-    );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(
+        child: AlertController.show("Descargando acta ", "Espere un momento",
+            TypeAlert.success, payload));
+    // var snackBar = SnackBar(
+    //   elevation: 0,
+    //   behavior: SnackBarBehavior.floating,
+    //   backgroundColor: Colors.transparent,
+    //   content: AwesomeSnackbarContent(
+    //     title: 'Descargando Acta',
+    //     message: 'Espere un momento',
+    //     contentType: ContentType.success,
+    //   ),
+    // );
+
+    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -229,7 +239,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
       },
       btnOkOnPress: () {
         openFiles(folio.toString());
-      //  _speak('abriendo pdf');
+        //  _speak('abriendo pdf');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => NavBar()));
       },
@@ -389,7 +399,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                                 _speak(
                                     'Si tu pdf, no se abre, descargalo otra vez, no genera nungun costo');
                                 openFiles(curp);
-                               // _speak('abriendo pdf');
+                                // _speak('abriendo pdf');
                               },
                               child: Text("Abrir"),
                               textColor: Colors.white,
@@ -411,40 +421,42 @@ class _SERACHACTASState extends State<SERACHACTAS>
       },
     );
   }
+
   final Color color_Modal = HexColor("#424242");
   showdialog_Aler() {
-
     showDialog(
-  context: context,
-  builder: (_) => new AlertDialog(
-    title:Center(
-            child: Text('Solicitar acta'.toUpperCase(),style: TextStyle(color: Colors.white),),
-       ), 
-       backgroundColor: color_Modal,
-  shape: RoundedRectangleBorder(
-    borderRadius:
-      BorderRadius.all(
-        Radius.circular(10.0))),
-    content: Builder(
-      builder: (context) {
-      
-        // Get available height and width of the build area of this widget. Make a choice depending on the size.                              
-        var height = MediaQuery.of(context).size.height;
-        var width = MediaQuery.of(context).size.width;
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: Center(
+                child: Text(
+                  'Solicitar acta'.toUpperCase(),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              backgroundColor: color_Modal,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                  var height = MediaQuery.of(context).size.height;
+                  var width = MediaQuery.of(context).size.width;
 
-        return Container(
-          height: height -50,
-          width: width - 20,
-          child: Modal_Actas(),
-          
-        );
-        
-      },
-    ),
-  
-  )
-);
-    
+                  return Container(
+                    height: height - 50,
+                    width: width - 20,
+                    child: Modal_Actas(),
+                  );
+                },
+              ),
+            ));
+  }
+
+  void _runAnimation() async {
+    for (int i = 0; i < 3; i++) {
+      await _animationController.forward();
+      await _animationController.reverse();
+    }
   }
 
   @override
@@ -463,34 +475,25 @@ class _SERACHACTASState extends State<SERACHACTAS>
     return WillPopScope(
         child: Scaffold(
           backgroundColor: color,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showdialog_Aler();
-              // Navigator.push(
-              //                                             context,
-              //                                             PageRouteBuilder(
-              //                                               pageBuilder:
-              //                                                   (context, animation, _) {
-              //                                                 return FadeTransition(
-              //                                                   opacity: animation,
-              //                                                   child: Body(),
-              //                                                 );
-              //                                               },
-              //                                               transitionDuration: duration,
-              //                                               reverseTransitionDuration:
-              //                                                   duration,
-              //                                             ),
-              //                                           );
-            },
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 29,
+          floatingActionButton: RotationTransition(
+            turns: Tween(begin: 0.0, end: -.1)
+                .chain(CurveTween(curve: Curves.elasticIn))
+                .animate(_animationController),
+            child: FloatingActionButton(
+              onPressed: () {
+                showdialog_Aler();
+                _runAnimation();
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 29,
+              ),
+              backgroundColor: Colors.black,
+              tooltip: 'Más Informacion',
+              elevation: 5,
+              splashColor: Colors.grey,
             ),
-            backgroundColor: Colors.black,
-            tooltip: 'Nueva Peticion',
-            elevation: 5,
-            splashColor: Colors.grey,
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           appBar: AppBar(
@@ -577,7 +580,6 @@ class _SERACHACTASState extends State<SERACHACTAS>
                       itemCount: data?.length,
                       itemBuilder: (context, index) {
                         if (!snapshot.hasData) {
-                        
                           return Center(
                             child: CircularProgressIndicator(
                               backgroundColor: Colors.black,

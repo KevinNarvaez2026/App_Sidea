@@ -114,6 +114,13 @@ class _transactasState extends State<transactas>
             ));
   }
 
+  void _runAnimation() async {
+    for (int i = 0; i < 3; i++) {
+      await _animationController.forward();
+      await _animationController.reverse();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

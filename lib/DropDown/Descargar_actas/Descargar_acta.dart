@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -57,6 +59,10 @@ class _D_Actastate extends State<D_Actas> {
           isApiCallProcess = false;
         });
       });
+       Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Descargando su acta ", "", TypeAlert.success, payload));
       File file = new File('/storage/emulated/0/Download/$filename' + '.pdf');
       var decoded = base64.decode(bytes['b64'].toString());
 
@@ -101,6 +107,11 @@ class _D_Actastate extends State<D_Actas> {
     GetNames();
     Get_Datos();
     Lenguaje();
+
+      AlertController.onTabListener(
+        (Map<String, dynamic> payload, TypeAlert type) {
+      print("$payload - $type");
+    });
   }
 
   Lenguaje() async {

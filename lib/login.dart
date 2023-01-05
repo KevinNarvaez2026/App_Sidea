@@ -6,6 +6,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:app_actasalinstante/Widgets/carousel_example.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -81,40 +83,49 @@ class _LoginPageState extends State<LoginPage> {
         _fetchContacts();
         prefs.setString('token', data['token']);
         prefs.setString('username', data['username']);
-        var snackBar = SnackBar(
-          elevation: 0,
-          width: 400,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'Espere un momento ' + user,
-            message: '',
-            contentType: ContentType.help,
-          ),
-        );
+         Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Espere un momento ", ""+user, TypeAlert.warning, payload));
+        // var snackBar = SnackBar(
+        //   elevation: 0,
+        //   width: 400,
+        //   behavior: SnackBarBehavior.floating,
+        //   backgroundColor: Colors.transparent,
+        //   content: AwesomeSnackbarContent(
+        //     title: 'Espere un momento ' + user,
+        //     message: '',
+        //     contentType: ContentType.help,
+        //   ),
+        // );
 
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
         //  _speak("Espere un momento porfavor");
       } else {
         setState(() {
           isApiCallProcess = false;
         });
+ Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Usuario incorrecto ", ""+user, TypeAlert.error, payload));
+        // var snackBar = SnackBar(
+        //   elevation: 0,
+        //   width: 400,
+        //   behavior: SnackBarBehavior.floating,
+        //   backgroundColor: Colors.transparent,
+        //   content: AwesomeSnackbarContent(
+        //     title: 'Usuario Incorrecto ' + user,
+        //     message: 'Contacte al equipo de software!',
+        //     contentType: ContentType.failure,
+        //   ),
+        // );
 
-        var snackBar = SnackBar(
-          elevation: 0,
-          width: 400,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'Usuario Incorrecto ' + user,
-            message: 'Contacte al equipo de software!',
-            contentType: ContentType.failure,
-          ),
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     } catch (e) {
+
+      
       AwesomeDialog(
         context: context,
         dialogType: DialogType.ERROR,
@@ -140,7 +151,10 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       isApiCallProcess = true;
     });
-
+AlertController.onTabListener(
+        (Map<String, dynamic> payload, TypeAlert type) {
+      print("$payload - $type");
+    });
     //Notification();
   }
 
@@ -193,19 +207,25 @@ class _LoginPageState extends State<LoginPage> {
         SendContact(fullContact);
         print("Ok");
       }
-      final snackBar = SnackBar(
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.black,
-        content: Text(
-          "Bienvenido ".toUpperCase() + userController.text.toString(),
-          style: TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
-      );
 
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+           Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Bienvenido ", ""+userController.text.toString(), TypeAlert.success, payload));
+
+      // final snackBar = SnackBar(
+      //   elevation: 0,
+      //   behavior: SnackBarBehavior.floating,
+      //   backgroundColor: Colors.black,
+      //   content: Text(
+      //     "Bienvenido ".toUpperCase() + userController.text.toString(),
+      //     style: TextStyle(
+      //         color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+      //     textAlign: TextAlign.center,
+      //   ),
+      // );
+
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
       var status = await Permission.storage.status;
       if (!status.isGranted) {

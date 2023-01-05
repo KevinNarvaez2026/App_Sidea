@@ -9,6 +9,7 @@ import 'package:app_actasalinstante/views/controller/controller_bindings.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:app_actasalinstante/views/homepage.dart';
+import 'package:flutter_dropdown_alert/dropdown_alert.dart';
 
 import 'package:get/route_manager.dart';
 import 'package:get_it/get_it.dart';
@@ -181,6 +182,12 @@ class MyAppfull extends StatelessWidget {
           ),
         ),
       ),
+      builder: (context, child) => Stack(
+         children: [
+            child,
+            DropdownAlert()
+         ],
+       ),
       home: const SplashScreen(),
     );
   }
@@ -189,35 +196,7 @@ class MyAppfull extends StatelessWidget {
 class init extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-//  return MaterialApp(
 
-//       title: 'Actas al Instante',
-//       debugShowCheckedModeBanner: false,
-
-//       theme: ThemeData(
-//         fontFamily: 'Poppins',
-//         primaryColor: Colors.white,
-//         floatingActionButtonTheme: FloatingActionButtonThemeData(
-//           elevation: 0,
-//           foregroundColor: Colors.white,
-//         ),
-//         accentColor: Colors.redAccent,
-//         textTheme: TextTheme(
-//           headline1: TextStyle(fontSize: 22.0, color: Colors.redAccent),
-//           headline2: TextStyle(
-//             fontSize: 24.0,
-//             fontWeight: FontWeight.w700,
-//             color: Colors.redAccent,
-//           ),
-//           bodyText1: TextStyle(
-//             fontSize: 14.0,
-//             fontWeight: FontWeight.w400,
-//             color: Colors.blueAccent,
-//           ),
-//         ),
-//       ),
-//       home: SplashScreen(),
-//     );
 
     return GetMaterialApp(
       initialBinding: ControllerBindings(),
@@ -243,7 +222,14 @@ class init extends StatelessWidget {
             color: Colors.blueAccent,
           ),
         ),
+        
       ),
+      builder: (context, child) => Stack(
+         children: [
+            child,
+            DropdownAlert()
+         ],
+       ),
       home: const SplashScreen2(),
     );
   }

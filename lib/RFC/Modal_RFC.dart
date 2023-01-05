@@ -6,6 +6,8 @@ import 'package:app_actasalinstante/RFC/RFC_Moral.dart';
 import 'package:app_actasalinstante/RFCDescargas/views/homepage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,10 @@ class _ModalRfcState extends State<ModalRfc>
   void initState() {
     super.initState();
     GetNames();
+      AlertController.onTabListener(
+        (Map<String, dynamic> payload, TypeAlert type) {
+      print("$payload - $type");
+    });
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
   }
@@ -628,19 +634,13 @@ class _ModalRfcState extends State<ModalRfc>
                               onPressed: () {
                                 if (curpController.text.toString() == null ||
                                     curpController.text.toString() == "") {
-                                  var snackBar = SnackBar(
-                                    elevation: 0,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'No escribiste el RFC! ',
-                                      message: '',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                                 Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "No escribiste el RFC", "", TypeAlert.error, payload));
+
+                                 
 
                                   print('Text is empty');
                                 } else if (curpController.text
@@ -649,22 +649,12 @@ class _ModalRfcState extends State<ModalRfc>
                                     12) {
                                   var digit =
                                       curpController.text.toString().length;
-
-                                  var snackBar = SnackBar(
-                                    elevation: 10,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    width: 500,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'Error en el RFC Moral',
-                                      message: 'Te faltan ${(12 - (digit))}' +
-                                          ' digitos en el RFC Moral',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
-
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                             Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Error en el RFC Moral", 'Te faltan ${(12 - (digit))}' +
+                                          ' digitos en el RFC Moral', TypeAlert.error, payload));
+                                 
                                 } else {
                                   print(curpController.text
                                           .toString()
@@ -718,20 +708,13 @@ class _ModalRfcState extends State<ModalRfc>
                               onPressed: () {
                                 if (curpController.text.toString() == null ||
                                     curpController.text.toString() == "") {
-                                  var snackBar = SnackBar(
-                                    elevation: 0,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'No escribiste el RFC! ',
-                                      message: '',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-
+                                      
+                                                 Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "No escribiste el RFC", "", TypeAlert.error, payload));
+                                 
                                   print('Text is empty');
                                 } else if (curpController.text
                                         .toString()
@@ -739,22 +722,13 @@ class _ModalRfcState extends State<ModalRfc>
                                     13) {
                                   var digit =
                                       curpController.text.toString().length;
-
-                                  var snackBar = SnackBar(
-                                    elevation: 10,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    width: 500,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'Error en el RFC',
-                                      message: 'Te faltan ${(13 - (digit))}' +
-                                          ' digitos en el RFC ',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
-
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                   Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Error en el RFC ", 'Te faltan ${(13 - (digit))}' +
+                                          ' digitos en el RFC', TypeAlert.error, payload));
+                                 
+                                 
                                 } else {
                                   Send_RFC_CURP(
                                       curpController.text
@@ -801,19 +775,12 @@ class _ModalRfcState extends State<ModalRfc>
                               onPressed: () {
                                 if (curpController.text.toString() == null ||
                                     curpController.text.toString() == "") {
-                                  var snackBar = SnackBar(
-                                    elevation: 0,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'No escribiste la Curp! ',
-                                      message: '',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
-
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                      
+                                                 Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "No escribiste la Curp", "", TypeAlert.error, payload));
+                                 
 
                                   print('Text is empty');
                                 } else if (curpController.text
@@ -822,22 +789,26 @@ class _ModalRfcState extends State<ModalRfc>
                                     18) {
                                   var digit =
                                       curpController.text.toString().length;
+   Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Error la Curp", 'Te faltan ${(18 - (digit))}' +
+                                          ' digitos en la Curp', TypeAlert.error, payload));
+                                  // var snackBar = SnackBar(
+                                  //   elevation: 10,
+                                  //   behavior: SnackBarBehavior.floating,
+                                  //   backgroundColor: Colors.transparent,
+                                  //   width: 500,
+                                  //   content: AwesomeSnackbarContent(
+                                  //     title: 'Error en la curp',
+                                  //     message: 'Te faltan ${(18 - (digit))}' +
+                                  //         ' digitos en la curp ',
+                                  //     contentType: ContentType.failure,
+                                  //   ),
+                                  // );
 
-                                  var snackBar = SnackBar(
-                                    elevation: 10,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    width: 500,
-                                    content: AwesomeSnackbarContent(
-                                      title: 'Error en la curp',
-                                      message: 'Te faltan ${(18 - (digit))}' +
-                                          ' digitos en la curp ',
-                                      contentType: ContentType.failure,
-                                    ),
-                                  );
-
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                  // ScaffoldMessenger.of(context)
+                                  //     .showSnackBar(snackBar);
                                 } else {
                                   CURP(curpController.text
                                       .toString()
@@ -927,18 +898,14 @@ class _ModalRfcState extends State<ModalRfc>
 
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
-      var snackBar = SnackBar(
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'RFC enviado!',
-          message: 'Revisa la vista de RFC',
-          contentType: ContentType.success,
-        ),
-      );
 
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      
+                                                 Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "RFC enviado! ", "Revisa la vista de RFC", TypeAlert.success, payload));
+                                 
+     
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => NavBar()));
     } else if (response.statusCode == 403) {

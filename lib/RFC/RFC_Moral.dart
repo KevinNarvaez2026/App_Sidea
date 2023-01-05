@@ -65,9 +65,10 @@ class _RFC_MORALState extends State<RFC_MORAL> {
     } else if (response.statusCode == 403) {
       ShowServiceActaOrRFC();
     } else if (response.statusCode == 401) {
+        Error_401();
       prefs.remove('token');
       prefs.remove('username');
-      Error_401();
+    
       await Future.delayed(Duration(seconds: 5));
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));

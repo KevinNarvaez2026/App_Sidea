@@ -6,6 +6,8 @@ import 'package:app_actasalinstante/NavBar.dart';
 import 'package:app_actasalinstante/SplashScreen/Splashscreen1.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -32,6 +34,10 @@ class _SplashScreen2State extends State<SplashScreen2> {
     GetNames();
     getToken();
     Lenguaje();
+     AlertController.onTabListener(
+        (Map<String, dynamic> payload, TypeAlert type) {
+      print("$payload - $type");
+    });
     // Welcomebakc();
   }
 
@@ -57,6 +63,13 @@ class _SplashScreen2State extends State<SplashScreen2> {
   Lenguaje() async {
     languages = List<String>.from(await flutterTts.getLanguages);
     setState(() {});
+  }
+ void _success() {
+    Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Bienvenido", ""+user.toString(), TypeAlert.success, payload));
+   
   }
 
   FlutterTts flutterTts = FlutterTts();
@@ -127,7 +140,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
   Color _containerColor = Colors.blue;
   final ImagePicker _picker = ImagePicker();
   PickedFile _imageFile;
-   final Color color = HexColor('#D61C4E');
+  final Color color = HexColor('#D61C4E');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +161,6 @@ class _SplashScreen2State extends State<SplashScreen2> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ColorSonar(
-                      
                       // wavesDisabled: true,
                       // waveMotion: WaveMotion.synced,
                       contentAreaRadius: 58.0,
@@ -158,22 +170,22 @@ class _SplashScreen2State extends State<SplashScreen2> {
                       // duration: Duration(seconds: 5),
 
                       child: InkWell(
-                        
                           onTap: () {
-                              _speak('Bienvenido, '+user);
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.black,
-                              content: Text(
-                                "Bienvenido " + user.toString(),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                                textAlign: TextAlign.center,
-                              ),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            _speak('Bienvenido, ' + user);
+                           _success();
+                            // final snackBar = SnackBar(
+                            //   elevation: 0,
+                            //   behavior: SnackBarBehavior.floating,
+                            //   backgroundColor: Colors.black,
+                            //   content: Text(
+                            //     "Bienvenido " + user.toString(),
+                            //     style: TextStyle(
+                            //         color: Colors.white, fontSize: 18),
+                            //     textAlign: TextAlign.center,
+                            //   ),
+                            // );
+                            // ScaffoldMessenger.of(context)
+                            //     .showSnackBar(snackBar);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -218,20 +230,9 @@ class _SplashScreen2State extends State<SplashScreen2> {
                       children: [
                         InkWell(
                           onTap: () {
-                             _speak('Bienvenido, '+user);
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.black,
-                              content: Text(
-                                "Bienvenido " + user.toString(),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                                textAlign: TextAlign.center,
-                              ),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            _speak('Bienvenido, ' + user);
+                          
+                         _success();
                             Navigator.push(
                               context,
                               PageRouteBuilder(

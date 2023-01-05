@@ -94,6 +94,8 @@ dependencies:
   syncfusion_flutter_datagrid_export: ^20.3.58-beta
   pie_chart: ^5.3.2
   percent_indicator: ^4.2.2
+  animated_widgets: ^1.1.0
+  flutter_dropdown_alert: ^1.0.6
   
 
   

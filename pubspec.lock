@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  animated_widgets:
+    dependency: "direct main"
+    description:
+      name: animated_widgets
+      sha256: "2d6b77a77fc733b06e185553ec0b8225ffd1dd0e6fa327900ff26f1e04995eda"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   animations:
     dependency: "direct main"
     description:
@@ -343,6 +351,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.5+1"
+  flutter_dropdown_alert:
+    dependency: "direct main"
+    description:
+      name: flutter_dropdown_alert
+      sha256: "07704c8196d1e5623c703e9b6b6a9120d88af5bd85e6dbf191710de5609c77a5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   flutter_easyloading:
     dependency: "direct main"
     description:

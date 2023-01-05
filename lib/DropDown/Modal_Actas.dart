@@ -6,6 +6,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:app_actasalinstante/Widgets/carousel_example.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -58,27 +60,34 @@ class _Modal_ActasState extends State<Modal_Actas> {
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
-    print(await response.stream.bytesToString());
+  
+    
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
+_success();
+      // var snackBar = SnackBar(
+      //   elevation: 0,
+      //   behavior: SnackBarBehavior.floating,
+      //   backgroundColor: Colors.transparent,
+      //   content: AwesomeSnackbarContent(
+      //     title: 'Acta enviada!',
+      //     message: 'Revisa la vista de actas',
+      //     contentType: ContentType.success,
+      //   ),
+      // );
 
-      var snackBar = SnackBar(
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Acta enviada!',
-          message: 'Revisa la vista de actas',
-          contentType: ContentType.success,
-        ),
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => NavBar()));
     } else if (response.statusCode == 401) {
       print(await response.stream.bytesToString());
-
+ Error_401();
+      prefs.remove('token');
+      prefs.remove('username');
+    
+      await Future.delayed(Duration(seconds: 5));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
       ShowLimitUser();
     } else if (response.statusCode == 500) {
       print(await response.stream.bytesToString());
@@ -90,12 +99,64 @@ class _Modal_ActasState extends State<Modal_Actas> {
       print(response.reasonPhrase);
     }
   }
+  Error_401() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Center(
+                child: Text(
+              'Caduco tu Sesion ' + user.toString(),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            )),
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                child: Column(
+                  children: <Widget>[
+                    Material(
+                      child: InkWell(
+                        onTap: () {},
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.asset('assets/ERROR_404.gif',
+                              width: 300.0, height: 300.0),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              // RaisedButton(
+              //     child: Text("Submit"),
+              //     onPressed: () {
+              //       // your code
+              //     })
+            ],
+          );
+        });
+  }
+   void _success() {
+    Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Acta enviada ", "Revisa el apartado de actas", TypeAlert.success, payload));
+   
+  }
 
   @override
   void initState() {
     super.initState();
     GetNames();
     Lenguaje();
+      AlertController.onTabListener(
+        (Map<String, dynamic> payload, TypeAlert type) {
+      print("$payload - $type");
+    });
   }
 
   String user = "";
@@ -208,6 +269,10 @@ class _Modal_ActasState extends State<Modal_Actas> {
             set_acta.setString('nombres', Req['nombres']);
             set_acta.setString('apellidos', Req['apellidos']);
             set_acta.setString('estado', Req['estado']);
+             Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Acta encontrada", "", TypeAlert.success, payload));
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -261,6 +326,10 @@ class _Modal_ActasState extends State<Modal_Actas> {
   }
 
   show_acta_NotFound() {
+     Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Acta no encontrada", "Revise su CURP", TypeAlert.error, payload));
     AwesomeDialog(
       context: context,
       dialogType: DialogType.ERROR,
@@ -287,18 +356,23 @@ class _Modal_ActasState extends State<Modal_Actas> {
       isApiCallProcess = true;
     });
      _speak('Solicitando acta, espere un momento');
-    var snackBar = SnackBar(
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.transparent,
-      content: AwesomeSnackbarContent(
-        title: 'Solicitando Acta',
-        message: 'Espere un momento',
-        contentType: ContentType.help,
-      ),
-    );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+     Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(child:  AlertController.show(
+        "Solicitando acta ", "Espere un momento", TypeAlert.warning, payload));
+    // var snackBar = SnackBar(
+    //   elevation: 0,
+    //   behavior: SnackBarBehavior.floating,
+    //   backgroundColor: Colors.transparent,
+    //   content: AwesomeSnackbarContent(
+    //     title: 'Solicitando Acta',
+    //     message: 'Espere un momento',
+    //     contentType: ContentType.help,
+    //   ),
+    // );
+
+    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
   // Send_FOLIO(String type, String data, String estado, int preferencess) async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();

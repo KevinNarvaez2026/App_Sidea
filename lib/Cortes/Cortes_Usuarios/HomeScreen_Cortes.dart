@@ -528,7 +528,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
         headers: mainheader,
       );
       corteDelUsuario = jsonDecode(response.body);
-
+     
       var decodedProducts =
           json.decode(response.body).cast<Map<String, dynamic>>();
       List<Product> productList = await decodedProducts
@@ -716,8 +716,9 @@ class ProductDataGridSource extends DataGridSource {
 
   void buildDataGridRow() {
     dataGridRows = productList.map<DataGridRow>((dataGridRow) {
+     
       return DataGridRow(cells: [
-        DataGridCell(columnName: '#', value: 0.toString()),
+        DataGridCell(columnName: '#', value: 0+1),
         DataGridCell<String>(
             columnName: 'Documento', value: dataGridRow.customerID),
         DataGridCell<String>(
