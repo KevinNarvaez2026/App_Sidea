@@ -105,6 +105,8 @@ class _RobotsState extends State<Robots> {
   var Toluca_Santos_Contador;
   var RegistroCivil1;
   var RegistroCivil1_contador;
+    var RegistroCivil2;
+  var RegistroCivil2_contador;
   bool isApiCallProcess = false;
   get_robots() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -151,7 +153,12 @@ class _RobotsState extends State<Robots> {
             RegistroCivil1_contador = GetRobots[i]['current'];
             print(Villaflores);
           });
+        
         }
+          else if (GetRobots[i]['name'] == 'Registro Civil 2') {
+                RegistroCivil2 = GetRobots[i]['limit'];
+            RegistroCivil2_contador = GetRobots[i]['current'];
+          }
       }
 
       //  print(GetRobots['[]'].toString());
@@ -629,6 +636,32 @@ class _RobotsState extends State<Robots> {
                       //  obscureText: true,
                     ),
 
+                    
+if (username == 'Registro Civil 2')
+                    Container(
+                      // width: 200,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Contador: " + RegistroCivil2.toString(),
+                          maxLines: 3,
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+
+                  if (username == 'Registro Civil 2')
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: Count,
+                      decoration: InputDecoration(
+                          hintText: 'Limite de Actas: ' +
+                              RegistroCivil2_contador.toString()),
+                      maxLength: 4,
+
+                      //  obscureText: true,
+                    ),
                   new Center(
                     child: Container(
                       decoration: BoxDecoration(
@@ -1244,6 +1277,89 @@ class _RobotsState extends State<Robots> {
                                         ],
                                       ),
                                     //CIVIL
+
+                                    //CIVIL2
+                                    if ('${data[index].data}' == 'Off' &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 2')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/Civil.jpeg',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_close.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    if ('${data[index].data}' != 'Off' &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 2')
+                                      Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/Civil.jpeg',
+                                                  alignment: Alignment.center,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Center(
+// Image radius
+                                              child: Image.asset(
+                                                  'assets/ststus_ok.gif',
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    //CIVIL2
                                     Text(
                                       "Robots",
                                       maxLines: 2,
@@ -1409,6 +1525,46 @@ class _RobotsState extends State<Robots> {
                                     if (RegistroCivil1 == null &&
                                         '${data[index].username}' ==
                                             'Registro Civil 1')
+                                      Text(
+                                        "Current: " + 'Robot apagado',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+
+
+                                    if (RegistroCivil2 != null &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 2')
+                                      Text(
+                                        "Limite: " + RegistroCivil2.toString(),
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if (RegistroCivil2 != null &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 2')
+                                      Text(
+                                        "Contador: " +
+                                            RegistroCivil2_contador.toString(),
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'avenir',
+                                            fontWeight: FontWeight.w800),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if (RegistroCivil2 == null &&
+                                        '${data[index].username}' ==
+                                            'Registro Civil 2')
                                       Text(
                                         "Current: " + 'Robot apagado',
                                         maxLines: 2,

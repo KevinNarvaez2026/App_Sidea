@@ -29,7 +29,7 @@ class FetchUserList {
     try {
       if (response.statusCode == 200) {
         data = json.decode(response.body);
-        // print(data);
+        //print(data);
         results = data.map((e) => Userlist2.fromJson(e)).toList();
         if (query != null) {
           results = results
@@ -61,7 +61,8 @@ class FetchUserList {
     mainheader['x-access-token'] = Token;
     Response response = await get(
       Uri.parse(
-          'https://actasalinstante.com:3030/api/rfc/request/getMyRequest/'),
+          'https://actasalinstante.com:3030/api/rfc/requests/myRequests/' +
+              datesforuserrfc.toString()),
       headers: mainheader,
     );
     try {

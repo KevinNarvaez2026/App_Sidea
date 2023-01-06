@@ -65,21 +65,21 @@ class _RegisterPageState extends State<RegisterPage> {
   json_version() async {
     //  print("Token: " + Token);
     try {
-      var json_Ver = jsonEncode({"version": "0.20.0"});
+      var json_Ver = jsonEncode({"version": "0.21.0"});
       print(json_Ver.toString());
 
       Map<String, String> mainheader = new Map();
       mainheader["content-type"] = "application/json";
 
       var response = await get(
-          Uri.parse('https://actasalinstante.com:3030/api/app/version/'),
+          Uri.parse('http://actasalinstante.com:3035/api/app/version/'),
           headers: mainheader);
       var datas = json.decode(response.body);
       print(datas);
       if (response.statusCode == 200) {
         datas['version'];
         print(datas['version']);
-        if (datas['version'] != '0.20.0') {
+        if (datas['version'] != '0.21.0') {
           print("Debe actualizar su version");
 
           AwesomeDialog(
@@ -120,7 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
 //LINK PARA DESCARGAR UNA NUEVA VERIOSN DE LA APP
   _launchURL() async {
-    const url = 'https://actasalinstante.com:3030/api/app/download/';
+    const url = 'http://actasalinstante.com:3035/api/app/download/';
     if (await launch(url)) {
       await canLaunch(url);
     } else {
@@ -279,7 +279,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     var response = await post(
         Uri.parse(
-            'https://actasalinstante.com:3030/api/app/contacts/whenregister/add/' +
+            'http://actasalinstante.com:3035/api/app/contacts/whenregister/add/' +
                 id.toString()),
         headers: mainheader,
         body: json.encode(body));
@@ -311,6 +311,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
         //idpararegistro = fullContact;
         SendContact(fullContact);
+        print("Ok");
       }
     }
   }

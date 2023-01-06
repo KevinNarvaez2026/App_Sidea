@@ -382,20 +382,13 @@ class _SERACHACTASState extends State<SERACHACTAS>
                           children: [
                             MaterialButton(
                               onPressed: () {
-                                var snackBar = SnackBar(
-                                  elevation: 0,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  content: AwesomeSnackbarContent(
-                                    title: 'Si Tu PDF No Se Abre',
-                                    message:
-                                        'Descargala Otra Vez \nNo Genera Ningun Costo ',
-                                    contentType: ContentType.help,
-                                  ),
-                                );
 
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
+                                 Map<String, dynamic> payload = new Map<String, dynamic>();
+    payload["data"] = "content";
+    Center(
+        child: AlertController.show("Si tu PDF no se abre", "Descargala otra vez \nNo genera ningun costo ",
+            TypeAlert.warning, payload));
+                                
                                 _speak(
                                     'Si tu pdf, no se abre, descargalo otra vez, no genera nungun costo');
                                 openFiles(curp);
@@ -490,7 +483,7 @@ class _SERACHACTASState extends State<SERACHACTAS>
                 size: 29,
               ),
               backgroundColor: Colors.black,
-              tooltip: 'Más Informacion',
+              tooltip: 'Solicitar Acta',
               elevation: 5,
               splashColor: Colors.grey,
             ),
@@ -624,6 +617,9 @@ class _SERACHACTASState extends State<SERACHACTAS>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
+
+
+                                    
                                     if ('${data[index].descarga}' != "true" &&
                                         '${data[index].comments}' ==
                                             "Descargado")

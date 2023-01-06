@@ -83,7 +83,7 @@ class _CarouselExampleState extends State<CarouselExample>
     Inicial_pORCENTAJE();
     Check_uPDATE();
     Lenguaje();
-AlertController.onTabListener(
+    AlertController.onTabListener(
         (Map<String, dynamic> payload, TypeAlert type) {
       print("$payload - $type");
     });
@@ -120,7 +120,7 @@ AlertController.onTabListener(
       headers: mainheader,
     );
     var GetRobots = json.decode(response.body.toString());
-    print("hola");
+   
 
     //vista = true;
     if (response.statusCode == 200) {
@@ -129,7 +129,7 @@ AlertController.onTabListener(
       });
 
       for (var i = 0; i < GetRobots.length; i++) {
-        print(GetRobots[i]);
+    
         setState(() {
           ids_user = GetRobots[i]['id'];
           nombre = GetRobots[i]['username'];
@@ -141,7 +141,7 @@ AlertController.onTabListener(
       Error_401();
       prefs.remove('token');
       prefs.remove('username');
-      print("401");
+    
       await Future.delayed(Duration(seconds: 4));
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
@@ -160,10 +160,10 @@ AlertController.onTabListener(
 //CHECADOR DE VERSION DE LA APP POR MEDIO DE UNA ARCHIVO JSON
   bool isApiCallProcess = false;
   json_version() async {
-    print("Token: " + Token);
+  
     try {
-      var json_Ver = jsonEncode({"version": "0.20.0"});
-      print(json_Ver.toString());
+      var json_Ver = jsonEncode({"version": "0.21.0"});
+     
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       setState(() {
@@ -174,19 +174,19 @@ AlertController.onTabListener(
       mainheader['x-access-token'] = Token;
 
       var response = await get(
-          Uri.parse('https://actasalinstante.com:3030/api/app/version/'),
+          Uri.parse('http://actasalinstante.com:3035/api/app/version'),
           headers: mainheader);
       var datas = json.decode(response.body);
-  
+     
       if (response.statusCode == 200) {
         setState(() {
           isApiCallProcess = false;
         });
 
         datas['version'];
-        print(datas['version']);
-        if (datas['version'] != '0.20.0') {
-          print("Debe actualizar su version");
+      
+        if (datas['version'] != '0.21.0') {
+       
 
           AwesomeDialog(
             context: context,
@@ -208,8 +208,8 @@ AlertController.onTabListener(
             isApiCallProcess = false;
           });
           version = datas['version'];
-          print(version);
-             
+         
+
           _runAnimation();
           GetImages();
           GetNames();
@@ -225,7 +225,7 @@ AlertController.onTabListener(
 
 //LINK PARA DESCARGAR UNA NUEVA VERIOSN DE LA APP
   _launchURL() async {
-    const url = 'https://actasalinstante.com:3030/api/app/download/';
+    const url = 'http://actasalinstante.com:3035/api/app/download';
     if (await launch(url)) {
       await canLaunch(url);
     } else {
@@ -303,7 +303,7 @@ AlertController.onTabListener(
 
     _latitude = position.latitude.toString();
     _longitud = position.longitude.toString();
-    print(_latitude + _longitud);
+
     Put_GPS(_latitude, _longitud);
   }
 
@@ -428,7 +428,8 @@ AlertController.onTabListener(
   var imagen;
 //YA SIRVE :/
   Future<String> GetImages() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+       SharedPreferences prefs = await SharedPreferences.getInstance();
 
     Token = prefs.getString('token');
     Map<String, String> mainheader = new Map();
@@ -440,13 +441,20 @@ AlertController.onTabListener(
     );
     final bytes = response.bodyBytes;
 
+    
     print(response.statusCode);
     if (response.statusCode == 200) {
       setState(() {
         imagen = bytes;
       });
-    }
+      
+    }     print("hola");
+    
 
+  
+    if (bytes== 'https://actasalinstante.com/') {
+        print("error");
+      }
     if (response.statusCode == 401) {
       Error_401();
       prefs.remove('token');
@@ -457,6 +465,10 @@ AlertController.onTabListener(
           MaterialPageRoute(builder: (BuildContext ctx) => SplashScreen()));
     }
     return (bytes != null ? base64Encode(bytes) : null);
+    } catch (e) {
+      print("HOLA "+e);
+    }
+   
   }
 
   Error_401() {
@@ -522,7 +534,7 @@ AlertController.onTabListener(
     // await flutterTts.setPitch(pitch);
     // await flutterTts.setSpeechRate(speechRate);
     await flutterTts.setLanguage(langCode);
-    print(langCode);
+ 
   }
 
   void _speak(voice) async {
@@ -778,6 +790,8 @@ AlertController.onTabListener(
   }
 
   Widget Carr(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
     return WillPopScope(
         child: Scaffold(
           backgroundColor: color,
@@ -803,7 +817,6 @@ AlertController.onTabListener(
               onPressed: () {
                 ShowDialog();
                 _runAnimation();
-                
               },
               child: Icon(
                 Icons.notifications_active_rounded,
@@ -857,7 +870,7 @@ AlertController.onTabListener(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (version != '0.20.0')
+                      if (version != '0.21.0')
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -885,7 +898,7 @@ AlertController.onTabListener(
                             )
                           ],
                         ),
-                      if (version == '0.20.0')
+                      if (version == '0.21.0')
                         Container(
                           color: Colors.transparent,
                           padding: EdgeInsets.symmetric(

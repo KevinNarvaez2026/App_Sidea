@@ -114,7 +114,7 @@ class _Cortes_ScreenState extends State<Cortes_Screen>
     setState(() {
       user = prefs.getString('username');
     });
-    _speak('Bienvenido,' + user + ', a tu apartado de corte');
+   // _speak('Bienvenido,' + user + ', a tu apartado de corte');
     // print(user);
     await Future.delayed(Duration(seconds: 4));
     Set_Corte();

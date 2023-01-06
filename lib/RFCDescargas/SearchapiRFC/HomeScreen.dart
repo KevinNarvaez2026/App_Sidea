@@ -204,7 +204,7 @@ class _HomePageState extends State<SERACHRFC> with TickerProviderStateMixin {
                 size: 29,
               ),
               backgroundColor: Colors.black,
-              tooltip: 'Más Informacion',
+              tooltip: 'Solicitar RFC',
               elevation: 5,
               splashColor: Colors.grey,
             ),
